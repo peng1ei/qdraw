@@ -515,7 +515,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 DrawView *MainWindow::createMdiChild()
 {
-
+    //--------------------------------------------------------
+    // 创建Scene
     DrawScene *scene = new DrawScene(this);
 
     QRectF rc = QRectF(0 , 0 , 800, 600);
@@ -539,6 +540,8 @@ DrawView *MainWindow::createMdiChild()
     connect(scene,SIGNAL(itemControl(QGraphicsItem* , int , const QPointF&,const QPointF&)),
             this,SLOT(itemControl(QGraphicsItem*,int,QPointF,QPointF)));
 
+    //----------------------------------------------------------------
+    // 创建 View
     DrawView *view = new DrawView(scene);
     scene->setView(view);
     connect(view,SIGNAL(positionChanged(int,int)),this,SLOT(positionChanged(int,int)));
@@ -550,9 +553,9 @@ DrawView *MainWindow::createMdiChild()
     //view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
     view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
+    // 将原本左上角为原点设置为左下角为原点
     // move orign point to leftbottom
-    view->setTransform(view->transform().scale(1,-1));
-
+    //view->setTransform(view->transform().scale(1,-1));
 
     scene->setBackgroundBrush(Qt::darkGray);
 
@@ -590,8 +593,7 @@ void MainWindow::addShape()
 
 void MainWindow::updateActions()
 {
-
-     QGraphicsScene * scene = NULL;
+    QGraphicsScene * scene = NULL;
     if (activeMdiChild())
         scene = activeMdiChild()->scene();
 

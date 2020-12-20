@@ -35,6 +35,12 @@ Makefile
 app/Makefile
 app/Makefile.Debug
 app/Makefile.Release
+app/*.user
 qtpropertybrowser/Makefile
 qtpropertybrowser/Makefile.Debug
 qtpropertybrowser/Makefile.Release
+qtpropertybrowser/*.user
+playground/Makefile
+playground/Makefile.Debug
+playground/Makefile.Release
+playground/*.user

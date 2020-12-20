@@ -51,6 +51,8 @@ public slots:
     void newFile();
     void open();
     void save();
+
+    // 创建DrawView
     DrawView *createMdiChild();
     void updateMenus();
     void updateWindowMenu();

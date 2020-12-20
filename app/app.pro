@@ -15,7 +15,7 @@ TEMPLATE = app
 CONFIG(debug, debug|release){
     DESTDIR = $$PWD/../bin/debug
 
-    PF_BUILD_DIR = $$PWD/../build/debug
+    PF_BUILD_DIR = $$PWD/../build/$${TARGET}/debug
     MOC_DIR = $${PF_BUILD_DIR}/moc
     RCC_DIR = $${PF_BUILD_DIR}/rcc
     UI_DIR = $${PF_BUILD_DIR}/ui
@@ -23,7 +23,7 @@ CONFIG(debug, debug|release){
 }else{
     DESTDIR = $$PWD/../bin/release
 
-    PF_BUILD_DIR = $$PWD/../build/release
+    PF_BUILD_DIR = $$PWD/../build/$${TARGET}/release
     MOC_DIR = $${PF_BUILD_DIR}/moc
     RCC_DIR = $${PF_BUILD_DIR}/rcc
     UI_DIR = $${PF_BUILD_DIR}/ui
