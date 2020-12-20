@@ -4,6 +4,8 @@
 QT_BEGIN_NAMESPACE
 class QWheelEvent;
 class QMouseEvent;
+class QResizeEvent;
+class QPaintEvent;
 QT_END_NAMESPACE
 
 class InteractiveViewPrivate;
@@ -18,11 +20,21 @@ public:
     double GetScale() const;
     void SetScale(double value);
 
+    void SetRuleBarVisiable(bool value);
+
 protected:
     void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void scrollContentsBy(int dx, int dy) Q_DECL_OVERRIDE;
+
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+
+protected:
+    void UpdateRuler();
 
 signals:
     void scaleChanged(double value);

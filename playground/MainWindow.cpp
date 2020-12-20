@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
 #include <QGraphicsRectItem>
+#include <QPen>
 #include <QDebug>
 
 int s_x = 50;
@@ -40,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->checkBox_Layer0, &QCheckBox::stateChanged,
             this, &MainWindow::OnLayerVisiableChanged);
     connect(ui->checkBox_Layer1, &QCheckBox::stateChanged,
+            this, &MainWindow::OnLayerVisiableChanged);
+    connect(ui->checkBox_RuleBar, &QCheckBox::stateChanged,
             this, &MainWindow::OnLayerVisiableChanged);
     connect(ui->horizontalSlider_Layer0, &QSlider::valueChanged,
             this, &MainWindow::OnOpacityChanged);
@@ -89,6 +92,12 @@ void MainWindow::OnLayerVisiableChanged(int status)
         else if (status == Qt::Unchecked) {
             SetLayerVisiable(mLayer1, false);
         }
+    } else if (sender() == ui->checkBox_RuleBar) {
+        if (status == Qt::Checked)
+            mView->SetRuleBarVisiable(false);
+        else if (status == Qt::Unchecked) {
+            mView->SetRuleBarVisiable(true);
+        }
     }
 }
 
@@ -115,6 +124,13 @@ Layer::Layer(const QColor &color, QGraphicsItem *parent)
 
     // 各个child item 处理自己的事件
     setHandlesChildEvents(false);
+
+    QPen p = mRectItem->pen();
+    p.setWidth(0);
+    p.setColor(Qt::red);
+
+    // 去除外边框
+    mRectItem->setPen(QPen(Qt::NoPen));
 
     // QGraphicsItem::ItemClipsChildrenToShape 隐藏子Item超出部分
     setFlags(QGraphicsItem::ItemClipsChildrenToShape);

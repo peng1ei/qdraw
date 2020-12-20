@@ -39,12 +39,14 @@ QMAKE_CXXFLAGS_WARN_ON += -wd4819
 
 SOURCES += \
     GraphicsView.cpp \
+    RuleBar.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
     GraphicsView.h \
-    MainWindow.h
+    MainWindow.h \
+    RuleBar.h
 
 FORMS += \
     MainWindow.ui
