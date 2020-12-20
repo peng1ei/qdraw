@@ -26,3 +26,15 @@
 *.exe
 *.out
 *.app
+
+bin/
+build/
+*.user
+.qmake.stash
+Makefile
+app/Makefile
+app/Makefile.Debug
+app/Makefile.Release
+qtpropertybrowser/Makefile
+qtpropertybrowser/Makefile.Debug
+qtpropertybrowser/Makefile.Release
