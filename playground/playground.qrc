@@ -1,0 +1,38 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/icons/align_all.png</file>
+        <file>image/icons/align_bottom.png</file>
+        <file>image/icons/align_hcenter.png</file>
+        <file>image/icons/align_height.png</file>
+        <file>image/icons/align_height.svg</file>
+        <file>image/icons/align_horzeven.png</file>
+        <file>image/icons/align_left.png</file>
+        <file>image/icons/align_right.png</file>
+        <file>image/icons/align_top.png</file>
+        <file>image/icons/align_vcenter.png</file>
+        <file>image/icons/align_verteven.png</file>
+        <file>image/icons/align_width.png</file>
+        <file>image/icons/align_width.svg</file>
+        <file>image/icons/arc.png</file>
+        <file>image/icons/arrow.png</file>
+        <file>image/icons/bezier.png</file>
+        <file>image/icons/bringtofront.png</file>
+        <file>image/icons/copy.png</file>
+        <file>image/icons/cut.png</file>
+        <file>image/icons/ellipse.png</file>
+        <file>image/icons/group.png</file>
+        <file>image/icons/line.png</file>
+        <file>image/icons/paste.png</file>
+        <file>image/icons/polygon.png</file>
+        <file>image/icons/polyline.png</file>
+        <file>image/icons/rectangle.png</file>
+        <file>image/icons/redo.png</file>
+        <file>image/icons/rotate.png</file>
+        <file>image/icons/roundrect.png</file>
+        <file>image/icons/sendtoback.png</file>
+        <file>image/icons/undo.png</file>
+        <file>image/icons/ungroup.png</file>
+        <file>image/icons/zoomin.png</file>
+        <file>image/icons/zoomout.png</file>
+    </qresource>
+</RCC>

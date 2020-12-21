@@ -39,6 +39,8 @@ protected:
 
 signals:
     void scaleChanged(double value);
+    void posFromSceneChanged(double x, double y);
+    void posFromViewChanged(int x, int y);
 
 private:
     void Pan(QPointF delta);

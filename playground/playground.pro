@@ -1,4 +1,4 @@
-QT       += core gui opengl widgets
+QT       += core gui opengl widgets xml svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -38,15 +38,23 @@ CONFIG(debug, debug|release){
 win32: QMAKE_CXXFLAGS_WARN_ON += -wd4819
 
 SOURCES += \
+    DrawObj.cpp \
+    DrawScene.cpp \
+    DrawTool.cpp \
     GraphicsView.cpp \
     RuleBar.cpp \
+    SizeHandle.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
+    DrawObj.h \
+    DrawScene.h \
+    DrawTool.h \
     GraphicsView.h \
     MainWindow.h \
-    RuleBar.h
+    RuleBar.h \
+    SizeHandle.h
 
 FORMS += \
     MainWindow.ui
@@ -55,3 +63,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    playground.qrc

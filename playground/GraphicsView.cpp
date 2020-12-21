@@ -248,6 +248,14 @@ void InteractiveView::Zoom(double factor)
     emit scaleChanged(d_ptr->mScale);
 }
 
+double InteractiveView::GetScale() const {
+    return d_ptr->mScale;
+}
+
+void InteractiveView::SetScale(double value) {
+    d_ptr->mScale = value;
+}
+
 void InteractiveViewPrivate::SetRuleBarVisiable(bool value)
 {
     mRuleBarVisiable = value;
