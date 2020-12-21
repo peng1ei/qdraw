@@ -32,8 +32,10 @@ public:
 InteractiveView::InteractiveView(QWidget *parent)
     : QGraphicsView(parent), d_ptr(new InteractiveViewPrivate) {
 
+#if 1
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+#endif
     setCursor(Qt::ArrowCursor);
     setRenderHint(QPainter::Antialiasing);
     //setDragMode(QGraphicsView::RubberBandDrag);
@@ -42,7 +44,7 @@ InteractiveView::InteractiveView(QWidget *parent)
     centerOn(0, 0);
     //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
-    setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+    setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer)));
     setCacheMode(QGraphicsView::CacheBackground);
     setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
     setMouseTracking(true);
@@ -105,6 +107,12 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
         d_ptr->mVRuler->updatePosition(event->pos());
         //emit positionChanged( pt.x() , pt.y() );
     }
+    
+    
+#if 0
+    d_ptr->mLastMousePos = event->pos();
+    this->viewport()->update();
+#endif
 
     QGraphicsView::mouseMoveEvent(event);
 }
@@ -147,19 +155,19 @@ void InteractiveView::scrollContentsBy(int dx, int dy)
 void InteractiveView::paintEvent(QPaintEvent *e)
 {
     QGraphicsView::paintEvent(e);
-
+    
 #if 0
     qDebug() << "InteractiveView::paintEvent";
 
     QPainter painter(this->viewport());
     QPen pen;
-    pen.setWidth(5);
+    pen.setWidth(1);
     pen.setColor(Qt::red);
     painter.setPen(pen);
     //绘制横向线
-    painter.drawLine(0, d_ptr->mLastMousePos.y(), width()-1, d_ptr->mLastMousePos.y());
+    painter.drawLine(0, d_ptr->mLastMousePos.y(), width(), d_ptr->mLastMousePos.y());
     //绘制纵向线
-    painter.drawLine(d_ptr->mLastMousePos.x(), 0, d_ptr->mLastMousePos.x(), height()-1);
+    painter.drawLine(d_ptr->mLastMousePos.x(), 0, d_ptr->mLastMousePos.x(), height());
 #endif
 }
 
