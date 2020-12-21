@@ -563,6 +563,8 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
 {
     DrawTool::mousePressEvent(event,scene);
     if ( c_drawShape == line ){
+        if (!item) return;
+
         item->endPoint(event->scenePos());
         item->updateCoordinate();
         emit scene->itemAdded( item );
