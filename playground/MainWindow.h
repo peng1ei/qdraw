@@ -37,6 +37,9 @@ class QUndoView;
 class QLabel;
 QT_END_NAMESPACE
 
+class ObjectController;
+class GraphicsScene;
+
 class Layer : public QGraphicsItemGroup {
 public:
     explicit Layer(const QColor &color = Qt::white, QGraphicsItem *parent = nullptr);
@@ -85,6 +88,18 @@ public slots:
     void OnZoomOut();
     void OnDeleteItem();
     
+    // from GraphicsView
+    void OnPosFromSceneChanged(double x, double y);
+    
+    // from item
+    void OnItemSelected();
+    void OnItemMoved( QGraphicsItem * item , const QPointF & oldPosition );
+    void OnItemRotate(QGraphicsItem * item , const qreal oldAngle );
+    void OnItemAdded(QGraphicsItem * item );
+    void OnItemResize(QGraphicsItem * item , int handle , const QPointF& scale );
+    void OnItemControl(QGraphicsItem * item , int handle , const QPointF & newPos , const QPointF& lastPos_ );
+    
+    
 private:
     void SetLayerVisiable(Layer *layer, bool visiable);
     
@@ -94,6 +109,8 @@ private:
     void CreateToolbars();
     void CreateToolBox();
     void CreatePropertyEditor();
+    
+    void InitGraphicsView();
 
 private:
     Ui::MainWindow *ui;
@@ -102,7 +119,7 @@ private:
     Layer *mLayer1;
 
     InteractiveView *mView;
-    QGraphicsScene *mScene;
+    GraphicsScene *mScene;
     
     // Menu and ToolBar
     QMenu *mUiMenu;
@@ -175,5 +192,10 @@ private:
     // statusbar label
     QLabel *mMousePosFromSceneInfo;
     QLabel  *mMousePosFromViewInfo;
+    
+    //property editor
+    QDockWidget *mUiDockProperty;
+    ObjectController *mPropertyEditor;
+    QObject *mTheControlledObject;
 };
 #endif // MAINWINDOW_H

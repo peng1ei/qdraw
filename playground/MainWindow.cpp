@@ -1,5 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "ObjectController.h"
+#include "GraphicsScene.h"
+#include "GraphicsView.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -23,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+#if 0
     mView = new InteractiveView;
     //setCentralWidget(mView);
 
@@ -37,8 +41,16 @@ MainWindow::MainWindow(QWidget *parent)
     //mView->setBackgroundBrush(Qt::black);
     setCentralWidget(mView);
 
+    
+#endif
+    
+    InitUI();
+    mTheControlledObject = nullptr;
+    
+    
+#if 1
     mLayer0 = new Layer;
-    mLayer1 = new Layer(Qt::black);
+    mLayer1 = new Layer(Qt::darkGreen);
     mScene->addItem(mLayer1);
     mScene->addItem(mLayer0);
 
@@ -58,8 +70,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_AddLayer, &QPushButton::clicked,
             this, &MainWindow::OnAddLayer);
+#endif
     
-    InitUI();
 }
 
 MainWindow::~MainWindow()
@@ -204,6 +216,41 @@ void MainWindow::OnDeleteItem()
     
 }
 
+void MainWindow::OnPosFromSceneChanged(double x, double y)
+{
+    
+}
+
+void MainWindow::OnItemSelected()
+{
+    
+}
+
+void MainWindow::OnItemMoved(QGraphicsItem *item, const QPointF &oldPosition)
+{
+    
+}
+
+void MainWindow::OnItemRotate(QGraphicsItem *item, const qreal oldAngle)
+{
+    
+}
+
+void MainWindow::OnItemAdded(QGraphicsItem *item)
+{
+    
+}
+
+void MainWindow::OnItemResize(QGraphicsItem *item, int handle, const QPointF &scale)
+{
+    
+}
+
+void MainWindow::OnItemControl(QGraphicsItem *item, int handle, const QPointF &newPos, const QPointF &lastPos_)
+{
+    
+}
+
 void MainWindow::SetLayerVisiable(Layer *layer, bool visiable)
 {
     layer->setVisible(visiable);
@@ -225,6 +272,8 @@ void MainWindow::InitUI()
     CreateToolbars();
     CreateToolBox();
     CreatePropertyEditor();
+    
+    InitGraphicsView();
 }
 
 void MainWindow::CreateActions()
@@ -524,7 +573,62 @@ void MainWindow::CreateToolBox()
 
 void MainWindow::CreatePropertyEditor()
 {
+    mUiDockProperty = new QDockWidget(this);
+    addDockWidget(Qt::RightDockWidgetArea, mUiDockProperty);
+
+    mPropertyEditor = new ObjectController(this);
+    mUiDockProperty->setWidget(mPropertyEditor);
+}
+
+void MainWindow::InitGraphicsView()
+{
+    //--------------------------------------------------------
+    // 创建Scene
+    mScene = new GraphicsScene(this);
+    QRectF rc = QRectF(0 , 0 , 800, 600);
+    mScene->setSceneRect(rc);
     
+    qDebug()<<rc.bottomLeft()<<rc.size() << rc.topLeft();
+
+    connect(mScene, SIGNAL(selectionChanged()),
+            this, SLOT(OnItemSelected()));
+
+    connect(mScene,SIGNAL(itemAdded(QGraphicsItem*)),
+            this, SLOT(OnItemAdded(QGraphicsItem*)));
+    connect(mScene,SIGNAL(itemMoved(QGraphicsItem*,QPointF)),
+            this,SLOT(OnItemMoved(QGraphicsItem*,QPointF)));
+    connect(mScene,SIGNAL(itemRotate(QGraphicsItem*,qreal)),
+            this,SLOT(OnItemRotate(QGraphicsItem*,qreal)));
+
+    connect(mScene,SIGNAL(itemResize(QGraphicsItem* , int , const QPointF&)),
+            this,SLOT(OnItemResize(QGraphicsItem* , int , const QPointF&)));
+
+    connect(mScene,SIGNAL(itemControl(QGraphicsItem* , int , const QPointF&,const QPointF&)),
+            this,SLOT(OnItemControl(QGraphicsItem* , int , const QPointF&,const QPointF&)));
+
+    //----------------------------------------------------------------
+    // 创建 View
+    mView = new InteractiveView(this);
+    mView->setScene(mScene);
+    mScene->setView(mView);
+    connect(mView,SIGNAL(posFromSceneChanged(double,double)),this,SLOT(OnPosFromSceneChanged(double,double)));
+
+#if 0
+    mView->setRenderHint(QPainter::Antialiasing);
+    mView->setCacheMode(QGraphicsView::CacheBackground);
+    mView->setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    mView->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+    //view->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    mView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+
+    // TODO 将原本左上角为原点设置为左下角为原点
+    // move orign point to leftbottom
+    //view->setTransform(view->transform().scale(1,-1));
+
+    //mView->setBackgroundBrush(Qt::darkGray);
+#endif
+    
+    setCentralWidget(mView);
 }
 
 Layer::Layer(const QColor &color, QGraphicsItem *parent)

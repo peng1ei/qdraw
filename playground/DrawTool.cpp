@@ -41,7 +41,7 @@ SelectMode selectMode = none;
 
 int nDragHandle = Handle_None;
 
-static void setCursor(DrawScene * scene , const QCursor & cursor )
+static void setCursor(GraphicsScene * scene , const QCursor & cursor )
 {
     QGraphicsView * view = scene->view();
     if (view)
@@ -55,25 +55,25 @@ DrawTool::DrawTool(DrawShape shape)
     c_tools.push_back(this);
 }
 
-void DrawTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void DrawTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     c_down = event->scenePos();
     c_last = event->scenePos();
 }
 
-void DrawTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void DrawTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     c_last = event->scenePos();
 }
 
-void DrawTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void DrawTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     if (event->scenePos() == c_down )
         c_drawShape = selection;
     setCursor(scene,Qt::ArrowCursor);
 }
 
-void DrawTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void DrawTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
 
 }
@@ -96,7 +96,7 @@ SelectTool::SelectTool()
     opposite_ = QPointF();
 }
 
-void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
 
@@ -172,7 +172,7 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *sce
     }
 }
 
-void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseMoveEvent(event,scene);
     QList<QGraphicsItem *> items = scene->selectedItems();
@@ -235,7 +235,7 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *scen
 
 }
 
-void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
 
     DrawTool::mouseReleaseEvent(event,scene);
@@ -288,7 +288,7 @@ RotationTool::RotationTool()
     dashRect = 0;
 }
 
-void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
     if ( event->button() != Qt::LeftButton ) return;
@@ -338,7 +338,7 @@ void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *s
     }
 }
 
-void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseMoveEvent(event,scene);
     QList<QGraphicsItem *> items = scene->selectedItems();
@@ -383,7 +383,7 @@ void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *sc
     scene->mouseEvent(event);
 }
 
-void RotationTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void RotationTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseReleaseEvent(event,scene);
     if ( event->button() != Qt::LeftButton ) return;
@@ -430,7 +430,7 @@ RectTool::RectTool(DrawShape drawShape)
     item = 0;
 }
 
-void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
 
     if ( event->button() != Qt::LeftButton ) return;
@@ -459,14 +459,14 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene
 
 }
 
-void RectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void RectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     setCursor(scene,Qt::CrossCursor);
 
     selectTool.mouseMoveEvent(event,scene);
 }
 
-void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     selectTool.mouseReleaseEvent(event,scene);
 
@@ -493,7 +493,7 @@ PolygonTool::PolygonTool(DrawShape shape)
     m_nPoints = 0;
 }
 
-void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
 
@@ -535,7 +535,7 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawScene *sc
     nDragHandle = item->handleCount();
 }
 
-void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseMoveEvent(event,scene);
     setCursor(scene,Qt::CrossCursor);
@@ -550,7 +550,7 @@ void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawScene *sce
 
 }
 
-void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
     if ( c_drawShape == line ){
@@ -564,7 +564,7 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawScene *
     }
 }
 
-void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawScene *scene)
+void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseDoubleClickEvent(event,scene);
     item->endPoint(event->scenePos());

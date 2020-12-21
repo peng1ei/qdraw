@@ -1,4 +1,4 @@
-#include "DrawScene.h"
+#include "GraphicsScene.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsRectItem>
 #include <QDebug>
@@ -13,7 +13,6 @@ GridTool::GridTool(const QSize & grid , const QSize & space )
     ,m_sizeGridSpace(20,20)
 {
 }
-
 
 void GridTool::paintGrid(QPainter *painter, const QRect &rect)
 {
@@ -79,7 +78,7 @@ bool operator< (const BBoxSort &a, const BBoxSort &b)
     return (a.anchor < b.anchor);
 }
 
-DrawScene::DrawScene(QObject *parent)
+GraphicsScene::GraphicsScene(QObject *parent)
     :QGraphicsScene(parent)
 {
     m_view = NULL;
@@ -90,12 +89,12 @@ DrawScene::DrawScene(QObject *parent)
 
 }
 
-DrawScene::~DrawScene()
+GraphicsScene::~GraphicsScene()
 {
     delete m_grid;
 }
 
-void DrawScene::align(AlignType alignType)
+void GraphicsScene::align(AlignType alignType)
 {
     AbstractShape * firstItem = qgraphicsitem_cast<AbstractShape*>(selectedItems().first());
     if ( !firstItem ) return;
@@ -231,7 +230,7 @@ void DrawScene::align(AlignType alignType)
     }
 }
 
-void DrawScene::mouseEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void GraphicsScene::mouseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     switch( mouseEvent->type() ){
     case QEvent::GraphicsSceneMousePress:
@@ -246,7 +245,7 @@ void DrawScene::mouseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
 }
 
-GraphicsItemGroup *DrawScene::createGroup(const QList<QGraphicsItem *> &items,bool isAdd)
+GraphicsItemGroup *GraphicsScene::createGroup(const QList<QGraphicsItem *> &items,bool isAdd)
 {
     // Build a list of the first item's ancestors
     QList<QGraphicsItem *> ancestors;
@@ -294,7 +293,7 @@ GraphicsItemGroup *DrawScene::createGroup(const QList<QGraphicsItem *> &items,bo
     return group;
 }
 
-void DrawScene::destroyGroup(QGraphicsItemGroup *group)
+void GraphicsScene::destroyGroup(QGraphicsItemGroup *group)
 {
     group->setSelected(false);
     foreach (QGraphicsItem *item, group->childItems()){
@@ -305,7 +304,7 @@ void DrawScene::destroyGroup(QGraphicsItemGroup *group)
     delete group;
 }
 
-void DrawScene::drawBackground(QPainter *painter, const QRectF &rect)
+void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsScene::drawBackground(painter,rect);
     painter->fillRect(sceneRect(),Qt::white);
@@ -314,7 +313,7 @@ void DrawScene::drawBackground(QPainter *painter, const QRectF &rect)
     }
 }
 
-void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
@@ -322,21 +321,21 @@ void DrawScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         tool->mousePressEvent(mouseEvent,this);
 }
 
-void DrawScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
         tool->mouseMoveEvent(mouseEvent,this);
 }
 
-void DrawScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
         tool->mouseReleaseEvent(mouseEvent,this);
 }
 
-void DrawScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvet)
+void GraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvet)
 {
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
@@ -344,7 +343,7 @@ void DrawScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvet)
 
 }
 
-void DrawScene::keyPressEvent(QKeyEvent *e)
+void GraphicsScene::keyPressEvent(QKeyEvent *e)
 {
     qreal dx=0,dy=0;
     m_moved = false;
@@ -380,7 +379,7 @@ void DrawScene::keyPressEvent(QKeyEvent *e)
     QGraphicsScene::keyPressEvent(e);
 }
 
-void DrawScene::keyReleaseEvent(QKeyEvent *e)
+void GraphicsScene::keyReleaseEvent(QKeyEvent *e)
 {
     if (m_moved && selectedItems().count()>0)
     emit itemMoved(NULL,QPointF(m_dx,m_dy));

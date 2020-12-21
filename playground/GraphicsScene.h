@@ -1,6 +1,4 @@
-#ifndef DRAWSCENE
-#define DRAWSCENE
-
+#pragma once
 #include <QGraphicsScene>
 #include "DrawTool.h"
 #include "DrawObj.h"
@@ -45,12 +43,12 @@ protected:
 
 class GraphicsItemGroup;
 
-class DrawScene : public QGraphicsScene
+class GraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit DrawScene(QObject *parent = 0);
-    ~DrawScene();
+    explicit GraphicsScene(QObject *parent = 0);
+    ~GraphicsScene();
     void setView(QGraphicsView * view ) { m_view = view ; }
     QGraphicsView * view() { return m_view; }
     void align(AlignType alignType );
@@ -79,6 +77,4 @@ protected:
     bool  m_moved;
     GridTool *m_grid;
 };
-
-#endif // DRAWSCENE
 

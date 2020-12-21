@@ -2,6 +2,8 @@ QT       += core gui opengl widgets xml svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+include(../qtpropertybrowser/src/qtpropertybrowser.pri)
+
 CONFIG += c++11
 TARGET = playground
 
@@ -38,21 +40,27 @@ CONFIG(debug, debug|release){
 win32: QMAKE_CXXFLAGS_WARN_ON += -wd4819
 
 SOURCES += \
+    Commands.cpp \
+    CustomProperty.cpp \
     DrawObj.cpp \
-    DrawScene.cpp \
     DrawTool.cpp \
+    GraphicsScene.cpp \
     GraphicsView.cpp \
+    ObjectController.cpp \
     RuleBar.cpp \
     SizeHandle.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
+    Commands.h \
+    CustomProperty.h \
     DrawObj.h \
-    DrawScene.h \
     DrawTool.h \
+    GraphicsScene.h \
     GraphicsView.h \
     MainWindow.h \
+    ObjectController.h \
     RuleBar.h \
     SizeHandle.h
 

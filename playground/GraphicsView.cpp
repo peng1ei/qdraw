@@ -40,6 +40,7 @@ InteractiveView::InteractiveView(QWidget *parent)
     setRenderHint(QPainter::Antialiasing);
     //setDragMode(QGraphicsView::RubberBandDrag);
 
+    // TODO
     setSceneRect(INT_MIN/2, INT_MIN/2, INT_MAX, INT_MAX);
     centerOn(0, 0);
     //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);

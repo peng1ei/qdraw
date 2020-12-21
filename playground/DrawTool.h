@@ -2,7 +2,7 @@
 #define DRAWTOOL
 
 #include "DrawObj.h"
-#include "DrawScene.h"
+#include "GraphicsScene.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsScene;
@@ -16,7 +16,7 @@ class QColor;
 class QAbstractGraphicsShapeItem;
 QT_END_NAMESPACE
 
-class DrawScene;
+class GraphicsScene;
 class GraphicsItem;
 class GraphicsPolygonItem;
 enum DrawShape
@@ -36,10 +36,10 @@ class DrawTool
 {
 public:
     DrawTool( DrawShape shape );
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene );
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event ,DrawScene *scene );
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event ,GraphicsScene *scene );
     DrawShape m_drawShape;
     bool m_hoverSizer;
 
@@ -55,9 +55,9 @@ class SelectTool : public DrawTool
 {
 public:
     SelectTool();
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene );
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
     QPointF initialPositions;
     QPointF opposite_;
     QGraphicsPathItem * dashRect;
@@ -68,9 +68,9 @@ class  RotationTool : public DrawTool
 {
 public:
     RotationTool();
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene );
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
     qreal lastAngle;
     QGraphicsPathItem * dashRect;
 };
@@ -79,9 +79,9 @@ class RectTool : public DrawTool
 {
 public:
     RectTool(DrawShape drawShape);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene );
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
     GraphicsItem * item;
 };
 
@@ -89,10 +89,10 @@ class PolygonTool : public DrawTool
 {
 public:
     PolygonTool(DrawShape shape );
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene ) ;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , DrawScene * scene );
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event ,DrawScene *scene );
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event ,GraphicsScene *scene );
     GraphicsPolygonItem * item;
     int m_nPoints;
     QPointF initialPositions;

@@ -55,7 +55,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&m_timer,SIGNAL(timeout()),this,SLOT(updateActions()));
     m_timer.start(500);
     theControlledObject = NULL;
-
 }
 
 MainWindow::~MainWindow()
