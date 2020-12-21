@@ -116,6 +116,10 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
 #endif
 
     QGraphicsView::mouseMoveEvent(event);
+    
+    if (d_ptr->mIsPan){
+        setCursor(Qt::ClosedHandCursor);
+    }
 }
 
 void InteractiveView::mouseReleaseEvent(QMouseEvent *event)

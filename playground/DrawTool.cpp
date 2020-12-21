@@ -213,10 +213,11 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
             else if(nDragHandle == Handle_None ){
                  int handle = item->collidesWithHandle(event->scenePos());
                  if ( handle != Handle_None){
-                     setCursor(scene,Qt::OpenHandCursor);
+                     //在绘制状态中鼠标全部为十字丝状态
+                     //setCursor(scene,Qt::OpenHandCursor);
                      m_hoverSizer = true;
                  }else{
-                     setCursor(scene,Qt::ArrowCursor);
+                     //setCursor(scene,Qt::ArrowCursor);
                      m_hoverSizer = false;
                  }
              }
@@ -224,7 +225,7 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     }
 
     if ( selectMode == move ){
-        setCursor(scene,Qt::ClosedHandCursor);
+        //setCursor(scene,Qt::ClosedHandCursor);
         if ( dashRect ){
             dashRect->setPos(initialPositions + c_last - c_down);
         }
@@ -233,7 +234,6 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     if ( selectMode != size  && items.count() > 1)
     {
         scene->mouseEvent(event);
-
     }
 
 }
@@ -466,13 +466,13 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
 
 void RectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
-    setCursor(scene,Qt::CrossCursor);
-
     selectTool.mouseMoveEvent(event,scene);
+    setCursor(scene,Qt::CrossCursor);
 }
 
 void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    //DrawTool::mouseMoveEvent(event,scene);
     selectTool.mouseReleaseEvent(event,scene);
 
     if ( event->scenePos() == (c_down-QPoint(2,2))){
@@ -490,6 +490,8 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     
     // TODO 在切换其他工具之前一直保持当前工具状态
     //c_drawShape = selection;
+    
+    setCursor(scene,Qt::CrossCursor);
 }
 
 
@@ -564,7 +566,7 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
         item->endPoint(event->scenePos());
         item->updateCoordinate();
         emit scene->itemAdded( item );
-        item = NULL;
+        item = nullptr;
         selectMode = none;
         
         // TODO 在切换其他工具之前一直保持当前工具状态
