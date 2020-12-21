@@ -35,7 +35,7 @@ CONFIG(debug, debug|release){
 }
 
 # disable C4819 warning
-QMAKE_CXXFLAGS_WARN_ON += -wd4819
+win32: QMAKE_CXXFLAGS_WARN_ON += -wd4819
 
 SOURCES += \
     GraphicsView.cpp \
