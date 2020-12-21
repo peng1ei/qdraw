@@ -133,7 +133,28 @@ void MainWindow::OnOpacityChanged(int value)
 
 void MainWindow::OnAddShape()
 {
-    
+    if ( sender() == mUiSelectAct )
+        DrawTool::c_drawShape = selection;
+    else if (sender() == mUiLineAct )
+        DrawTool::c_drawShape = line;
+    else if ( sender() == mUiRectAct )
+        DrawTool::c_drawShape = rectangle;
+    else if ( sender() == mUiRoundRectAct )
+        DrawTool::c_drawShape = roundrect;
+    else if ( sender() == mUiEllipseAct )
+        DrawTool::c_drawShape = ellipse ;
+    else if ( sender() == mUiPolygonAct )
+        DrawTool::c_drawShape = polygon;
+    else if ( sender() == mUiBezierAct )
+        DrawTool::c_drawShape = bezier ;
+    else if (sender() == mUiRotateAct )
+        DrawTool::c_drawShape = rotation;
+    else if (sender() == mUiPolylineAct )
+        DrawTool::c_drawShape = polyline;
+
+    if ( sender() != mUiSelectAct && sender() != mUiRotateAct ){
+        mScene->clearSelection();
+    }
 }
 
 void MainWindow::OnNewFile()
@@ -223,7 +244,21 @@ void MainWindow::OnPosFromSceneChanged(double x, double y)
 
 void MainWindow::OnItemSelected()
 {
-    
+    QGraphicsScene * scene = mScene;
+
+    if ( scene->selectedItems().count() > 0
+         && scene->selectedItems().first()->isSelected())
+    {
+        QGraphicsItem *item = scene->selectedItems().first();
+
+        mTheControlledObject = dynamic_cast<QObject*>(item);
+        mPropertyEditor->setObject(mTheControlledObject);
+    }
+    return ;
+    if ( mTheControlledObject )
+    {
+        mPropertyEditor->setObject(mTheControlledObject);
+    }
 }
 
 void MainWindow::OnItemMoved(QGraphicsItem *item, const QPointF &oldPosition)

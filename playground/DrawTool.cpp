@@ -68,8 +68,11 @@ void DrawTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *sc
 
 void DrawTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
-    if (event->scenePos() == c_down )
-        c_drawShape = selection;
+    if (event->scenePos() == c_down ) {
+        // TODO 在切换其他工具之前一直保持当前工具状态
+        //c_drawShape = selection;
+    }
+
     setCursor(scene,Qt::ArrowCursor);
 }
 
@@ -331,7 +334,9 @@ void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
                 setCursor(scene,QCursor((QPixmap(":/icons/rotate.png"))));
             }
             else{
-                    c_drawShape = selection;
+                    // TODO 在切换其他工具之前一直保持当前工具状态
+                    //c_drawShape = selection;
+                
                     selectTool.mousePressEvent(event,scene);
                 }
         }
@@ -482,7 +487,9 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     }else if( item ){
         emit scene->itemAdded( item );
     }
-  c_drawShape = selection;
+    
+    // TODO 在切换其他工具之前一直保持当前工具状态
+    //c_drawShape = selection;
 }
 
 
@@ -559,7 +566,10 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
         emit scene->itemAdded( item );
         item = NULL;
         selectMode = none;
-        c_drawShape = selection;
+        
+        // TODO 在切换其他工具之前一直保持当前工具状态
+        //c_drawShape = selection;
+
         m_nPoints = 0;
     }
 }
@@ -570,8 +580,11 @@ void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, Graphic
     item->endPoint(event->scenePos());
     item->updateCoordinate();
     emit scene->itemAdded( item );
-    item = NULL;
+    item = nullptr;
     selectMode = none;
-    c_drawShape = selection;
+    
+    // TODO 在切换其他工具之前一直保持当前工具状态
+    //c_drawShape = selection;
+    
     m_nPoints = 0;
 }
