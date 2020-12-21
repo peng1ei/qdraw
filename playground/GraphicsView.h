@@ -35,6 +35,7 @@ protected:
 
 protected:
     void UpdateRuler();
+    void ResizeRuler();
 
 signals:
     void scaleChanged(double value);

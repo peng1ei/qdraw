@@ -17,7 +17,6 @@ class InteractiveViewPrivate {
 public:
     void SetRuleBarVisiable(bool value);
 
-
     bool mIsPan = false;
     QPoint mLastMousePos;
     double mScale = 1.0;
@@ -25,9 +24,9 @@ public:
     QPointF mTargetScenePos, mTargetViewportPos;
 
     bool mRuleBarVisiable = true;
-    QtRuleBar *mHRuler;
-    QtRuleBar *mVRuler;
-    QtCornerBox *mBox;
+    QtRuleBar *mHRuler = nullptr;
+    QtRuleBar *mVRuler = nullptr;
+    QtCornerBox *mBox = nullptr;
 };
 
 InteractiveView::InteractiveView(QWidget *parent)
@@ -49,9 +48,11 @@ InteractiveView::InteractiveView(QWidget *parent)
     setMouseTracking(true);
     setBackgroundBrush(QBrush(Qt::darkGray));
 
-    d_ptr->mHRuler = new QtRuleBar(Qt::Horizontal,this,this);
-    d_ptr->mVRuler = new QtRuleBar(Qt::Vertical,this,this);
-    d_ptr->mBox = new QtCornerBox(this);
+    if (d_ptr->mRuleBarVisiable) {
+        d_ptr->mHRuler = new QtRuleBar(Qt::Horizontal,this,this);
+        d_ptr->mVRuler = new QtRuleBar(Qt::Vertical,this,this);
+        d_ptr->mBox = new QtCornerBox(this);
+    }    
 }
 
 InteractiveView::~InteractiveView()
@@ -62,7 +63,8 @@ InteractiveView::~InteractiveView()
 
 void InteractiveView::SetRuleBarVisiable(bool value)
 {
-    d_ptr->SetRuleBarVisiable(value);
+    d_ptr->SetRuleBarVisiable(value);    
+    ResizeRuler();    
     update();
 }
 
@@ -177,6 +179,23 @@ void InteractiveView::UpdateRuler()
 
     d_ptr->mVRuler->setRange(lower_y,upper_y,upper_y - lower_y );
     d_ptr->mVRuler->update();
+}
+
+void InteractiveView::ResizeRuler()
+{
+    if (d_ptr->mRuleBarVisiable) {
+        this->setViewportMargins(RULER_SIZE-1,RULER_SIZE-1,0,0);
+        d_ptr->mHRuler->resize(this->size().width()- RULER_SIZE - 1,RULER_SIZE);
+        d_ptr->mHRuler->move(RULER_SIZE,0);
+        d_ptr->mVRuler->resize(RULER_SIZE,this->size().height() - RULER_SIZE - 1);
+        d_ptr->mVRuler->move(0,RULER_SIZE);
+
+        d_ptr->mBox->resize(RULER_SIZE,RULER_SIZE);
+        d_ptr->mBox->move(0,0);
+        UpdateRuler();
+    } else {
+        this->setViewportMargins(0,0,0,0);
+    }
 }
 
 // 放大/缩小

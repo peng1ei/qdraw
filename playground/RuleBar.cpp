@@ -50,7 +50,7 @@ void QtRuleBar::updatePosition(const QPoint &pos)
 
 void QtRuleBar::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
     QPainter painter(this);
     QRect rulerRect = rect();
     painter.fillRect(rulerRect,m_faceColor);
