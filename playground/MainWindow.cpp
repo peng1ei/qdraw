@@ -156,6 +156,10 @@ void MainWindow::OnAddShape()
     if ( sender() != mUiSelectAct && sender() != mUiRotateAct ){
         mScene->clearSelection();
     }
+
+    if (sender() == mUiSelectAct || sender() == mUiRotateAct) {
+        mView->setCursor(Qt::ArrowCursor);
+    }
 }
 
 void MainWindow::OnNewFile()

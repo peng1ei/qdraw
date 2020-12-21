@@ -293,6 +293,7 @@ RotationTool::RotationTool()
 
 void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+
     DrawTool::mousePressEvent(event,scene);
     if ( event->button() != Qt::LeftButton ) return;
 
@@ -341,6 +342,8 @@ void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
                 }
         }
     }
+
+    setCursor(scene,Qt::ArrowCursor);
 }
 
 void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -349,6 +352,10 @@ void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
     QList<QGraphicsItem *> items = scene->selectedItems();
     if ( items.count() == 1 ){
         AbstractShape * item = qgraphicsitem_cast<AbstractShape*>(items.first());
+
+        // 在旋转期间禁止移动
+        item->setFlag(QGraphicsItem::ItemIsMovable, false);
+
         if ( item != 0  && nDragHandle !=Handle_None && selectMode == rotate ){
 
              QPointF origin = item->mapToScene(item->boundingRect().center());
@@ -371,13 +378,13 @@ void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
                  dashRect->setRotation( angle );
              }
 
-             setCursor(scene,QCursor((QPixmap(":/icons/rotate.png"))));
+             setCursor(scene,QCursor((QPixmap(":/image/icons/rotate.png"))));
         }
         else if ( item )
         {
             int handle = item->collidesWithHandle(event->scenePos());
             if ( handle != Handle_None){
-                setCursor(scene,QCursor((QPixmap(":/icons/rotate.png"))));
+                setCursor(scene,QCursor((QPixmap(":/image/icons/rotate.png"))));
                 m_hoverSizer = true;
             }else{
                 setCursor(scene,Qt::ArrowCursor);
@@ -492,6 +499,8 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     //c_drawShape = selection;
     
     setCursor(scene,Qt::CrossCursor);
+
+    scene->clearSelection();
 }
 
 
@@ -575,6 +584,8 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
         //c_drawShape = selection;
 
         m_nPoints = 0;
+
+        scene->clearSelection();
     }
 }
 
@@ -591,4 +602,6 @@ void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, Graphic
     //c_drawShape = selection;
     
     m_nPoints = 0;
+
+    scene->clearSelection();
 }
