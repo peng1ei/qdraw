@@ -15,6 +15,7 @@
 #include <QUndoView>
 #include <QToolBar>
 #include <QApplication>
+#include <QLabel>
 #include <QDebug>
 
 int s_x = 50;
@@ -239,7 +240,14 @@ void MainWindow::OnDeleteItem()
 
 void MainWindow::OnPosFromSceneChanged(double x, double y)
 {
-    
+    mUiMousePosFromSceneInfo->setText(QString(" scene: %1, %2 ")
+                                      .arg(QString::number(x,'f',2)).arg(QString::number(y,'f',2)));
+}
+
+void MainWindow::OnPosFromViewChanged(int x, int y)
+{
+    mUiMousePosFromViewInfo->setText(QString(" view: %1, %2 ")
+                                  .arg(QString::number(x)).arg(QString::number(y)));
 }
 
 void MainWindow::OnItemSelected()
@@ -286,6 +294,11 @@ void MainWindow::OnItemControl(QGraphicsItem *item, int handle, const QPointF &n
     
 }
 
+void MainWindow::OnScaleChanged(double scale)
+{
+    mUiScaleInfo->setText(QString(" scale: %1\% ").arg(QString::number(scale*100,'f',0)));
+}
+
 void MainWindow::SetLayerVisiable(Layer *layer, bool visiable)
 {
     layer->setVisible(visiable);
@@ -309,6 +322,8 @@ void MainWindow::InitUI()
     CreatePropertyEditor();
     
     InitGraphicsView();
+
+    CreateStatusBar();
 }
 
 void MainWindow::CreateActions()
@@ -613,6 +628,33 @@ void MainWindow::CreatePropertyEditor()
 
     mPropertyEditor = new ObjectController(this);
     mUiDockProperty->setWidget(mPropertyEditor);
+}
+
+void MainWindow::CreateStatusBar()
+{
+    mUiMousePosFromViewInfo = new QLabel(tr(" view:  "));
+    mUiMousePosFromViewInfo->setMinimumWidth(100);
+    mUiMousePosFromViewInfo->setAlignment(Qt::AlignHCenter);
+    statusBar()->addWidget(mUiMousePosFromViewInfo);
+
+    connect(mView, &InteractiveView::posFromViewChanged,
+            this, &MainWindow::OnPosFromViewChanged);
+
+    mUiMousePosFromSceneInfo = new QLabel(tr(" scene:  "));
+    mUiMousePosFromSceneInfo->setMinimumWidth(100);
+    mUiMousePosFromSceneInfo->setAlignment(Qt::AlignHCenter);
+    statusBar()->addWidget(mUiMousePosFromSceneInfo);
+
+    connect(mView, &InteractiveView::posFromSceneChanged,
+            this, &MainWindow::OnPosFromSceneChanged);
+
+    mUiScaleInfo = new QLabel(tr(" scale: 100% "));
+    mUiScaleInfo->setMinimumWidth(80);
+    mUiScaleInfo->setAlignment(Qt::AlignHCenter);
+    statusBar()->addWidget(mUiScaleInfo);
+
+    connect(mView, &InteractiveView::scaleChanged,
+            this, &MainWindow::OnScaleChanged);
 }
 
 void MainWindow::InitGraphicsView()

@@ -120,6 +120,9 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
     if (d_ptr->mIsPan){
         setCursor(Qt::ClosedHandCursor);
     }
+
+    emit posFromSceneChanged(d_ptr->mTargetScenePos.x(), d_ptr->mTargetScenePos.y());
+    emit posFromViewChanged(event->x(), event->y());
 }
 
 void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
@@ -240,6 +243,12 @@ void InteractiveView::Pan(QPointF delta)
 
 void InteractiveView::Zoom(double factor)
 {
+    //qDebug() << "Zoom factor: " << factor;
+
+    if (factor < 1 && d_ptr->mScale < 0.01) return;
+
+    if (factor > 1 && d_ptr->mScale > 500) return;
+
     scale(factor, factor);
     centerOn(d_ptr->mTargetScenePos);
 

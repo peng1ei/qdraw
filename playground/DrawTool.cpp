@@ -498,7 +498,7 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 PolygonTool::PolygonTool(DrawShape shape)
     :DrawTool(shape)
 {
-    item = NULL;
+    item = nullptr;
     m_nPoints = 0;
 }
 
@@ -508,7 +508,7 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
 
     if ( event->button() != Qt::LeftButton ) return;
 
-    if ( item == NULL ){
+    if ( item == nullptr ){
         if ( c_drawShape == polygon ){
         item = new GraphicsPolygonItem(NULL);
         }else if (c_drawShape == bezier ){

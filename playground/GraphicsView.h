@@ -22,6 +22,11 @@ public:
 
     void SetRuleBarVisiable(bool value);
 
+signals:
+    void scaleChanged(double value);
+    void posFromSceneChanged(double x, double y);
+    void posFromViewChanged(int x, int y);
+
 protected:
     void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -37,10 +42,7 @@ protected:
     void UpdateRuler();
     void ResizeRuler();
 
-signals:
-    void scaleChanged(double value);
-    void posFromSceneChanged(double x, double y);
-    void posFromViewChanged(int x, int y);
+
 
 private:
     void Pan(QPointF delta);

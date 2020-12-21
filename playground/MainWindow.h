@@ -88,9 +88,6 @@ public slots:
     void OnZoomOut();
     void OnDeleteItem();
     
-    // from GraphicsView
-    void OnPosFromSceneChanged(double x, double y);
-    
     // from item
     void OnItemSelected();
     void OnItemMoved( QGraphicsItem * item , const QPointF & oldPosition );
@@ -99,6 +96,10 @@ public slots:
     void OnItemResize(QGraphicsItem * item , int handle , const QPointF& scale );
     void OnItemControl(QGraphicsItem * item , int handle , const QPointF & newPos , const QPointF& lastPos_ );
     
+    // from graphicsview
+    void OnScaleChanged(double scale);
+    void OnPosFromSceneChanged(double x, double y);
+    void OnPosFromViewChanged(int x, int y);
     
 private:
     void SetLayerVisiable(Layer *layer, bool visiable);
@@ -109,6 +110,7 @@ private:
     void CreateToolbars();
     void CreateToolBox();
     void CreatePropertyEditor();
+    void CreateStatusBar();
     
     void InitGraphicsView();
 
@@ -190,8 +192,9 @@ private:
     QUndoStack *mUiUndoStack;
     QUndoView *mUiUndoView;
     // statusbar label
-    QLabel *mMousePosFromSceneInfo;
-    QLabel  *mMousePosFromViewInfo;
+    QLabel *mUiMousePosFromSceneInfo;
+    QLabel  *mUiMousePosFromViewInfo;
+    QLabel *mUiScaleInfo;
     
     //property editor
     QDockWidget *mUiDockProperty;
