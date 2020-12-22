@@ -294,8 +294,8 @@ void MainWindow::OnZoomOne()
 
 void MainWindow::OnZoomToRect()
 {
-    DrawTool::c_drawShape = selection;
-    mView->ZoomToRect();
+    DrawTool::c_drawShape = rubberbandzoom;
+    //mView->ZoomToRect(); // TODO
 }
 
 void MainWindow::OnDeleteItem()

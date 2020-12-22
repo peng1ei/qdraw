@@ -1,5 +1,6 @@
 #include "GraphicsView.h"
 #include "RuleBar.h"
+#include "DrawTool.h"
 
 #include <QWheelEvent>
 #include <QOpenGLWidget>
@@ -27,6 +28,8 @@ public:
     QtRuleBar *mHRuler = nullptr;
     QtRuleBar *mVRuler = nullptr;
     QtCornerBox *mBox = nullptr;
+
+    QRect mRubberBandRect;
 };
 
 InteractiveView::InteractiveView(QWidget *parent)
@@ -177,6 +180,9 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
 
     emit posFromSceneChanged(d_ptr->mTargetScenePos.x(), d_ptr->mTargetScenePos.y());
     emit posFromViewChanged(event->x(), event->y());
+
+    d_ptr->mRubberBandRect = rubberBandRect();
+    qDebug() << "Rubber band Rect wheel: " << d_ptr->mRubberBandRect;
 }
 
 void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
@@ -186,7 +192,14 @@ void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
         setCursor(Qt::ArrowCursor);
     }
 
+    if (DrawTool::c_drawShape == rubberbandzoom) {
+        // TODO判断mRubberBandRect的有效性
+        FitInView(d_ptr->mRubberBandRect, Qt::KeepAspectRatio);
+    }
+
     QGraphicsView::mouseReleaseEvent(event);
+
+    qDebug() << "Rubber band Rect release: " << rubberBandRect();
 }
 
 void InteractiveView::resizeEvent(QResizeEvent *event)
