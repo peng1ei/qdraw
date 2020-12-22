@@ -43,7 +43,7 @@ InteractiveView::InteractiveView(QWidget *parent)
     // TODO
     setSceneRect(INT_MIN/2, INT_MIN/2, INT_MAX, INT_MAX);
     centerOn(0, 0);
-    //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    //setTransformationAnchor(QGraphicsView::AnchorViewCenter);
 
     setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer)));
     setCacheMode(QGraphicsView::CacheBackground);
@@ -69,6 +69,28 @@ void InteractiveView::SetRuleBarVisiable(bool value)
     d_ptr->SetRuleBarVisiable(value);    
     ResizeRuler();    
     update();
+}
+
+void InteractiveView::FitInView(const QRectF &rect, Qt::AspectRatioMode aspectRadioMode)
+{
+    fitInView(rect,aspectRadioMode);
+    
+    d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
+    emit scaleChanged(d_ptr->mScale);
+}
+
+void InteractiveView::FitInView(qreal x, qreal y, qreal w, qreal h, Qt::AspectRatioMode aspectRadioMode)
+{
+    fitInView(x,  y, w, h, aspectRadioMode);
+    d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
+    emit scaleChanged(d_ptr->mScale);
+}
+
+void InteractiveView::FitInView(const QGraphicsItem *item, Qt::AspectRatioMode aspectRadioMode)
+{
+    fitInView(item, aspectRadioMode);
+    d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
+    emit scaleChanged(d_ptr->mScale);    
 }
 
 void InteractiveView::mousePressEvent(QMouseEvent *event)
@@ -150,6 +172,7 @@ void InteractiveView::resizeEvent(QResizeEvent *event)
         d_ptr->mBox->move(0,0);
         UpdateRuler();
     }
+
 }
 
 void InteractiveView::scrollContentsBy(int dx, int dy)
@@ -243,10 +266,11 @@ void InteractiveView::Pan(QPointF delta)
 
 void InteractiveView::Zoom(double factor)
 {
-    //qDebug() << "Zoom factor: " << factor;
+    qDebug() << "Zoom factor: " << factor;
+    qDebug() << "Zoom x scale: " << transform().m11();
+    qDebug() << "Zoom y scale: " << transform().m12();
 
     if (factor < 1 && d_ptr->mScale < 0.01) return;
-
     if (factor > 1 && d_ptr->mScale > 500) return;
 
     scale(factor, factor);

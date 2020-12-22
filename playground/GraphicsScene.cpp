@@ -86,7 +86,6 @@ GraphicsScene::GraphicsScene(QObject *parent)
     m_grid = new GridTool();
     QGraphicsItem * item = addRect(QRectF(0,0,0,0));
     item->setAcceptHoverEvents(true);
-
 }
 
 GraphicsScene::~GraphicsScene()

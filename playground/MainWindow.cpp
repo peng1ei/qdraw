@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
 #if 1
     mLayer0 = new Layer;
     mLayer1 = new Layer(Qt::darkGreen);
-    mScene->addItem(mLayer1);
-    mScene->addItem(mLayer0);
+    //mScene->addItem(mLayer1);
+    //mScene->addItem(mLayer0);
 
     ui->checkBox_Layer0->setChecked(true);
     ui->checkBox_Layer1->setChecked(true);
@@ -71,13 +71,36 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_AddLayer, &QPushButton::clicked,
             this, &MainWindow::OnAddLayer);
-#endif
     
+//    auto viewRect = mView->viewport()->rect();
+//    auto viewCenterPoint = viewRect.center();
+//    auto sceneCenterPoint = mView->mapToScene(viewCenterPoint);
+//    qDebug() << "0,0 map to scene: " << mView->mapToScene(viewCenterPoint);
+//    qDebug() << "resize view Rect: " << viewRect;
+//    qDebug() << "resize view center: " << viewCenterPoint;
+    
+//    mScene->addRect(sceneCenterPoint.x()-320,sceneCenterPoint.y()-240,640, 480);
+#endif 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    
+    //auto viewRect = mView->viewport()->rect();
+    //auto viewCenterPoint = viewRect.center();
+    
+//    auto sceneCenterPoint = mView->mapToScene(viewCenterPoint);
+//    qDebug() << "0,0 map to scene: " << mView->mapToScene(viewCenterPoint);
+//    qDebug() << "resize view Rect: " << viewRect;
+//    qDebug() << "resize view center: " << viewCenterPoint;
+    
+    //mScene->addRect(sceneCenterPoint.x()-320,sceneCenterPoint.y()-240,640, 480);
 }
 
 void MainWindow::OnAddLayer()
@@ -164,7 +187,22 @@ void MainWindow::OnAddShape()
 
 void MainWindow::OnNewFile()
 {
+    auto viewRect = mView->viewport()->rect();
+    auto viewCenterPoint = viewRect.center();
+    auto sceneCenterPoint = mView->mapToScene(viewCenterPoint);
+    qDebug() << "0,0 map to scene: " << mView->mapToScene(viewCenterPoint);
+    qDebug() << "resize view Rect: " << viewRect;
+    qDebug() << "resize view center: " << viewCenterPoint;
     
+    int w = 960, h = 720;
+    Layer *layer = new Layer(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h);
+    mScene->addItem(layer);
+    qDebug() << "x scale: " << mView->transform().m11();
+    qDebug() << "y scale: " << mView->transform().m12();
+    mView->FitInView(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h, Qt::KeepAspectRatio);
+    //mScene->addRect(sceneCenterPoint.x()-w/2, sceneCenterPoint.y()-h/2, w, h);
+    qDebug() << "x scale: " << mView->transform().m11();
+    qDebug() << "y scale: " << mView->transform().m12();
 }
 
 void MainWindow::OnOpen()
@@ -667,7 +705,7 @@ void MainWindow::InitGraphicsView()
     // 创建Scene
     mScene = new GraphicsScene(this);
     QRectF rc = QRectF(0 , 0 , 800, 600);
-    mScene->setSceneRect(rc);
+    //mScene->setSceneRect(rc);
     
     qDebug()<<rc.bottomLeft()<<rc.size() << rc.topLeft();
 
@@ -709,6 +747,9 @@ void MainWindow::InitGraphicsView()
     //mView->setBackgroundBrush(Qt::darkGray);
 #endif
     
+    //QGridLayout *layout = new QGridLayout;
+    //layout->addWidget(mView);
+    //centralWidget()->setLayout(layout);
     setCentralWidget(mView);
 }
 
@@ -725,6 +766,22 @@ Layer::Layer(const QColor &color, QGraphicsItem *parent)
     QPen p = mRectItem->pen();
     p.setWidth(0);
     p.setColor(Qt::red);
+
+    // 去除外边框
+    mRectItem->setPen(QPen(Qt::NoPen));
+
+    // QGraphicsItem::ItemClipsChildrenToShape 隐藏子Item超出部分
+    setFlags(QGraphicsItem::ItemClipsChildrenToShape);
+}
+
+Layer::Layer(double x, double y, int w, int h, const QColor &color, QGraphicsItem *parent)
+    : QGraphicsItemGroup(parent) {
+    mRectItem = new QGraphicsRectItem(x, y, w, h);
+    mRectItem->setBrush(color);
+    addToGroup(mRectItem);
+
+    // 各个child item 处理自己的事件
+    setHandlesChildEvents(false);
 
     // 去除外边框
     mRectItem->setPen(QPen(Qt::NoPen));

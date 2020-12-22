@@ -21,6 +21,11 @@ public:
     void SetScale(double value);
 
     void SetRuleBarVisiable(bool value);
+    
+    void FitInView(const QRectF &rect, Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
+    void FitInView(qreal x, qreal y, qreal w, qreal h,
+                          Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
+    void FitInView(const QGraphicsItem *item, Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
 
 signals:
     void scaleChanged(double value);

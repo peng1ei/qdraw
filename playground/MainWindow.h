@@ -35,6 +35,7 @@ class QSignalMapper;
 class QUndoStack;
 class QUndoView;
 class QLabel;
+class QResizeEvent;
 QT_END_NAMESPACE
 
 class ObjectController;
@@ -43,10 +44,10 @@ class GraphicsScene;
 class Layer : public QGraphicsItemGroup {
 public:
     explicit Layer(const QColor &color = Qt::white, QGraphicsItem *parent = nullptr);
+    Layer(double x, double y, int w, int h, const QColor &color = Qt::white, QGraphicsItem *parent = nullptr);
     ~Layer();
 
     void AddItem(QGraphicsItem *item);
-    //void RemoveItem(QGraphicsItem *item);
 
 private:
     QGraphicsRectItem *mRectItem;
@@ -58,6 +59,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    
+protected:
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 public slots:
     void OnAddLayer();
