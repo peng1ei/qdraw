@@ -96,14 +96,10 @@ void InteractiveView::FitInView(const QGraphicsItem *item, Qt::AspectRatioMode a
 void InteractiveView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == PAN_BUTTON) {
-        // TODO 当光标底下没有 item 时才能移动
-        //QPointF point = mapToScene(event->pos());
-        //if (true || scene()->itemAt(point, transform()) == NULL)  {
-            d_ptr->mIsPan = true;
-            d_ptr->mLastMousePos = event->pos();
-
-            setCursor(Qt::ClosedHandCursor);
-        //}
+        d_ptr->mIsPan = true;
+        d_ptr->mLastMousePos = event->pos();
+        
+        setCursor(Qt::ClosedHandCursor);
     }
 
     QGraphicsView::mousePressEvent(event);
@@ -112,7 +108,7 @@ void InteractiveView::mousePressEvent(QMouseEvent *event)
 void InteractiveView::mouseMoveEvent(QMouseEvent *event)
 {
     QPointF delta = d_ptr->mTargetViewportPos - event->pos();
-    if (qAbs(delta.x()) > 0/*5*/ || qAbs(delta.y()) > 0/*5*/) {
+    if (qAbs(delta.x()) > 0 || qAbs(delta.y()) > 0) {
         d_ptr->mTargetViewportPos = event->pos();
         d_ptr->mTargetScenePos = mapToScene(event->pos());
     }
@@ -243,10 +239,15 @@ void InteractiveView::ResizeRuler()
 // https://stackoverflow.com/questions/19113532/qgraphicsview-zooming-in-and-out-under-mouse-position-using-mouse-wheel
 void InteractiveView::wheelEvent(QWheelEvent *event)
 {
-    double angle = event->angleDelta().y();
-    double factor = qPow(d_ptr->mZoomFactorBase, angle);
-
-    Zoom(factor);
+    //double angle = event->angleDelta().y();
+    //double factor = qPow(d_ptr->mZoomFactorBase, angle);
+    
+    double factor = 1.25; // zoom in
+    if (event->angleDelta().y() < 0) {
+        factor = 1/1.25; // zoom out
+    }
+    
+    Zoom(factor); 
 }
 
 void InteractiveView::Pan(QPointF delta)
@@ -266,12 +267,12 @@ void InteractiveView::Pan(QPointF delta)
 
 void InteractiveView::Zoom(double factor)
 {
-    qDebug() << "Zoom factor: " << factor;
-    qDebug() << "Zoom x scale: " << transform().m11();
-    qDebug() << "Zoom y scale: " << transform().m12();
+    //qDebug() << "Zoom factor: " << factor;
+    //qDebug() << "Zoom x scale: " << transform().m11();
+    //qDebug() << "Zoom y scale: " << transform().m12();
 
-    if (factor < 1 && d_ptr->mScale < 0.01) return;
-    if (factor > 1 && d_ptr->mScale > 500) return;
+    if (factor < 1 && d_ptr->mScale < 0.06) return;
+    if (factor > 1 && d_ptr->mScale > 256) return;
 
     scale(factor, factor);
     centerOn(d_ptr->mTargetScenePos);

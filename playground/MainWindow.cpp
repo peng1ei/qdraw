@@ -16,6 +16,7 @@
 #include <QToolBar>
 #include <QApplication>
 #include <QLabel>
+#include <QComboBox>
 #include <QDebug>
 
 int s_x = 50;
@@ -199,8 +200,7 @@ void MainWindow::OnNewFile()
     mScene->addItem(layer);
     qDebug() << "x scale: " << mView->transform().m11();
     qDebug() << "y scale: " << mView->transform().m12();
-    mView->FitInView(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h, Qt::KeepAspectRatio);
-    //mScene->addRect(sceneCenterPoint.x()-w/2, sceneCenterPoint.y()-h/2, w, h);
+    //mView->FitInView(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h, Qt::KeepAspectRatio);
     qDebug() << "x scale: " << mView->transform().m11();
     qDebug() << "y scale: " << mView->transform().m12();
 }
