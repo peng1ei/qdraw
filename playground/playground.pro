@@ -74,3 +74,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     playground.qrc
+
+RC_ICONS = via.ico

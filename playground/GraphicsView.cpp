@@ -90,7 +90,20 @@ void InteractiveView::FitInView(const QGraphicsItem *item, Qt::AspectRatioMode a
 {
     fitInView(item, aspectRadioMode);
     d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
-    emit scaleChanged(d_ptr->mScale);    
+    emit scaleChanged(d_ptr->mScale);
+}
+
+void InteractiveView::Zoom1To1()
+{
+    // scale to 1:1
+    QRectF unity = transform().mapRect(QRectF(0, 0, 1, 1));
+    if (unity.isEmpty())
+        return;
+    scale(1 / unity.width(), 1 / unity.height());
+
+    centerOn((QRectF(0,0,960,720)).center());
+    d_ptr->mScale = 1;
+    emit scaleChanged(d_ptr->mScale);
 }
 
 void InteractiveView::mousePressEvent(QMouseEvent *event)
@@ -246,8 +259,8 @@ void InteractiveView::wheelEvent(QWheelEvent *event)
     if (event->angleDelta().y() < 0) {
         factor = 1/1.25; // zoom out
     }
-    
-    Zoom(factor); 
+
+    Zoom(factor);
 }
 
 void InteractiveView::Pan(QPointF delta)
@@ -267,22 +280,24 @@ void InteractiveView::Pan(QPointF delta)
 
 void InteractiveView::Zoom(double factor)
 {
-    //qDebug() << "Zoom factor: " << factor;
-    //qDebug() << "Zoom x scale: " << transform().m11();
-    //qDebug() << "Zoom y scale: " << transform().m12();
+    qDebug() << "Zoom factor: " << factor;
+    qDebug() << "scale: " << d_ptr->mScale;
+    qDebug() << "Zoom x scale: " << transform().m11();
+    qDebug() << "Zoom y scale: " << transform().m12();
     if (factor == 1) return;
+
 
     if (factor < 1 && d_ptr->mScale < 0.06) return;
     if (factor > 1 && d_ptr->mScale > 256) return;
     
-    
-
     scale(factor, factor);
     centerOn(d_ptr->mTargetScenePos);
 
     QPointF delta_viewport_pos = d_ptr->mTargetViewportPos - QPointF(viewport()->width() / 2.0,
                                                                viewport()->height() / 2.0);
     QPointF viewport_center = mapFromScene(d_ptr->mTargetScenePos) - delta_viewport_pos;
+
+    qDebug() << delta_viewport_pos << ", " << viewport_center;
     centerOn(mapToScene(viewport_center.toPoint()));
 
     d_ptr->mScale *= factor;
@@ -295,11 +310,20 @@ double InteractiveView::GetScale() const {
 }
 
 void InteractiveView::SetScale(double value) {
-    auto pos = QPoint(viewport()->rect().width()/2, viewport()->height()/2);
+//    auto pos = QPoint(viewport()->rect().width()/2, viewport()->height()/2);
     
-    d_ptr->mTargetViewportPos = pos;
-    d_ptr->mTargetScenePos = mapToScene(pos);
+//    d_ptr->mTargetViewportPos = pos;
+//    d_ptr->mTargetScenePos = mapToScene(pos);
     Zoom(value / d_ptr->mScale);
+
+//    FitInView(d_ptr->mTargetScenePos.x()-960/2,d_ptr->mTargetScenePos.y()-720/2, 960, 720, Qt::KeepAspectRatio);
+
+//    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
+//    scale(value / d_ptr->mScale, value / d_ptr->mScale);
+//    d_ptr->mScale = 1;
+//    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+
+
 }
 
 void InteractiveViewPrivate::SetRuleBarVisiable(bool value)

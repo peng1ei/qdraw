@@ -82,6 +82,8 @@ MainWindow::MainWindow(QWidget *parent)
     
 //    mScene->addRect(sceneCenterPoint.x()-320,sceneCenterPoint.y()-240,640, 480);
 #endif 
+
+    setWindowIcon(QIcon(":/image/icons/via.ico"));
 }
 
 MainWindow::~MainWindow()
@@ -196,13 +198,18 @@ void MainWindow::OnNewFile()
     qDebug() << "resize view center: " << viewCenterPoint;
     
     int w = 960, h = 720;
-    Layer *layer = new Layer(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h);
+    //Layer *layer = new Layer(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h);
+    Layer *layer = new Layer(0,0, w, h);
     mScene->addItem(layer);
+    //layer->setX(0);
+    //layer->setY(0);
     qDebug() << "x scale: " << mView->transform().m11();
     qDebug() << "y scale: " << mView->transform().m12();
-    //mView->FitInView(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h, Qt::KeepAspectRatio);
+    mView->Zoom1To1();
     qDebug() << "x scale: " << mView->transform().m11();
     qDebug() << "y scale: " << mView->transform().m12();
+
+    qDebug() << "Layer Rect: " << layer->GetRectFromScene();
 }
 
 void MainWindow::OnOpen()
@@ -277,12 +284,12 @@ void MainWindow::OnZoomOut()
 
 void MainWindow::OnZoomFitView()
 {
-    
+    mView->FitInView(0,0,960,720, Qt::KeepAspectRatio);
 }
 
 void MainWindow::OnZoomOne()
 {
-    mView->SetScale(1);
+    mView->Zoom1To1();
 }
 
 void MainWindow::OnDeleteItem()
@@ -821,4 +828,9 @@ void Layer::AddItem(QGraphicsItem *item)
     for (auto &item : childItems) {
         qDebug() << item << " Z: " <<  item->zValue();
     }
+}
+
+QRectF Layer::GetRectFromScene()
+{
+    return this->sceneBoundingRect();
 }

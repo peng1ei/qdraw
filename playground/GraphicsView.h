@@ -27,6 +27,8 @@ public:
                           Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
     void FitInView(const QGraphicsItem *item, Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
 
+    void Zoom1To1();
+
 signals:
     void scaleChanged(double value);
     void posFromSceneChanged(double x, double y);

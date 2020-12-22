@@ -49,6 +49,8 @@ public:
 
     void AddItem(QGraphicsItem *item);
 
+    QRectF GetRectFromScene();
+
 private:
     QGraphicsRectItem *mRectItem;
 };
