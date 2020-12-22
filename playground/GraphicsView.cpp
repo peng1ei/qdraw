@@ -93,6 +93,24 @@ void InteractiveView::FitInView(const QGraphicsItem *item, Qt::AspectRatioMode a
     emit scaleChanged(d_ptr->mScale);
 }
 
+void InteractiveView::ZoomInUnderViewCenter()
+{
+    auto pos = QPoint(viewport()->rect().width()/2, viewport()->height()/2);
+
+    d_ptr->mTargetViewportPos = pos;
+    d_ptr->mTargetScenePos = mapToScene(pos);
+    Zoom(1.25);
+}
+
+void InteractiveView::ZoomOutUnderViewCenter()
+{
+    auto pos = QPoint(viewport()->rect().width()/2, viewport()->height()/2);
+
+    d_ptr->mTargetViewportPos = pos;
+    d_ptr->mTargetScenePos = mapToScene(pos);
+    Zoom(1/1.25);
+}
+
 void InteractiveView::Zoom1To1()
 {
     // scale to 1:1
@@ -104,6 +122,11 @@ void InteractiveView::Zoom1To1()
     centerOn((QRectF(0,0,960,720)).center());
     d_ptr->mScale = 1;
     emit scaleChanged(d_ptr->mScale);
+}
+
+void InteractiveView::ZoomToRect()
+{
+
 }
 
 void InteractiveView::mousePressEvent(QMouseEvent *event)

@@ -274,12 +274,12 @@ void MainWindow::OnCut()
 
 void MainWindow::OnZoomIn()
 {
-    
+    mView->ZoomInUnderViewCenter();
 }
 
 void MainWindow::OnZoomOut()
 {
-    
+    mView->ZoomOutUnderViewCenter();
 }
 
 void MainWindow::OnZoomFitView()
@@ -290,6 +290,12 @@ void MainWindow::OnZoomFitView()
 void MainWindow::OnZoomOne()
 {
     mView->Zoom1To1();
+}
+
+void MainWindow::OnZoomToRect()
+{
+    DrawTool::c_drawShape = selection;
+    mView->ZoomToRect();
 }
 
 void MainWindow::OnDeleteItem()
@@ -519,6 +525,11 @@ void MainWindow::CreateActions()
     mUiDrawActionGroup->addAction(mUiPolylineAct);
     mUiDrawActionGroup->addAction(mUiBezierAct);
     mUiDrawActionGroup->addAction(mUiRotateAct);
+
+    mUiZoomToRectAct = new QAction(QIcon(":/image/icons/zoomrect.png"),tr("zoomToRect"),this);
+    mUiZoomToRectAct->setCheckable(true);
+    mUiDrawActionGroup->addAction(mUiZoomToRectAct);
+
     mUiSelectAct->setChecked(true);
 
     connect(mUiSelectAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
@@ -546,6 +557,8 @@ void MainWindow::CreateActions()
     mUiZoomOutAct = new QAction(QIcon(":/image/icons/zoomout.png"),tr("zoomOut"),this);
     mUiZoomFitAct = new QAction(QIcon(":/image/icons/zoom_fit.png"),tr("zoomFitView"),this);
     mUiZoomOneAct = new QAction(QIcon(":/image/icons/zoom1-1.png"),tr("zoom1-1"),this);
+    //mUiZoomToRectAct = new QAction(QIcon(":/image/icons/zoomrect.png"),tr("zoomToRect"),this);
+    //mUiZoomToRectAct->setCheckable(true);
 
     mUiCopyAct = new QAction(QIcon(":/image/icons/copy.png"),tr("copy"),this);
     mUiCopyAct->setShortcut(QKeySequence::Copy);
@@ -564,6 +577,7 @@ void MainWindow::CreateActions()
     connect(mUiZoomOutAct , SIGNAL(triggered()),this,SLOT(OnZoomOut()));
     connect(mUiZoomFitAct , SIGNAL(triggered()),this,SLOT(OnZoomFitView()));
     connect(mUiZoomOneAct , SIGNAL(triggered()),this,SLOT(OnZoomOne()));
+    connect(mUiZoomToRectAct , SIGNAL(triggered()),this,SLOT(OnZoomToRect()));
     connect(mUiDeleteAct, SIGNAL(triggered()), this, SLOT(OnDeleteItem()));
 
     mUiFuncAct = new QAction(tr("func test"),this);
@@ -592,6 +606,7 @@ void MainWindow::CreateMenus()
     viewMenu->addAction(mUiZoomOutAct);
     viewMenu->addAction(mUiZoomFitAct);
     viewMenu->addAction(mUiZoomOneAct);
+    viewMenu->addAction(mUiZoomToRectAct);
 
     QMenu *toolMenu = menuBar()->addMenu(tr("&Tools"));
     QMenu *shapeTool = new QMenu("&Shape");
@@ -645,6 +660,7 @@ void MainWindow::CreateToolbars()
 
     mUiEditToolBar->addAction(mUiZoomInAct);
     mUiEditToolBar->addAction(mUiZoomOutAct);
+    mUiEditToolBar->addAction(mUiZoomToRectAct);
     mUiEditToolBar->addAction(mUiZoomFitAct);
     mUiEditToolBar->addAction(mUiZoomOneAct);
 

@@ -37,5 +37,6 @@
         <file>image/icons/zoom1-1.png</file>
         <file>image/icons/zoom_fit.png</file>
         <file>image/icons/via.ico</file>
+        <file>image/icons/zoomrect.png</file>
     </qresource>
 </RCC>
