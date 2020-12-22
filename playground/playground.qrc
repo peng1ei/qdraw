@@ -34,5 +34,7 @@
         <file>image/icons/ungroup.png</file>
         <file>image/icons/zoomin.png</file>
         <file>image/icons/zoomout.png</file>
+        <file>image/icons/zoom1-1.png</file>
+        <file>image/icons/zoom_fit.png</file>
     </qresource>
 </RCC>

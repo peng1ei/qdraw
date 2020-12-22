@@ -275,6 +275,16 @@ void MainWindow::OnZoomOut()
     
 }
 
+void MainWindow::OnZoomFitView()
+{
+    
+}
+
+void MainWindow::OnZoomOne()
+{
+    mView->SetScale(1);
+}
+
 void MainWindow::OnDeleteItem()
 {
     
@@ -527,6 +537,8 @@ void MainWindow::CreateActions()
 
     mUiZoomInAct = new QAction(QIcon(":/image/icons/zoomin.png"),tr("zoomIn"),this);
     mUiZoomOutAct = new QAction(QIcon(":/image/icons/zoomout.png"),tr("zoomOut"),this);
+    mUiZoomFitAct = new QAction(QIcon(":/image/icons/zoom_fit.png"),tr("zoomFitView"),this);
+    mUiZoomOneAct = new QAction(QIcon(":/image/icons/zoom1-1.png"),tr("zoom1-1"),this);
 
     mUiCopyAct = new QAction(QIcon(":/image/icons/copy.png"),tr("copy"),this);
     mUiCopyAct->setShortcut(QKeySequence::Copy);
@@ -543,6 +555,8 @@ void MainWindow::CreateActions()
 
     connect(mUiZoomInAct , SIGNAL(triggered()),this,SLOT(OnZoomIn()));
     connect(mUiZoomOutAct , SIGNAL(triggered()),this,SLOT(OnZoomOut()));
+    connect(mUiZoomFitAct , SIGNAL(triggered()),this,SLOT(OnZoomFitView()));
+    connect(mUiZoomOneAct , SIGNAL(triggered()),this,SLOT(OnZoomOne()));
     connect(mUiDeleteAct, SIGNAL(triggered()), this, SLOT(OnDeleteItem()));
 
     mUiFuncAct = new QAction(tr("func test"),this);
@@ -569,6 +583,8 @@ void MainWindow::CreateMenus()
     QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(mUiZoomInAct);
     viewMenu->addAction(mUiZoomOutAct);
+    viewMenu->addAction(mUiZoomFitAct);
+    viewMenu->addAction(mUiZoomOneAct);
 
     QMenu *toolMenu = menuBar()->addMenu(tr("&Tools"));
     QMenu *shapeTool = new QMenu("&Shape");
@@ -622,6 +638,8 @@ void MainWindow::CreateToolbars()
 
     mUiEditToolBar->addAction(mUiZoomInAct);
     mUiEditToolBar->addAction(mUiZoomOutAct);
+    mUiEditToolBar->addAction(mUiZoomFitAct);
+    mUiEditToolBar->addAction(mUiZoomOneAct);
 
     // create draw toolbar
     mUiDrawToolBar = addToolBar(tr("drawing"));

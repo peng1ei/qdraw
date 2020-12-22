@@ -292,7 +292,7 @@ double InteractiveView::GetScale() const {
 }
 
 void InteractiveView::SetScale(double value) {
-    d_ptr->mScale = value;
+    Zoom(value / d_ptr->mScale);
 }
 
 void InteractiveViewPrivate::SetRuleBarVisiable(bool value)

@@ -90,6 +90,8 @@ public slots:
     void OnCut();
     void OnZoomIn();
     void OnZoomOut();
+    void OnZoomFitView();
+    void OnZoomOne();
     void OnDeleteItem();
     
     // from item
@@ -167,6 +169,8 @@ private:
     QAction  * mUiCutAct;
     QAction  * mUiZoomInAct;
     QAction  * mUiZoomOutAct;
+    QAction  * mUiZoomFitAct;
+    QAction  * mUiZoomOneAct;
 
     // drawing toolbar
     QToolBar * mUiDrawToolBar;
