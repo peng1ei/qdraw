@@ -270,9 +270,12 @@ void InteractiveView::Zoom(double factor)
     //qDebug() << "Zoom factor: " << factor;
     //qDebug() << "Zoom x scale: " << transform().m11();
     //qDebug() << "Zoom y scale: " << transform().m12();
+    if (factor == 1) return;
 
     if (factor < 1 && d_ptr->mScale < 0.06) return;
     if (factor > 1 && d_ptr->mScale > 256) return;
+    
+    
 
     scale(factor, factor);
     centerOn(d_ptr->mTargetScenePos);
@@ -292,6 +295,10 @@ double InteractiveView::GetScale() const {
 }
 
 void InteractiveView::SetScale(double value) {
+    auto pos = QPoint(viewport()->rect().width()/2, viewport()->height()/2);
+    
+    d_ptr->mTargetViewportPos = pos;
+    d_ptr->mTargetScenePos = mapToScene(pos);
     Zoom(value / d_ptr->mScale);
 }
 
