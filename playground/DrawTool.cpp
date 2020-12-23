@@ -302,39 +302,8 @@ void RubberBandZoomTool::mousePressEvent(QGraphicsSceneMouseEvent *event, Graphi
 
     if ( event->button() != Qt::LeftButton ) return;
 
-    if (!m_hoverSizer)
-       scene->mouseEvent(event);
-
     nDragHandle = Handle_None;
     selectMode = none;
-    QList<QGraphicsItem *> items = scene->selectedItems();
-    AbstractShape *item = 0;
-
-    if ( items.count() == 1 )
-        item = qgraphicsitem_cast<AbstractShape*>(items.first());
-
-    if ( item != 0 ){
-
-        nDragHandle = item->collidesWithHandle(event->scenePos());
-        if ( nDragHandle != Handle_None && nDragHandle <= Left )
-             selectMode = size;
-        else if ( nDragHandle > Left )
-            selectMode = editor;
-        else
-            selectMode =  move;
-
-        if ( nDragHandle!= Handle_None && nDragHandle <= Left ){
-            opposite_ = item->opposite(nDragHandle);
-            if( opposite_.x() == 0 )
-                opposite_.setX(1);
-            if (opposite_.y() == 0 )
-                opposite_.setY(1);
-        }
-
-        setCursor(scene,Qt::ClosedHandCursor);
-
-    }else if ( items.count() > 1 )
-        selectMode =  move;
 
     if( selectMode == none ){
         selectMode = netSelect;
@@ -348,27 +317,6 @@ void RubberBandZoomTool::mousePressEvent(QGraphicsSceneMouseEvent *event, Graphi
             selLayer = 0;
         }
 #endif
-    }
-
-    if ( selectMode == move && items.count() == 1 ){
-
-        if (dashRect ){
-            scene->removeItem(dashRect);
-            delete dashRect;
-            dashRect = 0;
-        }
-
-        dashRect = new QGraphicsPathItem(item->shape());
-        dashRect->setPen(Qt::DashLine);
-        dashRect->setPos(item->pos());
-        dashRect->setTransformOriginPoint(item->transformOriginPoint());
-        dashRect->setTransform(item->transform());
-        dashRect->setRotation(item->rotation());
-        dashRect->setScale(item->scale());
-        dashRect->setZValue(item->zValue());
-        scene->addItem(dashRect);
-
-        initialPositions = item->pos();
     }
 
     setCursor(scene, QCursor(QPixmap(":/image/icons/zoomrectcur.png")));

@@ -78,21 +78,21 @@ void InteractiveView::FitInView(const QRectF &rect, Qt::AspectRatioMode aspectRa
 {
     fitInView(rect,aspectRadioMode);
     
-    d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
+    d_ptr->mScale = transform().m11(); // x scale, m22 -> y scale
     emit scaleChanged(d_ptr->mScale);
 }
 
 void InteractiveView::FitInView(qreal x, qreal y, qreal w, qreal h, Qt::AspectRatioMode aspectRadioMode)
 {
     fitInView(x,  y, w, h, aspectRadioMode);
-    d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
+    d_ptr->mScale = transform().m11(); // x scale, m22 -> y scale
     emit scaleChanged(d_ptr->mScale);
 }
 
 void InteractiveView::FitInView(const QGraphicsItem *item, Qt::AspectRatioMode aspectRadioMode)
 {
     fitInView(item, aspectRadioMode);
-    d_ptr->mScale = transform().m11(); // x scale, m12 -> y scale, default 0
+    d_ptr->mScale = transform().m11(); // x scale, m22 -> y scale
     emit scaleChanged(d_ptr->mScale);
 }
 
@@ -193,9 +193,17 @@ void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
     }
 
     if (DrawTool::c_drawShape == rubberbandzoom) {
-        // TODO判断mRubberBandRect的有效性
+        // TODO判断mRubberBandRect的有效性,此处为放大，缩小呢？
         // 参考：https://github.com/MagedMilad/Image-Processing/blob/master/customview.cpp
         FitInView(QRectF(mapToScene(d_ptr->mRubberBandRect.topLeft()), mapToScene(d_ptr->mRubberBandRect.bottomRight())), Qt::KeepAspectRatio);
+
+#if 0 //zoom out
+        auto rect = d_ptr->mRubberBandRect.normalized();
+        auto rec = QRectF(mapToScene(rect.topLeft()), mapToScene(rect.bottomRight()));
+
+        centerOn(rec.center());
+        scale(0.8, 0.8);
+#endif
     }
 
     QGraphicsView::mouseReleaseEvent(event);
