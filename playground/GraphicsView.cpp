@@ -48,7 +48,7 @@ InteractiveView::InteractiveView(QWidget *parent)
     centerOn(0, 0);
     //setTransformationAnchor(QGraphicsView::AnchorViewCenter);
 
-    setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DoubleBuffer)));
+    setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
     setCacheMode(QGraphicsView::CacheBackground);
     setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
     setMouseTracking(true);
@@ -127,6 +127,18 @@ void InteractiveView::Zoom1To1()
     emit scaleChanged(d_ptr->mScale);
 }
 
+void InteractiveView::Zoom1To1(int x, int y, int w, int h)
+{
+    QRectF unity = transform().mapRect(QRectF(0, 0, 1, 1));
+    if (unity.isEmpty())
+        return;
+    scale(1 / unity.width(), 1 / unity.height());
+
+    centerOn((QRectF(x,y,w,h)).center());
+    d_ptr->mScale = 1;
+    emit scaleChanged(d_ptr->mScale);
+}
+
 void InteractiveView::ZoomToRect()
 {
 
@@ -188,7 +200,7 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
     emit posFromViewChanged(event->x(), event->y());
 
     d_ptr->mRubberBandRect = rubberBandRect();
-    qDebug() << "Rubber band Rect wheel: " << d_ptr->mRubberBandRect;
+    //qDebug() << "Rubber band Rect wheel: " << d_ptr->mRubberBandRect;
 }
 
 void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
@@ -216,7 +228,7 @@ void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
 
     QGraphicsView::mouseReleaseEvent(event);
 
-    qDebug() << "Rubber band Rect release: " << rubberBandRect();
+    //qDebug() << "Rubber band Rect release: " << rubberBandRect();
 }
 
 void InteractiveView::resizeEvent(QResizeEvent *event)

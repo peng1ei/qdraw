@@ -46,6 +46,8 @@ SOURCES += \
     DrawTool.cpp \
     GraphicsScene.cpp \
     GraphicsView.cpp \
+    ImageProvider/ImageProvider.cpp \
+    TreeNode/Node.cpp \
     ObjectController.cpp \
     RuleBar.cpp \
     SizeHandle.cpp \
@@ -59,7 +61,9 @@ HEADERS += \
     DrawTool.h \
     GraphicsScene.h \
     GraphicsView.h \
+    ImageProvider/ImageProvider.h \
     MainWindow.h \
+    TreeNode/Node.h \
     ObjectController.h \
     RuleBar.h \
     SizeHandle.h

@@ -17,6 +17,9 @@
 #include <QApplication>
 #include <QLabel>
 #include <QComboBox>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QImageReader>
 #include <QDebug>
 
 int s_x = 50;
@@ -217,7 +220,19 @@ void MainWindow::OnNewFile()
 
 void MainWindow::OnOpen()
 {
-    
+    QString filePath = QFileDialog::getOpenFileName(this,
+                                                    tr("Open image"),
+                                                    QString(),
+                                                    "Image File(*.png);;");
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    QImageReader imgReader(filePath, "png");
+    QImage img = imgReader.read();
+
+    mScene->addPixmap(QPixmap::fromImage(img));
+    mView->Zoom1To1(0, 0, img.width(), img.height());
 }
 
 void MainWindow::OnSave()
@@ -287,7 +302,10 @@ void MainWindow::OnZoomOut()
 
 void MainWindow::OnZoomFitView()
 {
-    mView->FitInView(0,0,960,720, Qt::KeepAspectRatio);
+    auto rect = mScene->itemsBoundingRect();
+    qDebug() << rect;
+
+    mView->FitInView(rect, Qt::KeepAspectRatio);
 }
 
 void MainWindow::OnZoomOne()

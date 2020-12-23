@@ -656,7 +656,7 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     
     // TODO 在切换其他工具之前一直保持当前工具状态
     //c_drawShape = selection;
-    
+
     setCursor(scene,Qt::CrossCursor);
 
     scene->clearSelection();

@@ -30,6 +30,8 @@ public:
     void ZoomInUnderViewCenter();
     void ZoomOutUnderViewCenter();
     void Zoom1To1();
+    void Zoom1To1(int x, int y, int w, int h);
+    //void Zoom1To1(Layer *layer);
     void ZoomToRect();
     void SetPan(bool value);
 
