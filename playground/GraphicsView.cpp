@@ -194,7 +194,8 @@ void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
 
     if (DrawTool::c_drawShape == rubberbandzoom) {
         // TODO判断mRubberBandRect的有效性
-        FitInView(d_ptr->mRubberBandRect, Qt::KeepAspectRatio);
+        // 参考：https://github.com/MagedMilad/Image-Processing/blob/master/customview.cpp
+        FitInView(QRectF(mapToScene(d_ptr->mRubberBandRect.topLeft()), mapToScene(d_ptr->mRubberBandRect.bottomRight())), Qt::KeepAspectRatio);
     }
 
     QGraphicsView::mouseReleaseEvent(event);
