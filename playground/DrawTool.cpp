@@ -545,6 +545,7 @@ void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
             }
         }
     }
+
     scene->mouseEvent(event);
 }
 
@@ -586,6 +587,11 @@ void RotationTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSc
         delete dashRect;
         dashRect = 0;
     }
+
+    // 此句代码能够消除旋转后留下原始图形的外边框问题,
+    //没有这句代码则需要重新单机item才能消除外边框
+    selectTool.mouseReleaseEvent(event,scene);
+
     scene->mouseEvent(event);
 }
 
