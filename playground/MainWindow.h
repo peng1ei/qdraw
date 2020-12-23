@@ -95,6 +95,7 @@ public slots:
     void OnZoomFitView();
     void OnZoomOne();
     void OnZoomToRect();
+    void OnPan();
     void OnDeleteItem();
     
     // from item
@@ -137,6 +138,7 @@ private:
     
     // edit toolbar;
     QToolBar * mUiEditToolBar;
+
     // align toolbar
     QToolBar * mUiAlignToolBar;
     QAction  * mUiRightAct;
@@ -170,6 +172,10 @@ private:
     QAction  * mUiCopyAct;
     QAction  * mUiPasteAct;
     QAction  * mUiCutAct;
+
+    // image browse control
+    QToolBar * mUiImgBrowseControlToolBar;
+    QAction  * mUiPanAct;
     QAction  * mUiZoomInAct;
     QAction  * mUiZoomOutAct;
     QAction  * mUiZoomFitAct;

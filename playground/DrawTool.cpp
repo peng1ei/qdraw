@@ -15,6 +15,7 @@ quint32 DrawTool::c_nDownFlags;
 
 DrawShape DrawTool::c_drawShape = selection;
 
+static PanTool panTool;
 static RubberBandZoomTool rubberBandZoomTool;
 static SelectTool selectTool;
 static RectTool   rectTool(rectangle);
@@ -756,4 +757,24 @@ void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, Graphic
     m_nPoints = 0;
 
     scene->clearSelection();
+}
+
+PanTool::PanTool()
+    : DrawTool(pan) {
+
+}
+
+void PanTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
+{
+
+}
+
+void PanTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
+{
+
+}
+
+void PanTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
+{
+
 }

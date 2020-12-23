@@ -31,6 +31,7 @@ public:
     void ZoomOutUnderViewCenter();
     void Zoom1To1();
     void ZoomToRect();
+    void SetPan(bool value);
 
 signals:
     void scaleChanged(double value);

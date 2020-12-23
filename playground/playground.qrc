@@ -39,5 +39,6 @@
         <file>image/icons/via.ico</file>
         <file>image/icons/zoomrect.png</file>
         <file>image/icons/zoomrectcur.png</file>
+        <file>image/icons/pan.png</file>
     </qresource>
 </RCC>

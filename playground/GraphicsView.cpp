@@ -132,9 +132,15 @@ void InteractiveView::ZoomToRect()
 
 }
 
+void InteractiveView::SetPan(bool value)
+{
+    d_ptr->mIsPan = value;
+}
+
 void InteractiveView::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == PAN_BUTTON) {
+    if (event->button() == PAN_BUTTON
+        || (DrawTool::c_drawShape == pan && event->button() == Qt::LeftButton)) {
         d_ptr->mIsPan = true;
         d_ptr->mLastMousePos = event->pos();
         
@@ -187,9 +193,11 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
 
 void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == PAN_BUTTON) {
+    if (event->button() == PAN_BUTTON
+        || event->button() == Qt::LeftButton) {
         d_ptr->mIsPan = false;
-        setCursor(Qt::ArrowCursor);
+
+        DrawTool::c_drawShape == pan ? setCursor(Qt::ClosedHandCursor) : setCursor(Qt::ArrowCursor);
     }
 
     if (DrawTool::c_drawShape == rubberbandzoom) {

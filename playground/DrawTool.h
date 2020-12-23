@@ -30,7 +30,8 @@ enum DrawShape
     bezier,
     polygon,
     polyline,
-    rubberbandzoom
+    rubberbandzoom,
+    pan
 };
 
 class DrawTool
@@ -76,6 +77,15 @@ public:
     QPointF opposite_;
     QGraphicsPathItem * dashRect;
     GraphicsItemGroup * selLayer;
+};
+
+class PanTool : public DrawTool
+{
+public:
+    PanTool();
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
 };
 
 class  RotationTool : public DrawTool

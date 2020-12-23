@@ -160,6 +160,7 @@ void MainWindow::OnOpacityChanged(int value)
 
 void MainWindow::OnAddShape()
 {
+    // TODO 当绘图工具发生变化时，应对外发出工具改变信号，并传出当前的工具类型
     if ( sender() == mUiSelectAct )
         DrawTool::c_drawShape = selection;
     else if (sender() == mUiLineAct )
@@ -186,13 +187,15 @@ void MainWindow::OnAddShape()
     if (sender() == mUiSelectAct || sender() == mUiRotateAct) {
         mView->setCursor(Qt::ArrowCursor);
     }
+
+    //mView->SetPan(false);
 }
 
 void MainWindow::OnNewFile()
 {
     auto viewRect = mView->viewport()->rect();
     auto viewCenterPoint = viewRect.center();
-    auto sceneCenterPoint = mView->mapToScene(viewCenterPoint);
+    //auto sceneCenterPoint = mView->mapToScene(viewCenterPoint);
     qDebug() << "0,0 map to scene: " << mView->mapToScene(viewCenterPoint);
     qDebug() << "resize view Rect: " << viewRect;
     qDebug() << "resize view center: " << viewCenterPoint;
@@ -296,7 +299,15 @@ void MainWindow::OnZoomToRect()
 {
     DrawTool::c_drawShape = rubberbandzoom;
     //mView->ZoomToRect(); // TODO
+    //mView->SetPan(false);
     mView->setCursor(QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
+}
+
+void MainWindow::OnPan()
+{
+    DrawTool::c_drawShape = pan;
+    //mView->SetPan(true);
+    mView->setCursor(Qt::ClosedHandCursor);
 }
 
 void MainWindow::OnDeleteItem()
@@ -531,6 +542,10 @@ void MainWindow::CreateActions()
     mUiZoomToRectAct->setCheckable(true);
     mUiDrawActionGroup->addAction(mUiZoomToRectAct);
 
+    mUiPanAct = new QAction(QIcon(":/image/icons/pan.png"),tr("pan"),this);
+    mUiPanAct->setCheckable(true);
+    mUiDrawActionGroup->addAction(mUiPanAct);
+
     mUiSelectAct->setChecked(true);
 
     connect(mUiSelectAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
@@ -554,6 +569,7 @@ void MainWindow::CreateActions()
     mUiRedoAct->setIcon(QIcon(":/image/icons/redo.png"));
     mUiRedoAct->setShortcuts(QKeySequence::Redo);
 
+    //mUiPanAct = new QAction(QIcon(":/image/icons/pan.png"),tr("zoomIn"),this);
     mUiZoomInAct = new QAction(QIcon(":/image/icons/zoomin.png"),tr("zoomIn"),this);
     mUiZoomOutAct = new QAction(QIcon(":/image/icons/zoomout.png"),tr("zoomOut"),this);
     mUiZoomFitAct = new QAction(QIcon(":/image/icons/zoom_fit.png"),tr("zoomFitView"),this);
@@ -579,6 +595,7 @@ void MainWindow::CreateActions()
     connect(mUiZoomFitAct , SIGNAL(triggered()),this,SLOT(OnZoomFitView()));
     connect(mUiZoomOneAct , SIGNAL(triggered()),this,SLOT(OnZoomOne()));
     connect(mUiZoomToRectAct , SIGNAL(triggered()),this,SLOT(OnZoomToRect()));
+    connect(mUiPanAct , SIGNAL(triggered()),this,SLOT(OnPan()));
     connect(mUiDeleteAct, SIGNAL(triggered()), this, SLOT(OnDeleteItem()));
 
     mUiFuncAct = new QAction(tr("func test"),this);
@@ -603,6 +620,7 @@ void MainWindow::CreateMenus()
     editMenu->addAction(mUiDeleteAct);
 
     QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
+    viewMenu->addAction(mUiPanAct);
     viewMenu->addAction(mUiZoomInAct);
     viewMenu->addAction(mUiZoomOutAct);
     viewMenu->addAction(mUiZoomFitAct);
@@ -659,11 +677,14 @@ void MainWindow::CreateToolbars()
     mUiEditToolBar->addAction(mUiUndoAct);
     mUiEditToolBar->addAction(mUiRedoAct);
 
-    mUiEditToolBar->addAction(mUiZoomInAct);
-    mUiEditToolBar->addAction(mUiZoomOutAct);
-    mUiEditToolBar->addAction(mUiZoomToRectAct);
-    mUiEditToolBar->addAction(mUiZoomFitAct);
-    mUiEditToolBar->addAction(mUiZoomOneAct);
+    mUiImgBrowseControlToolBar = addToolBar(tr("browse"));
+
+    mUiImgBrowseControlToolBar->addAction(mUiPanAct);
+    mUiImgBrowseControlToolBar->addAction(mUiZoomInAct);
+    mUiImgBrowseControlToolBar->addAction(mUiZoomOutAct);
+    mUiImgBrowseControlToolBar->addAction(mUiZoomToRectAct);
+    mUiImgBrowseControlToolBar->addAction(mUiZoomFitAct);
+    mUiImgBrowseControlToolBar->addAction(mUiZoomOneAct);
 
     // create draw toolbar
     mUiDrawToolBar = addToolBar(tr("drawing"));
