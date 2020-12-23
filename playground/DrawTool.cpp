@@ -298,6 +298,7 @@ RubberBandZoomTool::RubberBandZoomTool()
 void RubberBandZoomTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
+    scene->clearSelection();
 
     if ( event->button() != Qt::LeftButton ) return;
 
@@ -369,11 +370,15 @@ void RubberBandZoomTool::mousePressEvent(QGraphicsSceneMouseEvent *event, Graphi
 
         initialPositions = item->pos();
     }
+
+    setCursor(scene, QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
 }
 
 void RubberBandZoomTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseMoveEvent(event,scene);
+    scene->clearSelection();
+
     QList<QGraphicsItem *> items = scene->selectedItems();
     AbstractShape * item = 0;
     if ( items.count() == 1 ){
@@ -436,8 +441,8 @@ void RubberBandZoomTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, Graphic
 
 void RubberBandZoomTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
-
     DrawTool::mouseReleaseEvent(event,scene);
+    setCursor(scene, QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
 
     if ( event->button() != Qt::LeftButton ) return;
 
@@ -478,6 +483,9 @@ void RubberBandZoomTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, Grap
     m_hoverSizer = false;
     opposite_ = QPointF();
     scene->mouseEvent(event);
+
+    scene->clearSelection();
+
 }
 
 RotationTool::RotationTool()

@@ -296,6 +296,7 @@ void MainWindow::OnZoomToRect()
 {
     DrawTool::c_drawShape = rubberbandzoom;
     //mView->ZoomToRect(); // TODO
+    mView->setCursor(QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
 }
 
 void MainWindow::OnDeleteItem()
