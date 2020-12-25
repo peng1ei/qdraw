@@ -26,6 +26,7 @@
 #include <QListView>
 #include <QStringListModel>
 #include <QMessageBox>
+#include <QGLWidget>
 #include <QDebug>
 
 int s_x = 50;
@@ -113,6 +114,22 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 //    qDebug() << "resize view center: " << viewCenterPoint;
     
     //mScene->addRect(sceneCenterPoint.x()-320,sceneCenterPoint.y()-240,640, 480);
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *evt)
+{
+    // TODO
+    if(obj == mView  &&  evt->type() == QEvent::ContextMenu)
+    {
+        //qDebug() << "item count: " << mScene->items().count();
+        if(!mScene->items().empty()) {
+              mContextMenu->exec(cursor().pos()); //在当前鼠标位置上运行菜单menu对象
+              //mContextMenu->setActiveAction(mUiSelectAct);
+              //mContextMenu->setFocus();
+        }
+    }
+
+    return QWidget::eventFilter(obj,evt);
 }
 
 void MainWindow::OnAddLayer()
@@ -228,7 +245,7 @@ void MainWindow::OnOpen()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("Open image"),
-                                                    QString(),
+                                                    QString("D:/Data/default"),
                                                     "Image File(*.png *.jpg *.jpeg *.bmp *.ico *.tif *.gif *.svg)");
     if (filePath.isEmpty()) {
         return;
@@ -473,13 +490,13 @@ void MainWindow::InitUI()
     addDockWidget(Qt::RightDockWidgetArea, dock);
     dock->setWidget(mUiUndoView);
     
+    InitGraphicsView();
+
     CreateActions();
     CreateMenus();
     CreateToolbars();
     CreateToolBox();
     CreatePropertyEditor();
-    
-    InitGraphicsView();
 
     CreateStatusBar();
 
@@ -755,6 +772,38 @@ void MainWindow::CreateMenus()
     helpMenu->addAction(mUiAboutAct);
     helpMenu->addAction(mUiAboutQtAct);
     helpMenu->addAction(mUiFuncAct);
+
+    // 右键菜单
+    mContextMenu = new QMenu;
+    mView->installEventFilter(this);
+    //QAction *a1 = new QAction("aaaa");
+    //mContextMenu->addAction(a1);
+//    mView->setContextMenuPolicy(Qt::CustomContextMenu);
+//    connect(mView,&InteractiveView::customContextMenuRequested,[=](const QPoint &pos)
+//    {
+//        //qDebug()<<pos;//参数pos用来传递右键点击时的鼠标的坐标，这个坐标一般是相对于控件左上角而言的
+//        mContextMenu->exec(QCursor::pos());
+//        mContextMenu->setActiveAction(mUiPanAct);
+//        //mContextMenu->setFocus(Qt::FocusReason::PopupFocusReason);
+//    });
+
+    mContextMenu->addAction(mUiPanAct);
+    mContextMenu->addAction(mUiZoomInAct);
+    mContextMenu->addAction(mUiZoomOutAct);
+    mContextMenu->addAction(mUiZoomFitAct);
+    mContextMenu->addAction(mUiZoomOneAct);
+    mContextMenu->addAction(mUiZoomToRectAct);
+
+    mContextMenu->addSeparator();
+
+    mContextMenu->addAction(mUiSelectAct);
+    mContextMenu->addAction(mUiRectAct);
+    mContextMenu->addAction(mUiRoundRectAct);
+    mContextMenu->addAction(mUiEllipseAct);
+    mContextMenu->addAction(mUiPolygonAct);
+    mContextMenu->addAction(mUiPolylineAct);
+    mContextMenu->addAction(mUiBezierAct);
+    mContextMenu->addAction(mUiRotateAct);
 }
 
 void MainWindow::CreateToolbars()
@@ -877,7 +926,7 @@ void MainWindow::InitGraphicsView()
     //--------------------------------------------------------
     // 创建Scene
     mScene = new GraphicsScene(this);
-    QRectF rc = QRectF(0 , 0 , 800, 600);
+    //QRectF rc = QRectF(0 , 0 , 800, 600);
     //mScene->setSceneRect(rc);
     
     //qDebug()<<rc.bottomLeft()<<rc.size() << rc.topLeft();
@@ -1012,3 +1061,4 @@ QRectF Layer::GetRectFromScene()
 {
     return this->sceneBoundingRect();
 }
+

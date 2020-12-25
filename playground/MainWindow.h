@@ -40,6 +40,7 @@ class QResizeEvent;
 class QListView;
 class QStringListModel;
 class ImageFileListProviderThd;
+class QEvent;
 QT_END_NAMESPACE
 
 class ObjectController;
@@ -69,6 +70,7 @@ public:
     
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject* obj, QEvent *evt) override;
 
 public slots:
     void OnAddLayer();
@@ -246,5 +248,8 @@ private:
 
     ProgressBarDialog *mProgressBarDlg;
     ImageFileListProviderThd *mImageFileListProviderThd;
+
+    QMenu *mContextMenu = nullptr;
+    ProgressBarDialog *mTestDlg;
 };
 #endif // MAINWINDOW_H

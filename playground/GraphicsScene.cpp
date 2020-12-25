@@ -314,7 +314,6 @@ void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
         tool->mousePressEvent(mouseEvent,this);

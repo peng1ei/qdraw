@@ -7,6 +7,7 @@
 #include <QSet>
 
 // 参考：https://www.walletfox.com/course/qtcheckablelist.php
+// https://stackoverflow.com/questions/37781426/how-to-change-the-color-of-qstringlistmodel-items
 class ImageFileListModel : public QStringListModel
 {
 public:

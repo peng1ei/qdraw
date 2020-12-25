@@ -151,6 +151,9 @@ void InteractiveView::SetPan(bool value)
 
 void InteractiveView::mousePressEvent(QMouseEvent *event)
 {
+//    if (event->button() == Qt::RightButton)
+//        return;
+
     if (event->button() == PAN_BUTTON
         || (DrawTool::c_drawShape == pan && event->button() == Qt::LeftButton)) {
         d_ptr->mIsPan = true;
@@ -159,11 +162,16 @@ void InteractiveView::mousePressEvent(QMouseEvent *event)
         setCursor(Qt::ClosedHandCursor);
     }
 
+//    if (event->button() == Qt::RightButton)
+//        return;
     QGraphicsView::mousePressEvent(event);
 }
 
 void InteractiveView::mouseMoveEvent(QMouseEvent *event)
 {
+//    if (event->button() == Qt::RightButton)
+//        return;
+
     QPointF delta = d_ptr->mTargetViewportPos - event->pos();
     if (qAbs(delta.x()) > 0 || qAbs(delta.y()) > 0) {
         d_ptr->mTargetViewportPos = event->pos();
@@ -205,6 +213,9 @@ void InteractiveView::mouseMoveEvent(QMouseEvent *event)
 
 void InteractiveView::mouseReleaseEvent(QMouseEvent *event)
 {
+//    if (event->button() == Qt::RightButton)
+//        return;
+
     if (event->button() == PAN_BUTTON
         || event->button() == Qt::LeftButton) {
         d_ptr->mIsPan = false;
