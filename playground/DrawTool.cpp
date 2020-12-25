@@ -687,7 +687,10 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
             item = new GraphicsLineItem(0);
         }
         item->setPos(event->scenePos());
+
+        // TODO 加入当前图层
         scene->addItem(item);
+
         initialPositions = c_down;
         item->addPoint(c_down);
         item->setSelected(true);

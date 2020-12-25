@@ -47,6 +47,8 @@ class GraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
+    using Layer = QGraphicsItemGroup;
+
     explicit GraphicsScene(QObject *parent = 0);
     ~GraphicsScene();
     void setView(QGraphicsView * view ) { m_view = view ; }
@@ -55,6 +57,9 @@ public:
     void mouseEvent(QGraphicsSceneMouseEvent *mouseEvent );
     GraphicsItemGroup * createGroup(const QList<QGraphicsItem *> &items ,bool isAdd = true);
     void destroyGroup(QGraphicsItemGroup *group);
+
+    void SetCurrentLayer(Layer *layer);
+
 signals:
     void itemMoved( QGraphicsItem * item , const QPointF & oldPosition );
     void itemRotate(QGraphicsItem * item , const qreal oldAngle );
@@ -76,5 +81,8 @@ protected:
     qreal m_dy;
     bool  m_moved;
     GridTool *m_grid;
+
+
+    Layer *m_curLayer;
 };
 

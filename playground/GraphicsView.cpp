@@ -122,7 +122,7 @@ void InteractiveView::Zoom1To1()
         return;
     scale(1 / unity.width(), 1 / unity.height());
 
-    centerOn((QRectF(0,0,960,720)).center());
+    centerOn(scene()->itemsBoundingRect().center());
     d_ptr->mScale = 1;
     emit scaleChanged(d_ptr->mScale);
 }

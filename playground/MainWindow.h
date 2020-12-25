@@ -11,6 +11,7 @@ class QGraphicsItemGroup;
 class QGraphicsScene;
 class QGraphicsRectItem;
 class QGraphicsItem;
+class ProgressBarDialog;
 QT_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
@@ -36,6 +37,9 @@ class QUndoStack;
 class QUndoView;
 class QLabel;
 class QResizeEvent;
+class QListView;
+class QStringListModel;
+class ImageFileListProviderThd;
 QT_END_NAMESPACE
 
 class ObjectController;
@@ -76,6 +80,7 @@ public slots:
 
     void OnNewFile();
     void OnOpen();
+    void OnOpenDir();
     void OnSave();
     
     void OnAbout();
@@ -110,6 +115,13 @@ public slots:
     void OnScaleChanged(double scale);
     void OnPosFromSceneChanged(double x, double y);
     void OnPosFromViewChanged(int x, int y);
+
+    // import image
+    void OnOpenDirFinished();
+    void OnOpenDirResult(bool, QString);
+
+    void OnImageListViewDoubleClicked(const QModelIndex &index);
+
     
 private:
     void SetLayerVisiable(Layer *layer, bool visiable);
@@ -121,8 +133,12 @@ private:
     void CreateToolBox();
     void CreatePropertyEditor();
     void CreateStatusBar();
+    void CreateImageListView();
     
     void InitGraphicsView();
+
+    void UpdateImageFileListModel(const QStringList &fileList);
+    void UpdateScene(const QString &imgFile);
 
 private:
     Ui::MainWindow *ui;
@@ -132,6 +148,8 @@ private:
 
     InteractiveView *mView;
     GraphicsScene *mScene;
+
+    InteractiveView *mEyeView;
     
     // Menu and ToolBar
     QMenu *mUiMenu;
@@ -159,6 +177,7 @@ private:
     // file
     QAction *mUiNewAct;
     QAction *mUiOpenAct;
+    QAction *mUiOpenDirAct;
     QAction *mUiSaveAct;
     QAction *mUiExitAct;
 
@@ -218,5 +237,13 @@ private:
     QDockWidget *mUiDockProperty;
     ObjectController *mPropertyEditor;
     QObject *mTheControlledObject;
+
+    // QDockWidget imagelist
+    QDockWidget *mUiDockImageList;
+    QListView *mUiImageListView;
+    QStringListModel *mImageListModel;
+
+    ProgressBarDialog *mProgressBarDlg;
+    ImageFileListProviderThd *mImageFileListProviderThd;
 };
 #endif // MAINWINDOW_H

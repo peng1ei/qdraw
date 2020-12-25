@@ -3,6 +3,8 @@
 #include "ObjectController.h"
 #include "GraphicsScene.h"
 #include "GraphicsView.h"
+#include "Utils/ImageFileListProviderThd.h"
+#include "Utils/ProgressBarDialog.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -20,6 +22,9 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QImageReader>
+#include <QListView>
+#include <QStringListModel>
+#include <QMessageBox>
 #include <QDebug>
 
 int s_x = 50;
@@ -223,21 +228,43 @@ void MainWindow::OnOpen()
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("Open image"),
                                                     QString(),
-                                                    "Image File(*.png);;");
+                                                    "Image File(*.png *.jpg *.jpeg *.bmp *.ico *.tif *.gif *.svg)");
     if (filePath.isEmpty()) {
         return;
     }
 
-    QImageReader imgReader(filePath, "png");
-    QImage img = imgReader.read();
+    UpdateImageFileListModel(QStringList(filePath));
+    UpdateScene(filePath);
+}
 
-    mScene->addPixmap(QPixmap::fromImage(img));
-    mView->Zoom1To1(0, 0, img.width(), img.height());
+void MainWindow::OnOpenDir()
+{
+    QString dirPath = QFileDialog::getExistingDirectory(this,
+                                                    tr("Open Dir"),
+                                                    tr("D:/Data"));
+    if (dirPath.isEmpty()) {
+        return;
+    }
+
+    // TODO 放到独立线程去做
+    QStringList filters = { "*.png", "*.jpg", "*.jpeg", "*.bmp", "*.ico", "*.gif", "*.svg" };
+    mImageFileListProviderThd = new ImageFileListProviderThd(dirPath, filters);
+    connect(mImageFileListProviderThd, &ImageFileListProviderThd::finished,
+            this, &MainWindow::OnOpenDirFinished);
+    connect(mImageFileListProviderThd, &ImageFileListProviderThd::sigResult,
+            this, &MainWindow::OnOpenDirResult);
+
+    mImageFileListProviderThd->SetListMode(mImageListModel);
+    mImageFileListProviderThd->start();
+
+    mProgressBarDlg = new ProgressBarDialog(ProgressBarDialog::Busy, this);
+    mProgressBarDlg->SetText(tr("Reading folder..."));
+    mProgressBarDlg->exec();
 }
 
 void MainWindow::OnSave()
 {
-    
+
 }
 
 void MainWindow::OnAbout()
@@ -342,7 +369,54 @@ void MainWindow::OnPosFromSceneChanged(double x, double y)
 void MainWindow::OnPosFromViewChanged(int x, int y)
 {
     mUiMousePosFromViewInfo->setText(QString(" view: %1, %2 ")
-                                  .arg(QString::number(x)).arg(QString::number(y)));
+                                     .arg(QString::number(x)).arg(QString::number(y)));
+}
+
+void MainWindow::OnOpenDirFinished()
+{
+    // TODO hide, not delete
+    delete mProgressBarDlg;
+    mProgressBarDlg = nullptr;
+
+    // TODO move OpenDirManager
+    delete mImageFileListProviderThd;
+    mImageFileListProviderThd = nullptr;
+
+    if (mImageListModel->rowCount() > 0) {
+        mImageListModel->data(mImageListModel->index(0)).toString();
+        UpdateScene(mImageListModel->data(mImageListModel->index(0)).toString());
+    }
+}
+
+void MainWindow::OnOpenDirResult(bool result, QString msg)
+{
+    if (result == false) {
+        QMessageBox::warning(this, tr("Warning"), msg);
+        return;
+    }
+}
+
+void MainWindow::OnImageListViewDoubleClicked(const QModelIndex &index)
+{
+    if (!index.isValid())
+        return;
+
+    QString filePath = mImageListModel->data(index).toString();
+    QFileInfo file(filePath);
+
+    QImageReader imgReader(filePath, file.suffix().toLocal8Bit());
+    if (!imgReader.canRead()) {
+        QMessageBox::warning(this, tr("Warning"), QString(tr("The image file cannot be read!")).append("\n[%1]").arg(filePath));
+        return;
+    }
+
+    QImage img = imgReader.read();
+
+    mScene->clear();
+    mScene->addPixmap(QPixmap::fromImage(img));
+    mView->Zoom1To1(0, 0, img.width(), img.height());
+
+    qDebug() << "Scene item size: " << mScene->items().count();
 }
 
 void MainWindow::OnItemSelected()
@@ -419,6 +493,8 @@ void MainWindow::InitUI()
     InitGraphicsView();
 
     CreateStatusBar();
+
+    CreateImageListView();
 }
 
 void MainWindow::CreateActions()
@@ -432,6 +508,11 @@ void MainWindow::CreateActions()
     mUiOpenAct->setShortcuts(QKeySequence::Open);
     mUiOpenAct->setStatusTip(tr("Open an existing file"));
     connect(mUiOpenAct, SIGNAL(triggered()), this, SLOT(OnOpen()));
+
+    mUiOpenDirAct = new QAction(tr("&Open Dir..."), this);
+    mUiOpenDirAct->setShortcuts(QKeySequence::Open);
+    mUiOpenDirAct->setStatusTip(tr("Open an existing dir"));
+    connect(mUiOpenDirAct, SIGNAL(triggered()), this, SLOT(OnOpenDir()));
 
     mUiSaveAct = new QAction(tr("&Save"), this);
     mUiSaveAct->setShortcuts(QKeySequence::Save);
@@ -623,8 +704,9 @@ void MainWindow::CreateActions()
 void MainWindow::CreateMenus()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(mUiNewAct);
+    //fileMenu->addAction(mUiNewAct);
     fileMenu->addAction(mUiOpenAct);
+    fileMenu->addAction(mUiOpenDirAct);
     fileMenu->addAction(mUiSaveAct);
     fileMenu->addSeparator();
     fileMenu->addAction(mUiExitAct);
@@ -656,6 +738,8 @@ void MainWindow::CreateMenus()
     shapeTool->addAction(mUiBezierAct);
     shapeTool->addAction(mUiRotateAct);
     toolMenu->addMenu(shapeTool);
+
+#if 0
     QMenu *alignMenu = new QMenu("Align");
     alignMenu->addAction(mUiRightAct);
     alignMenu->addAction(mUiLeftAct);
@@ -669,6 +753,7 @@ void MainWindow::CreateMenus()
     alignMenu->addAction(mUiWidthAct);
     alignMenu->addAction(mUiAllAct);
     toolMenu->addMenu(alignMenu);
+#endif
 
     // TODO 控制打开的文档
     //mUiMenu = menuBar()->addMenu(tr("&Window"));
@@ -718,6 +803,7 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiRotateAct);
 
     // create align toolbar
+#if 0
     mUiAlignToolBar = addToolBar(tr("align"));
     mUiAlignToolBar->setIconSize(QSize(24,24));
     mUiAlignToolBar->addAction(mUiUpAct);
@@ -737,6 +823,7 @@ void MainWindow::CreateToolbars()
     mUiAlignToolBar->addAction(mUiSendToBackAct);
     mUiAlignToolBar->addAction(mUiGroupAct);
     mUiAlignToolBar->addAction(mUiUnGroupAct);
+#endif
 }
 
 void MainWindow::CreateToolBox()
@@ -780,6 +867,22 @@ void MainWindow::CreateStatusBar()
             this, &MainWindow::OnScaleChanged);
 }
 
+void MainWindow::CreateImageListView()
+{
+    mUiDockImageList = new QDockWidget(tr("File List"), this);
+    addDockWidget(Qt::RightDockWidgetArea, mUiDockImageList);
+
+    mUiImageListView = new QListView(this);
+    mImageListModel = new QStringListModel(this);
+    mUiDockImageList->setWidget(mUiImageListView);
+
+    mUiImageListView->setModel(mImageListModel);
+    mUiImageListView->setEditTriggers(QListView::EditTrigger::NoEditTriggers);
+
+    connect(mUiImageListView, &QListView::doubleClicked,
+            this, &MainWindow::OnImageListViewDoubleClicked);
+}
+
 void MainWindow::InitGraphicsView()
 {
     //--------------------------------------------------------
@@ -788,7 +891,7 @@ void MainWindow::InitGraphicsView()
     QRectF rc = QRectF(0 , 0 , 800, 600);
     //mScene->setSceneRect(rc);
     
-    qDebug()<<rc.bottomLeft()<<rc.size() << rc.topLeft();
+    //qDebug()<<rc.bottomLeft()<<rc.size() << rc.topLeft();
 
     connect(mScene, SIGNAL(selectionChanged()),
             this, SLOT(OnItemSelected()));
@@ -832,6 +935,34 @@ void MainWindow::InitGraphicsView()
     //layout->addWidget(mView);
     //centralWidget()->setLayout(layout);
     setCentralWidget(mView);
+
+    // TODO 鹰眼图
+    mEyeView = new InteractiveView;
+    mEyeView->setScene(mScene);
+    mEyeView->SetRuleBarVisiable(false);
+    mEyeView->setMinimumSize(256,256);
+    mEyeView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    hLayout->addWidget(mEyeView);
+    ui->dockWidgetContents_EyeView->setLayout(hLayout);
+    ui->dockWidget_EyeView->setVisible(false);
+}
+
+void MainWindow::UpdateImageFileListModel(const QStringList &fileList)
+{
+    mImageListModel->setStringList(fileList);
+}
+
+void MainWindow::UpdateScene(const QString &imgFile)
+{
+    // TODO 更新场景，每次双击图片时，更换场景内容
+    QFileInfo file(imgFile);
+    QImageReader imgReader(imgFile, file.suffix().toLocal8Bit());
+    QImage img = imgReader.read();
+
+    mScene->addPixmap(QPixmap::fromImage(img));
+    mView->Zoom1To1(0, 0, img.width(), img.height());
 }
 
 Layer::Layer(const QColor &color, QGraphicsItem *parent)

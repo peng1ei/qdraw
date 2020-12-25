@@ -47,10 +47,14 @@ SOURCES += \
     GraphicsScene.cpp \
     GraphicsView.cpp \
     ImageProvider/ImageProvider.cpp \
-    TreeNode/Node.cpp \
+    TreeView/Layer.cpp \
+    TreeView/Node.cpp \
     ObjectController.cpp \
     RuleBar.cpp \
     SizeHandle.cpp \
+    TreeView/TreeView.cpp \
+    Utils/ImageFileListProviderThd.cpp \
+    Utils/ProgressBarDialog.cpp \
     main.cpp \
     MainWindow.cpp
 
@@ -63,10 +67,14 @@ HEADERS += \
     GraphicsView.h \
     ImageProvider/ImageProvider.h \
     MainWindow.h \
-    TreeNode/Node.h \
+    TreeView/Layer.h \
+    TreeView/Node.h \
     ObjectController.h \
     RuleBar.h \
-    SizeHandle.h
+    SizeHandle.h \
+    TreeView/TreeView.h \
+    Utils/ImageFileListProviderThd.h \
+    Utils/ProgressBarDialog.h
 
 FORMS += \
     MainWindow.ui
