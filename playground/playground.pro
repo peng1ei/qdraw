@@ -53,6 +53,7 @@ SOURCES += \
     RuleBar.cpp \
     SizeHandle.cpp \
     TreeView/TreeView.cpp \
+    Utils/ImageFileListModel.cpp \
     Utils/ImageFileListProviderThd.cpp \
     Utils/ProgressBarDialog.cpp \
     main.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
     RuleBar.h \
     SizeHandle.h \
     TreeView/TreeView.h \
+    Utils/ImageFileListModel.h \
     Utils/ImageFileListProviderThd.h \
     Utils/ProgressBarDialog.h
 

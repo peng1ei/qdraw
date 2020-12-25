@@ -5,6 +5,7 @@
 #include "GraphicsView.h"
 #include "Utils/ImageFileListProviderThd.h"
 #include "Utils/ProgressBarDialog.h"
+#include "Utils/ImageFileListModel.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -254,7 +255,7 @@ void MainWindow::OnOpenDir()
     connect(mImageFileListProviderThd, &ImageFileListProviderThd::sigResult,
             this, &MainWindow::OnOpenDirResult);
 
-    mImageFileListProviderThd->SetListMode(mImageListModel);
+    mImageFileListProviderThd->SetListMode(mImageFileListModel);
     mImageFileListProviderThd->start();
 
     mProgressBarDlg = new ProgressBarDialog(ProgressBarDialog::Busy, this);
@@ -382,9 +383,9 @@ void MainWindow::OnOpenDirFinished()
     delete mImageFileListProviderThd;
     mImageFileListProviderThd = nullptr;
 
-    if (mImageListModel->rowCount() > 0) {
-        mImageListModel->data(mImageListModel->index(0)).toString();
-        UpdateScene(mImageListModel->data(mImageListModel->index(0)).toString());
+    if (mImageFileListModel->rowCount() > 0) {
+        mImageFileListModel->data(mImageFileListModel->index(0)).toString();
+        UpdateScene(mImageFileListModel->data(mImageFileListModel->index(0)).toString());
     }
 }
 
@@ -401,22 +402,10 @@ void MainWindow::OnImageListViewDoubleClicked(const QModelIndex &index)
     if (!index.isValid())
         return;
 
-    QString filePath = mImageListModel->data(index).toString();
-    QFileInfo file(filePath);
+    UpdateScene(mImageFileListModel->data(index).toString());
 
-    QImageReader imgReader(filePath, file.suffix().toLocal8Bit());
-    if (!imgReader.canRead()) {
-        QMessageBox::warning(this, tr("Warning"), QString(tr("The image file cannot be read!")).append("\n[%1]").arg(filePath));
-        return;
-    }
-
-    QImage img = imgReader.read();
-
-    mScene->clear();
-    mScene->addPixmap(QPixmap::fromImage(img));
-    mView->Zoom1To1(0, 0, img.width(), img.height());
-
-    qDebug() << "Scene item size: " << mScene->items().count();
+    // TODO 自动保存，点击下一张或上一张时自动保存标注结果
+    mImageFileListModel->setData(index, Qt::Checked, Qt::CheckStateRole);
 }
 
 void MainWindow::OnItemSelected()
@@ -873,10 +862,10 @@ void MainWindow::CreateImageListView()
     addDockWidget(Qt::RightDockWidgetArea, mUiDockImageList);
 
     mUiImageListView = new QListView(this);
-    mImageListModel = new QStringListModel(this);
+    mImageFileListModel = new ImageFileListModel(this);
     mUiDockImageList->setWidget(mUiImageListView);
 
-    mUiImageListView->setModel(mImageListModel);
+    mUiImageListView->setModel(mImageFileListModel);
     mUiImageListView->setEditTriggers(QListView::EditTrigger::NoEditTriggers);
 
     connect(mUiImageListView, &QListView::doubleClicked,
@@ -951,7 +940,7 @@ void MainWindow::InitGraphicsView()
 
 void MainWindow::UpdateImageFileListModel(const QStringList &fileList)
 {
-    mImageListModel->setStringList(fileList);
+    mImageFileListModel->setStringList(fileList);
 }
 
 void MainWindow::UpdateScene(const QString &imgFile)
@@ -961,8 +950,10 @@ void MainWindow::UpdateScene(const QString &imgFile)
     QImageReader imgReader(imgFile, file.suffix().toLocal8Bit());
     QImage img = imgReader.read();
 
+    mScene->clear();
     mScene->addPixmap(QPixmap::fromImage(img));
-    mView->Zoom1To1(0, 0, img.width(), img.height());
+    mView->FitInView(0, 0, img.width(), img.height());
+    //mView->Zoom1To1(0, 0, img.width(), img.height());
 }
 
 Layer::Layer(const QColor &color, QGraphicsItem *parent)

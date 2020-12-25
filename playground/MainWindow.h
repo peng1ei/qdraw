@@ -44,6 +44,7 @@ QT_END_NAMESPACE
 
 class ObjectController;
 class GraphicsScene;
+class ImageFileListModel;
 
 class Layer : public QGraphicsItemGroup {
 public:
@@ -241,7 +242,7 @@ private:
     // QDockWidget imagelist
     QDockWidget *mUiDockImageList;
     QListView *mUiImageListView;
-    QStringListModel *mImageListModel;
+    ImageFileListModel *mImageFileListModel;
 
     ProgressBarDialog *mProgressBarDlg;
     ImageFileListProviderThd *mImageFileListProviderThd;

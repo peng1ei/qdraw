@@ -22,10 +22,10 @@ public:
 
     void SetRuleBarVisiable(bool value);
     
-    void FitInView(const QRectF &rect, Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
+    void FitInView(const QRectF &rect, Qt::AspectRatioMode aspectRadioMode = Qt::KeepAspectRatio);
     void FitInView(qreal x, qreal y, qreal w, qreal h,
-                          Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
-    void FitInView(const QGraphicsItem *item, Qt::AspectRatioMode aspectRadioMode = Qt::IgnoreAspectRatio);
+                          Qt::AspectRatioMode aspectRadioMode = Qt::KeepAspectRatio);
+    void FitInView(const QGraphicsItem *item, Qt::AspectRatioMode aspectRadioMode = Qt::KeepAspectRatio);
 
     void ZoomInUnderViewCenter();
     void ZoomOutUnderViewCenter();
