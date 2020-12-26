@@ -640,7 +640,7 @@ void MainWindow::CreateActions()
     mUiDrawActionGroup->addAction(mUiEllipseAct);
     mUiDrawActionGroup->addAction(mUiPolygonAct);
     mUiDrawActionGroup->addAction(mUiPolylineAct);
-    mUiDrawActionGroup->addAction(mUiBezierAct);
+    //mUiDrawActionGroup->addAction(mUiBezierAct);
     mUiDrawActionGroup->addAction(mUiRotateAct);
 
     mUiZoomToRectAct = new QAction(QIcon(":/image/icons/zoomrect.png"),tr("zoomToRect"),this);
@@ -741,7 +741,7 @@ void MainWindow::CreateMenus()
     shapeTool->addAction(mUiEllipseAct);
     shapeTool->addAction(mUiPolygonAct);
     shapeTool->addAction(mUiPolylineAct);
-    shapeTool->addAction(mUiBezierAct);
+    //shapeTool->addAction(mUiBezierAct);
     shapeTool->addAction(mUiRotateAct);
     toolMenu->addMenu(shapeTool);
 
@@ -792,7 +792,7 @@ void MainWindow::CreateMenus()
     mContextMenu->addAction(mUiEllipseAct);
     mContextMenu->addAction(mUiPolygonAct);
     mContextMenu->addAction(mUiPolylineAct);
-    mContextMenu->addAction(mUiBezierAct);
+    //mContextMenu->addAction(mUiBezierAct);
     mContextMenu->addAction(mUiRotateAct);
 
     mContextMenu->addSeparator();
@@ -836,7 +836,7 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiEllipseAct);
     mUiDrawToolBar->addAction(mUiPolygonAct);
     mUiDrawToolBar->addAction(mUiPolylineAct);
-    mUiDrawToolBar->addAction(mUiBezierAct);
+    //mUiDrawToolBar->addAction(mUiBezierAct);
     mUiDrawToolBar->addAction(mUiRotateAct);
 
     // create align toolbar

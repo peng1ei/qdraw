@@ -1051,18 +1051,30 @@ bool GraphicsBezier::saveToXml(QXmlStreamWriter *xml)
     return true;
 }
 
+// 绘制多折线，贝塞尔曲线
 void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
     QPainterPath path;
-    painter->setPen(pen());
-    painter->setBrush(brush());
+//    painter->setPen(pen());
+//    painter->setBrush(brush());
+    QPen tpen = painter->pen();
+    tpen.setWidthF(1);
+    tpen.setColor(QColor(32, 224, 32));
+    tpen.setCosmetic(true); // 设置外边框粗细不变
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+    painter->setPen(tpen);
+    painter->setBrush(Qt::NoBrush);
+
     path.moveTo(m_points.at(0));
 
     int i=1;
     while (m_isBezier && ( i + 2 < m_points.size())) {
+        // 绘制贝塞尔曲线
         path.cubicTo(m_points.at(i), m_points.at(i+1), m_points.at(i+2));
         i += 3;
     }
@@ -1073,11 +1085,13 @@ void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     painter->drawPath(path);
 
    if (option->state & QStyle::State_Selected){
-       painter->setPen(QPen(Qt::lightGray, 0, Qt::SolidLine));
+       //painter->setPen(QPen(Qt::lightGray, 0, Qt::SolidLine));
        painter->setBrush(Qt::NoBrush);
        painter->drawPolyline(m_points);
     }
 
+   return;
+   // 绘制外接矩形，个人认为可以不必画出
    if (option->state & QStyle::State_Selected)
        qt_graphicsItem_highlightSelected(this, painter, option);
 }
@@ -1465,7 +1479,10 @@ void GraphicsPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->drawPolygon(m_points);
     qDebug() << "Polygon point size: " << m_points.size();
 
+
     return;
+
+    // 绘制外接矩形，个人认为可以不必画出
     if (option->state & QStyle::State_Selected)
         qt_graphicsItem_highlightSelected(this, painter, option);
 }
