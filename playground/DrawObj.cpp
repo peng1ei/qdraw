@@ -484,9 +484,21 @@ QRectF RecalcBounds(const QPolygonF&  pts)
 
 void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+   //painter->setPen(pen());
+   //painter->setBrush(brush());
 
-   painter->setPen(pen());
-   painter->setBrush(brush());
+   QPen tpen = painter->pen();
+   tpen.setWidthF(1);
+   tpen.setColor(QColor(32, 224, 32));
+   tpen.setCosmetic(true);
+   painter->setRenderHint(QPainter::Antialiasing);
+   painter->setRenderHint(QPainter::HighQualityAntialiasing);
+   painter->setRenderHint(QPainter::SmoothPixmapTransform);
+   painter->setPen(tpen);
+
+   widget->setAttribute(Qt::WA_TranslucentBackground, true);
+   painter->setBrush(QColor(0,144,0,50));//最后一位是设置透明属性（在0-255取值）
+
    double rx,ry;
    if(m_fRatioX<=0)
       rx=0;
@@ -502,11 +514,13 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
    else
        painter->drawRect(rect().toRect());
 
+#if 0 // 绘制十字丝标注
    painter->setPen(Qt::blue);
    painter->drawLine(QLine(QPoint(opposite_.x()-6,opposite_.y()),QPoint(opposite_.x()+6,opposite_.y())));
    painter->drawLine(QLine(QPoint(opposite_.x(),opposite_.y()-6),QPoint(opposite_.x(),opposite_.y()+6)));
+#endif
 
-
+   return;
    if (option->state & QStyle::State_Selected)
        qt_graphicsItem_highlightSelected(this, painter, option);
 /*
@@ -1259,9 +1273,21 @@ void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     result.setColorAt(0.5, c.light(120));
     result.setColorAt(1.0, c.dark(200));
 */
-    painter->setPen(pen());
-    QBrush b(c);
-    painter->setBrush(b);
+    //painter->setPen(pen());
+    //QBrush b(c);
+    //painter->setBrush(b);
+
+    QPen tpen = painter->pen();
+    tpen.setWidthF(1);
+    tpen.setColor(QColor(32, 224, 32));
+    tpen.setCosmetic(true);
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+    painter->setPen(tpen);
+
+    widget->setAttribute(Qt::WA_TranslucentBackground, true);
+    painter->setBrush(QColor(0,144,0,50));//最后一位是设置透明属性（在0-255取值）
 
     int startAngle = m_startAngle <= m_spanAngle ? m_startAngle : m_spanAngle;
     int endAngle = m_startAngle >= m_spanAngle ? m_startAngle : m_spanAngle;
@@ -1274,6 +1300,7 @@ void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
         painter->drawPie(m_localRect, startAngle * 16 , (endAngle-startAngle) * 16);
 
 
+    return;
     if (option->state & QStyle::State_Selected)
         qt_graphicsItem_highlightSelected(this, painter, option);
 }
