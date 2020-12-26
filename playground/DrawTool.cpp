@@ -765,6 +765,7 @@ void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, Graphic
     
     m_nPoints = 0;
 
+    // 会清除多边形的角点
     scene->clearSelection();
 }
 

@@ -1,5 +1,6 @@
 #include "DrawObj.h"
 #include <QPainter>
+#include <QPen>
 #include <QLinearGradient>
 #include <QRadialGradient>
 #include <QCursor>
@@ -101,15 +102,16 @@ static void qt_graphicsItem_highlightSelected(
         fgcolor.green() > 127 ? 0 : 255,
         fgcolor.blue()  > 127 ? 0 : 255);
 
-
+    // Item外界矩形的边框颜色线
+#if 0
     painter->setPen(QPen(bgcolor, penWidth, Qt::SolidLine));
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(item->boundingRect().adjusted(-pad, -pad, pad, pad));
-
+#else
     painter->setPen(QPen(QColor("lightskyblue"), 0, Qt::SolidLine));
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(item->boundingRect().adjusted(-pad, -pad, pad, pad));
-
+#endif
 }
 
 GraphicsItem::GraphicsItem(QGraphicsItem *parent)
@@ -149,6 +151,7 @@ QPixmap GraphicsItem::image() {
 }
 
 
+// 控制绘制时外接矩形的角点和四边的中点
 void GraphicsItem::updatehandles()
 {
     const QRectF &geom = this->boundingRect();
@@ -215,12 +218,15 @@ bool GraphicsItem::writeBaseAttributes(QXmlStreamWriter *xml)
     return true;
 }
 
+// item 选中状态改变
 QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if ( change == QGraphicsItem::ItemSelectedHasChanged ) {
         QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(parentItem());
         if (!g)
-            setState(value.toBool() ? SelectionHandleActive : SelectionHandleOff);
+            // [2020-12-26 23:25 by pl] 无论Item是否被选中，都显示角点标注
+            setState(value.toBool() ? SelectionHandleActive : SelectionHandleActive);
+            //setState(value.toBool() ? SelectionHandleActive : SelectionHandleOff);
         else{
             setSelected(false);
             return QVariant::fromValue<bool>(false);
@@ -937,6 +943,7 @@ QVariant GraphicsItemGroup::itemChange(QGraphicsItem::GraphicsItemChange change,
     if ( change == QGraphicsItem::ItemSelectedHasChanged ) {
         QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(parentItem());
         if (!g)
+            // TODO
             setState(value.toBool() ? SelectionHandleActive : SelectionHandleOff);
         else{
             setSelected(false);
@@ -1418,9 +1425,11 @@ QGraphicsItem *GraphicsPolygonItem::duplicate() const
 
 void GraphicsPolygonItem::updatehandles()
 {
-    GraphicsItem::updatehandles();
+    // TODO 不需要显示角点
+    //GraphicsItem::updatehandles();
 
     for ( int i = 0 ; i < m_points.size() ; ++i ){
+        // 每个角点的绘制
         m_handles[Left+i]->move(m_points[i].x() ,m_points[i].y() );
     }
 }
@@ -1428,18 +1437,35 @@ void GraphicsPolygonItem::updatehandles()
 void GraphicsPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
-    Q_UNUSED(widget);
+    //Q_UNUSED(widget);
 
+#if 0 // 设置绘制多边形矩形时背景透明
+    / 渐变颜色
     QColor c = brushColor();
     QLinearGradient result(boundingRect().topLeft(), boundingRect().topRight());
     result.setColorAt(0, c.dark(150));
     result.setColorAt(0.5, c.light(200));
     result.setColorAt(1, c.dark(150));
     painter->setBrush(result);
+#else
+    // TODO 根据图形指定的颜色进行填充
+    widget->setAttribute(Qt::WA_TranslucentBackground, true);
+    painter->setBrush(QColor(0,144,0,50));//最后一位是设置透明属性（在0-255取值）
+#endif
 
-    painter->setPen(pen());
+    QPen tpen = painter->pen();
+    tpen.setWidthF(1);
+    tpen.setColor(QColor(32, 224, 32));
+    tpen.setCosmetic(true);
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+
+    painter->setPen(tpen);
     painter->drawPolygon(m_points);
+    qDebug() << "Polygon point size: " << m_points.size();
 
+    return;
     if (option->state & QStyle::State_Selected)
         qt_graphicsItem_highlightSelected(this, painter, option);
 }

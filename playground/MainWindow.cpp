@@ -786,16 +786,6 @@ void MainWindow::CreateMenus()
 //        mContextMenu->setActiveAction(mUiPanAct);
 //        //mContextMenu->setFocus(Qt::FocusReason::PopupFocusReason);
 //    });
-
-    mContextMenu->addAction(mUiPanAct);
-    mContextMenu->addAction(mUiZoomInAct);
-    mContextMenu->addAction(mUiZoomOutAct);
-    mContextMenu->addAction(mUiZoomFitAct);
-    mContextMenu->addAction(mUiZoomOneAct);
-    mContextMenu->addAction(mUiZoomToRectAct);
-
-    mContextMenu->addSeparator();
-
     mContextMenu->addAction(mUiSelectAct);
     mContextMenu->addAction(mUiRectAct);
     mContextMenu->addAction(mUiRoundRectAct);
@@ -804,6 +794,15 @@ void MainWindow::CreateMenus()
     mContextMenu->addAction(mUiPolylineAct);
     mContextMenu->addAction(mUiBezierAct);
     mContextMenu->addAction(mUiRotateAct);
+
+    mContextMenu->addSeparator();
+
+    mContextMenu->addAction(mUiPanAct);
+    mContextMenu->addAction(mUiZoomInAct);
+    mContextMenu->addAction(mUiZoomOutAct);
+    mContextMenu->addAction(mUiZoomFitAct);
+    mContextMenu->addAction(mUiZoomOneAct);
+    mContextMenu->addAction(mUiZoomToRectAct);
 }
 
 void MainWindow::CreateToolbars()
