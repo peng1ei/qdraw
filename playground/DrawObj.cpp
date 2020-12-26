@@ -123,6 +123,8 @@ GraphicsItem::GraphicsItem(QGraphicsItem *parent)
     effect->setBlurRadius(4);
     setGraphicsEffect(effect);
    */
+
+    // 预定义外界矩形的角点，比如当选择某个item的时候，可以显示这些角点
     // handles
     m_handles.reserve(Left);
     for (int i = LeftTop; i <= Left; ++i) {
@@ -269,6 +271,12 @@ GraphicsRectItem::GraphicsRectItem(const QRect & rect , bool isRound , QGraphics
         m_handles.push_back(shr);
         //shr = new SizeHandleRect(this, 11 , true);
         //m_handles.push_back(shr);
+    } else {
+        // 直角矩形
+        for (int i = 1; i <= 4; i++) {
+            SizeHandleRect *shr = new SizeHandleRect(this, i+Left , true);
+            m_handles.push_back(shr);
+        }
     }
 
     updatehandles();
@@ -454,12 +462,22 @@ bool GraphicsRectItem::saveToXml(QXmlStreamWriter * xml)
 
 void GraphicsRectItem::updatehandles()
 {
+    qDebug() << "Handles size: " << m_handles.size();
+
     const QRectF &geom = this->boundingRect();
+
+    qDebug() << geom;
+
     GraphicsItem::updatehandles();
     if ( m_isRound ){
         m_handles[8]->move( geom.right() , geom.top() + geom.height() * m_fRatioY );
         m_handles[9]->move( geom.right() - geom.width() * m_fRatioX , geom.top());
         //m_handles[10]->move(m_originPoint.x(),m_originPoint.y());
+    } else {
+        m_handles[0+Left]->move(geom.left(), geom.top());
+        m_handles[1+Left]->move(geom.right(), geom.top());
+        m_handles[2+Left]->move(geom.right(), geom.bottom());
+        m_handles[3+Left]->move(geom.left(), geom.bottom());
     }
 }
 
@@ -1329,6 +1347,8 @@ QPainterPath GraphicsPolygonItem::shape() const
 void GraphicsPolygonItem::addPoint(const QPointF &point)
 {
     m_points.append(mapFromScene(point));
+
+    // 新增的点在第几个位置
     int dir = m_points.count();
     SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, true);
     shr->setState(SelectionHandleActive);

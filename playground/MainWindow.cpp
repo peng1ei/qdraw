@@ -665,6 +665,8 @@ void MainWindow::CreateActions()
     connect(mUiBezierAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiRotateAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
 
+
+
     mUiDeleteAct = new QAction(tr("&Delete"), this);
     mUiDeleteAct->setShortcut(QKeySequence::Delete);
 

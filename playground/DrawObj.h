@@ -252,6 +252,7 @@ protected:
     QPointF m_originPoint;
 };
 
+// TODO 一些不必要绘制的点不需要绘制
 class GraphicsEllipseItem :public GraphicsRectItem
 {
 public:
