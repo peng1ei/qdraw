@@ -634,12 +634,14 @@ void MainWindow::CreateActions()
 
     mUiDrawActionGroup = new QActionGroup(this);
     mUiDrawActionGroup->addAction(mUiSelectAct);
-    mUiDrawActionGroup->addAction(mUiLineAct);
+
     mUiDrawActionGroup->addAction(mUiRectAct);
-    mUiDrawActionGroup->addAction(mUiRoundRectAct);
+    //mUiDrawActionGroup->addAction(mUiRoundRectAct);
     mUiDrawActionGroup->addAction(mUiEllipseAct);
-    mUiDrawActionGroup->addAction(mUiPolygonAct);
+    mUiDrawActionGroup->addAction(mUiLineAct);
     mUiDrawActionGroup->addAction(mUiPolylineAct);
+    mUiDrawActionGroup->addAction(mUiPolygonAct);
+
     //mUiDrawActionGroup->addAction(mUiBezierAct);
     mUiDrawActionGroup->addAction(mUiRotateAct);
 
@@ -737,10 +739,11 @@ void MainWindow::CreateMenus()
     QMenu *shapeTool = new QMenu("&Shape");
     shapeTool->addAction(mUiSelectAct);
     shapeTool->addAction(mUiRectAct);
-    shapeTool->addAction(mUiRoundRectAct);
+    //shapeTool->addAction(mUiRoundRectAct);
     shapeTool->addAction(mUiEllipseAct);
-    shapeTool->addAction(mUiPolygonAct);
+    shapeTool->addAction(mUiLineAct);
     shapeTool->addAction(mUiPolylineAct);
+    shapeTool->addAction(mUiPolygonAct);
     //shapeTool->addAction(mUiBezierAct);
     shapeTool->addAction(mUiRotateAct);
     toolMenu->addMenu(shapeTool);
@@ -788,10 +791,12 @@ void MainWindow::CreateMenus()
 //    });
     mContextMenu->addAction(mUiSelectAct);
     mContextMenu->addAction(mUiRectAct);
-    mContextMenu->addAction(mUiRoundRectAct);
+    //mContextMenu->addAction(mUiRoundRectAct);
     mContextMenu->addAction(mUiEllipseAct);
-    mContextMenu->addAction(mUiPolygonAct);
+    mContextMenu->addAction(mUiLineAct);
     mContextMenu->addAction(mUiPolylineAct);
+    mContextMenu->addAction(mUiPolygonAct);
+
     //mContextMenu->addAction(mUiBezierAct);
     mContextMenu->addAction(mUiRotateAct);
 
@@ -830,12 +835,13 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar = addToolBar(tr("drawing"));
     mUiDrawToolBar->setIconSize(QSize(24,24));
     mUiDrawToolBar->addAction(mUiSelectAct);
-    mUiDrawToolBar->addAction(mUiLineAct);
+
     mUiDrawToolBar->addAction(mUiRectAct);
-    mUiDrawToolBar->addAction(mUiRoundRectAct);
+    //mUiDrawToolBar->addAction(mUiRoundRectAct);
     mUiDrawToolBar->addAction(mUiEllipseAct);
-    mUiDrawToolBar->addAction(mUiPolygonAct);
+    mUiDrawToolBar->addAction(mUiLineAct);
     mUiDrawToolBar->addAction(mUiPolylineAct);
+    mUiDrawToolBar->addAction(mUiPolygonAct);
     //mUiDrawToolBar->addAction(mUiBezierAct);
     mUiDrawToolBar->addAction(mUiRotateAct);
 
