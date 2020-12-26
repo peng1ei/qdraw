@@ -577,11 +577,14 @@ void GraphicsLineItem::addPoint(const QPointF &point)
 {
     m_points.append(mapFromScene(point));
     int dir = m_points.count();
-    SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, dir == 1 ? false : true);
+
+    // 隐藏起始标注点
+    //SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, dir == 1 ? false : true);
+
+    SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, true);
     shr->setState(SelectionHandleActive);
     m_handles.push_back(shr);
 }
-
 
 void GraphicsLineItem::endPoint(const QPointF &point)
 {
@@ -688,7 +691,16 @@ void GraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    painter->setPen(pen());
+    //painter->setPen(pen());
+    QPen tpen = painter->pen();
+    tpen.setWidthF(1);
+    tpen.setColor(QColor(32, 224, 32));
+    tpen.setCosmetic(true);
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::HighQualityAntialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+    painter->setPen(tpen);
+
     if ( m_points.size() > 1)
     painter->drawLine(m_points.at(0),m_points.at(1));
 }
