@@ -1144,11 +1144,20 @@ void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 GraphicsEllipseItem::GraphicsEllipseItem(const QRect & rect ,QGraphicsItem *parent)
     :GraphicsRectItem(rect,parent)
 {
+    qDebug() << "m_handles size before: " << m_handles.size();
+    for (int i = 0; i < 4; i++) {
+        m_handles.pop_back();
+    }
+
+    qDebug() << "m_handles size after: " << m_handles.size();
+
     m_startAngle = 40;
     m_spanAngle  = 400;
     SizeHandleRect *shr = new SizeHandleRect(this, 9 , true);
     m_handles.push_back(shr);
     shr = new SizeHandleRect(this, 10 , true);
+    m_handles.push_back(shr);
+    shr = new SizeHandleRect(this, 11 , true);
     m_handles.push_back(shr);
     updatehandles();
 }
@@ -1271,6 +1280,8 @@ void GraphicsEllipseItem::updatehandles()
     x = (m_width/2) * cos( -m_spanAngle * M_PI / 180);
     y = (m_height/2) * sin(-m_spanAngle * M_PI / 180);
     m_handles.at(9)->move(x-delta.x(),y-delta.y());
+
+    m_handles.at(10)->move(m_localRect.center().x(), m_localRect.center().y());
 }
 
 void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
