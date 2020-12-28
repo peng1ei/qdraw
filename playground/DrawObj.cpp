@@ -460,6 +460,20 @@ bool GraphicsRectItem::saveToXml(QXmlStreamWriter * xml)
     return true;
 }
 
+void GraphicsRectItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
+{
+    m_alpha = 100;
+    update();
+    QGraphicsItem::hoverEnterEvent(e);
+}
+
+void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
+{
+    m_alpha = 50;
+    update();
+    QGraphicsItem::hoverLeaveEvent(e);
+}
+
 void GraphicsRectItem::updatehandles()
 {
     qDebug() << "Handles size: " << m_handles.size();
@@ -478,6 +492,11 @@ void GraphicsRectItem::updatehandles()
         m_handles[1+Left]->move(geom.right(), geom.top());
         m_handles[2+Left]->move(geom.right(), geom.bottom());
         m_handles[3+Left]->move(geom.left(), geom.bottom());
+
+        m_handles[0+Left]->setBrushColor(m_brush.color());
+        m_handles[1+Left]->setBrushColor(m_brush.color());
+        m_handles[2+Left]->setBrushColor(m_brush.color());
+        m_handles[3+Left]->setBrushColor(m_brush.color());
     }
 }
 
@@ -507,15 +526,16 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
    QPen tpen = painter->pen();
    tpen.setWidthF(1);
-   tpen.setColor(QColor(32, 224, 32));
+   tpen.setColor(m_pen.color());
    tpen.setCosmetic(true);
    painter->setRenderHint(QPainter::Antialiasing);
-   painter->setRenderHint(QPainter::HighQualityAntialiasing);
    painter->setRenderHint(QPainter::SmoothPixmapTransform);
    painter->setPen(tpen);
 
    widget->setAttribute(Qt::WA_TranslucentBackground, true);
-   painter->setBrush(QColor(0,144,0,50));//最后一位是设置透明属性（在0-255取值）
+   painter->setBrush(QColor(m_brush.color().red(),
+                                m_brush.color().green(),
+                                m_brush.color().blue(),m_alpha));//最后一位是设置透明属性（在0-255取值）
 
    double rx,ry;
    if(m_fRatioX<=0)
@@ -615,6 +635,7 @@ void GraphicsLineItem::addPoint(const QPointF &point)
 
     SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, true);
     shr->setState(SelectionHandleActive);
+    shr->setBrushColor(m_brush.color());
     m_handles.push_back(shr);
 }
 
@@ -726,10 +747,9 @@ void GraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     //painter->setPen(pen());
     QPen tpen = painter->pen();
     tpen.setWidthF(1);
-    tpen.setColor(QColor(32, 224, 32));
+    tpen.setColor(m_pen.color());
     tpen.setCosmetic(true);
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setRenderHint(QPainter::HighQualityAntialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
     painter->setPen(tpen);
 
@@ -1055,7 +1075,9 @@ QGraphicsItem *GraphicsBezier::duplicate() const
     item->m_points = m_points;
     item->m_isBezier = m_isBezier;
     for ( int i = 0 ; i < m_points.size() ; ++i ){
-        item->m_handles.push_back(new SizeHandleRect(item,Left+i+1,true));
+        auto sizehandle = new SizeHandleRect(item,Left+i+1,true);
+        sizehandle->setBrushColor(m_brush.color());
+        item->m_handles.push_back(sizehandle);
     }
     item->setPos(pos().x(),pos().y());
     item->setPen(pen());
@@ -1106,10 +1128,9 @@ void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 //    painter->setBrush(brush());
     QPen tpen = painter->pen();
     tpen.setWidthF(1);
-    tpen.setColor(QColor(32, 224, 32));
+    tpen.setColor(m_pen.color());
     tpen.setCosmetic(true); // 设置外边框粗细不变
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setRenderHint(QPainter::HighQualityAntialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
     painter->setPen(tpen);
     painter->setBrush(Qt::NoBrush);
@@ -1282,6 +1303,10 @@ void GraphicsEllipseItem::updatehandles()
     m_handles.at(9)->move(x-delta.x(),y-delta.y());
 
     m_handles.at(10)->move(m_localRect.center().x(), m_localRect.center().y());
+
+    m_handles.at(8)->setBrushColor(m_brush.color());
+    m_handles.at(9)->setBrushColor(m_brush.color());
+    m_handles.at(10)->setBrushColor(m_brush.color());
 }
 
 void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -1308,15 +1333,16 @@ void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     QPen tpen = painter->pen();
     tpen.setWidthF(1);
-    tpen.setColor(QColor(32, 224, 32));
+    tpen.setColor(m_pen.color());
     tpen.setCosmetic(true);
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setRenderHint(QPainter::HighQualityAntialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
     painter->setPen(tpen);
 
     widget->setAttribute(Qt::WA_TranslucentBackground, true);
-    painter->setBrush(QColor(0,144,0,50));//最后一位是设置透明属性（在0-255取值）
+    painter->setBrush(QColor(m_brush.color().red(),
+                            m_brush.color().green(),
+                            m_brush.color().blue(),m_alpha));//最后一位是设置透明属性（在0-255取值）
 
     int startAngle = m_startAngle <= m_spanAngle ? m_startAngle : m_spanAngle;
     int endAngle = m_startAngle >= m_spanAngle ? m_startAngle : m_spanAngle;
@@ -1363,6 +1389,7 @@ void GraphicsPolygonItem::addPoint(const QPointF &point)
     int dir = m_points.count();
     SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, true);
     shr->setState(SelectionHandleActive);
+    shr->setBrushColor(m_brush.color());
     m_handles.push_back(shr);
 }
 
@@ -1492,7 +1519,9 @@ QGraphicsItem *GraphicsPolygonItem::duplicate() const
     item->m_points = m_points;
 
     for ( int i = 0 ; i < m_points.size() ; ++i ){
-        item->m_handles.push_back(new SizeHandleRect(item,Left+i+1,true));
+        auto sizehandle = new SizeHandleRect(item,Left+i+1,true);
+        sizehandle->setBrushColor(m_brush.color());
+        item->m_handles.push_back(sizehandle);
     }
 
     item->setPos(pos().x(),pos().y());
@@ -1505,6 +1534,20 @@ QGraphicsItem *GraphicsPolygonItem::duplicate() const
     item->setZValue(zValue()+0.1);
     item->updateCoordinate();
     return item;
+}
+
+void GraphicsPolygonItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
+{
+    m_alpha = 100;
+    update();
+    QGraphicsItem::hoverEnterEvent(e);
+}
+
+void GraphicsPolygonItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
+{
+    m_alpha = 50;
+    update();
+    QGraphicsItem::hoverLeaveEvent(e);
 }
 
 void GraphicsPolygonItem::updatehandles()
@@ -1534,15 +1577,16 @@ void GraphicsPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 #else
     // TODO 根据图形指定的颜色进行填充
     widget->setAttribute(Qt::WA_TranslucentBackground, true);
-    painter->setBrush(QColor(0,144,0,50));//最后一位是设置透明属性（在0-255取值）
+    painter->setBrush(QColor(m_brush.color().red(),
+                             m_brush.color().green(),
+                             m_brush.color().blue(),m_alpha));//最后一位是设置透明属性（在0-255取值）
 #endif
 
     QPen tpen = painter->pen();
     tpen.setWidthF(1);
-    tpen.setColor(QColor(32, 224, 32));
+    tpen.setColor(m_pen.color());
     tpen.setCosmetic(true);
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setRenderHint(QPainter::HighQualityAntialiasing);
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
     painter->setPen(tpen);

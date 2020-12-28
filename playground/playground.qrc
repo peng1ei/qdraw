@@ -40,5 +40,6 @@
         <file>image/icons/zoomrect.png</file>
         <file>image/icons/zoomrectcur.png</file>
         <file>image/icons/pan.png</file>
+        <file>image/icons/color.png</file>
     </qresource>
 </RCC>

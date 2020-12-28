@@ -80,6 +80,7 @@ public slots:
     //----------------------------
     // Action
     void OnAddShape();
+    void OnSelectColor();
 
     void OnNewFile();
     void OnOpen();
@@ -216,6 +217,7 @@ private:
     QAction  * mUiPolylineAct;
     QAction  * mUiBezierAct;
     QAction  * mUiRotateAct;
+    QAction  * mUiSelectColorAct;
 
     QAction *mUiCloseAct;
     QAction *mUiCloseAllAct;

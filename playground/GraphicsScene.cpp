@@ -324,6 +324,8 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
         tool->mouseMoveEvent(mouseEvent,this);
+
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)

@@ -15,6 +15,9 @@ quint32 DrawTool::c_nDownFlags;
 
 DrawShape DrawTool::c_drawShape = selection;
 
+QColor DrawTool::c_penColor = Qt::green;
+QColor DrawTool::c_brushColor = Qt::green;
+
 static PanTool panTool;
 static RubberBandZoomTool rubberBandZoomTool;
 static SelectTool selectTool;
@@ -620,6 +623,10 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
         break;
     }
     if ( item == 0) return;
+
+    item->setPenColor(DrawTool::c_penColor);
+    item->setBrushColor(DrawTool::c_brushColor);
+
     c_down+=QPoint(2,2);
     item->setPos(event->scenePos());
     scene->addItem(item);
@@ -686,6 +693,8 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
         }else if ( c_drawShape == line ){
             item = new GraphicsLineItem(0);
         }
+        item->setPenColor(DrawTool::c_penColor);
+        item->setBrushColor(DrawTool::c_brushColor);
         item->setPos(event->scenePos());
 
         // TODO 加入当前图层

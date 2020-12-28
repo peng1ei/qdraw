@@ -51,6 +51,9 @@ public:
     static quint32 c_nDownFlags;
     static QPointF c_last;
     static DrawShape c_drawShape;
+
+    static QColor c_penColor;
+    static QColor c_brushColor;
 };
 
 class SelectTool : public DrawTool

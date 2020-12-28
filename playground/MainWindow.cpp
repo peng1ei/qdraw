@@ -28,6 +28,7 @@
 #include <QMessageBox>
 #include <QGLWidget>
 #include <QDebug>
+#include <QColorDialog>
 
 int s_x = 50;
 int s_y = 50;
@@ -215,6 +216,16 @@ void MainWindow::OnAddShape()
     }
 
     //mView->SetPan(false);
+}
+
+void MainWindow::OnSelectColor()
+{
+    QColor color=QColorDialog::getColor(DrawTool::c_brushColor,this);
+    if(!color.isValid())
+        return;
+
+    DrawTool::c_penColor = color;
+    DrawTool::c_brushColor = color;
 }
 
 void MainWindow::OnNewFile()
@@ -632,6 +643,8 @@ void MainWindow::CreateActions()
     mUiRotateAct = new QAction(QIcon(":/image/icons/rotate.png"),tr("rotate tool"),this);
     mUiRotateAct->setCheckable(true);
 
+    mUiSelectColorAct = new QAction(QIcon(":/image/icons/color.png"),tr("select color tool"),this);
+
     mUiDrawActionGroup = new QActionGroup(this);
     mUiDrawActionGroup->addAction(mUiSelectAct);
 
@@ -664,8 +677,7 @@ void MainWindow::CreateActions()
     connect(mUiPolylineAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiBezierAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiRotateAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
-
-
+    connect(mUiSelectColorAct,SIGNAL(triggered()),this,SLOT(OnSelectColor()));
 
     mUiDeleteAct = new QAction(tr("&Delete"), this);
     mUiDeleteAct->setShortcut(QKeySequence::Delete);
@@ -748,6 +760,7 @@ void MainWindow::CreateMenus()
     shapeTool->addAction(mUiPolygonAct);
     //shapeTool->addAction(mUiBezierAct);
     shapeTool->addAction(mUiRotateAct);
+    shapeTool->addAction(mUiSelectAct);
     toolMenu->addMenu(shapeTool);
 
 #if 0
@@ -846,6 +859,7 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiPolygonAct);
     //mUiDrawToolBar->addAction(mUiBezierAct);
     mUiDrawToolBar->addAction(mUiRotateAct);
+    mUiDrawToolBar->addAction(mUiSelectColorAct);
 
     // create align toolbar
 #if 0

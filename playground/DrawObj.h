@@ -162,6 +162,7 @@ public:
     QPen   pen() const {return m_pen;}
     QColor penColor() const {return m_pen.color();}
     void   setPen(const QPen & pen ) { m_pen = pen;}
+    void   setPenColor(const QColor &color) { m_pen.setColor(color); }
     void   setBrush( const QBrush & brush ) { m_brush = brush ; }
     void   setBrushColor( const QColor & color ) { m_brush.setColor(color);}
     qreal  width() const { return m_width ; }
@@ -242,6 +243,10 @@ public:
     virtual bool saveToXml( QXmlStreamWriter * xml );
 
 protected:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *e );
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e );
+
+protected:
     void updatehandles();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     bool m_isRound;
@@ -250,6 +255,8 @@ protected:
     QRectF m_initialRect;
     QPointF opposite_;
     QPointF m_originPoint;
+
+    int m_alpha = 50;
 };
 
 // TODO 一些不必要绘制的点不需要绘制
@@ -264,6 +271,11 @@ public:
     QString displayName() const { return tr("ellipse"); }
     virtual bool loadFromXml(QXmlStreamReader * xml );
     virtual bool saveToXml( QXmlStreamWriter * xml );
+
+protected:
+    //void hoverEnterEvent(QGraphicsSceneHoverEvent *e );
+    //void hoverLeaveEvent(QGraphicsSceneHoverEvent *e );
+
 protected:
     void updatehandles();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -326,11 +338,17 @@ public:
     virtual bool saveToXml( QXmlStreamWriter * xml );
     QString displayName() const { return tr("polygon"); }
     QGraphicsItem *duplicate() const;
+
+protected:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *e );
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e );
+
 protected:
     void updatehandles();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QPolygonF m_points;
     QPolygonF m_initialPoints;
+    int m_alpha = 50;
 };
 
 class GraphicsLineItem : public GraphicsPolygonItem
