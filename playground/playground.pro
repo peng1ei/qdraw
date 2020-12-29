@@ -39,6 +39,9 @@ CONFIG(debug, debug|release){
 # disable C4819 warning
 win32: QMAKE_CXXFLAGS_WARN_ON += -wd4819
 
+INCLUDEPATH += Utils/
+INCLUDEPATH += Utils/ColorWidget/
+
 SOURCES += \
     Commands.cpp \
     CustomProperty.cpp \
@@ -53,6 +56,11 @@ SOURCES += \
     RuleBar.cpp \
     SizeHandle.cpp \
     TreeView/TreeView.cpp \
+    Utils/ColorWidget/ColorCombox.cpp \
+    Utils/ColorWidget/colormodel.cpp \
+    Utils/ColorWidget/qwwcolorbutton.cpp \
+    Utils/ColorWidget/qwwcolorcombobox.cpp \
+    Utils/ColorWidget/wwglobal_p.cpp \
     Utils/ImageFileListModel.cpp \
     Utils/ImageFileListProviderThd.cpp \
     Utils/ProgressBarDialog.cpp \
@@ -74,6 +82,12 @@ HEADERS += \
     RuleBar.h \
     SizeHandle.h \
     TreeView/TreeView.h \
+    Utils/ColorWidget/ColorCombox.h \
+    Utils/ColorWidget/colormodel.h \
+    Utils/ColorWidget/qwwcolorbutton.h \
+    Utils/ColorWidget/qwwcolorcombobox.h \
+    Utils/ColorWidget/wwglobal.h \
+    Utils/ColorWidget/wwglobal_p.h \
     Utils/ImageFileListModel.h \
     Utils/ImageFileListProviderThd.h \
     Utils/ProgressBarDialog.h

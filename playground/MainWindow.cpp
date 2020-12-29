@@ -6,6 +6,9 @@
 #include "Utils/ImageFileListProviderThd.h"
 #include "Utils/ProgressBarDialog.h"
 #include "Utils/ImageFileListModel.h"
+#include "Utils/ColorWidget/qwwcolorcombobox.h"
+#include "Utils/ColorWidget/qwwcolorbutton.h"
+#include "Utils/ColorWidget/ColorCombox.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -95,6 +98,9 @@ MainWindow::MainWindow(QWidget *parent)
 #endif 
 
     setWindowIcon(QIcon(":/image/icons/via.ico"));
+
+    DrawTool::c_penColor = QColor(mUiPenColorCombox->getColor());
+    DrawTool::c_brushColor = QColor(mUiBrushColorCombox->getColor());
 }
 
 MainWindow::~MainWindow()
@@ -434,6 +440,17 @@ void MainWindow::OnImageListViewDoubleClicked(const QModelIndex &index)
 
     // TODO 自动保存，点击下一张或上一张时自动保存标注结果
     mImageFileListModel->setData(index, Qt::Checked, Qt::CheckStateRole);
+}
+
+void MainWindow::OnPenColorChanged(QColor color)
+{
+    DrawTool::c_penColor = color;
+
+}
+
+void MainWindow::OnBrushColorChanged(QColor color)
+{
+    DrawTool::c_brushColor = color;
 }
 
 void MainWindow::OnItemSelected()
@@ -859,7 +876,18 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiPolygonAct);
     //mUiDrawToolBar->addAction(mUiBezierAct);
     mUiDrawToolBar->addAction(mUiRotateAct);
-    mUiDrawToolBar->addAction(mUiSelectColorAct);
+    //mUiDrawToolBar->addAction(mUiSelectColorAct);
+
+    // Pen and Brush Color
+    mUiPenColorCombox = new ColorCombox(tr("Pen"));
+    mUiBrushColorCombox = new ColorCombox(tr("Brush"));
+    mUiDrawToolBar->addSeparator();
+    mUiDrawToolBar->addWidget(mUiPenColorCombox);
+    mUiDrawToolBar->addWidget(mUiBrushColorCombox);
+    connect(mUiPenColorCombox, &ColorCombox::sigColorChanged,
+            this, &MainWindow::OnPenColorChanged);
+    connect(mUiBrushColorCombox, &ColorCombox::sigColorChanged,
+            this, &MainWindow::OnBrushColorChanged);
 
     // create align toolbar
 #if 0

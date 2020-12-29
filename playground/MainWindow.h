@@ -46,6 +46,7 @@ QT_END_NAMESPACE
 class ObjectController;
 class GraphicsScene;
 class ImageFileListModel;
+class ColorCombox;
 
 class Layer : public QGraphicsItemGroup {
 public:
@@ -126,7 +127,9 @@ public slots:
 
     void OnImageListViewDoubleClicked(const QModelIndex &index);
 
-    
+    void OnPenColorChanged(QColor color);
+    void OnBrushColorChanged(QColor color);
+
 private:
     void SetLayerVisiable(Layer *layer, bool visiable);
     
@@ -218,6 +221,9 @@ private:
     QAction  * mUiBezierAct;
     QAction  * mUiRotateAct;
     QAction  * mUiSelectColorAct;
+
+    ColorCombox * mUiPenColorCombox;
+    ColorCombox * mUiBrushColorCombox;
 
     QAction *mUiCloseAct;
     QAction *mUiCloseAllAct;
