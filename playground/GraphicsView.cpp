@@ -1,6 +1,7 @@
 #include "GraphicsView.h"
 #include "RuleBar.h"
 #include "DrawTool.h"
+#include "GraphicsScene.h"
 
 #include <QWheelEvent>
 #include <QOpenGLWidget>
@@ -328,9 +329,6 @@ void InteractiveView::ResizeRuler()
 // https://stackoverflow.com/questions/19113532/qgraphicsview-zooming-in-and-out-under-mouse-position-using-mouse-wheel
 void InteractiveView::wheelEvent(QWheelEvent *event)
 {
-    //double angle = event->angleDelta().y();
-    //double factor = qPow(d_ptr->mZoomFactorBase, angle);
-    
     double factor = 1.25; // zoom in
     if (event->angleDelta().y() < 0) {
         factor = 1/1.25; // zoom out
@@ -359,9 +357,8 @@ void InteractiveView::Zoom(double factor)
     qDebug() << "Zoom factor: " << factor;
     qDebug() << "scale: " << d_ptr->mScale;
     qDebug() << "Zoom x scale: " << transform().m11();
-    qDebug() << "Zoom y scale: " << transform().m12();
+    qDebug() << "Zoom y scale: " << transform().m22();
     if (factor == 1) return;
-
 
     if (factor < 1 && d_ptr->mScale < 0.06) return;
     if (factor > 1 && d_ptr->mScale > 256) return;
@@ -398,8 +395,6 @@ void InteractiveView::SetScale(double value) {
 //    scale(value / d_ptr->mScale, value / d_ptr->mScale);
 //    d_ptr->mScale = 1;
 //    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-
-
 }
 
 void InteractiveViewPrivate::SetRuleBarVisiable(bool value)

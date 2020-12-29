@@ -46,14 +46,14 @@ public:
     bool m_hoverSizer;
 
     static DrawTool * findTool( DrawShape drawShape );
-    static QList<DrawTool*> c_tools;
+    static QList<DrawTool*> c_tools; // 全局绘图工具集合
     static QPointF c_down;
     static quint32 c_nDownFlags;
     static QPointF c_last;
-    static DrawShape c_drawShape;
+    static DrawShape c_drawShape; // 当前绘制的Shape
 
-    static QColor c_penColor;
-    static QColor c_brushColor;
+    static QColor c_penColor; // 当前绘制的笔的颜色
+    static QColor c_brushColor; // 当前绘制的画刷的颜色
 };
 
 class SelectTool : public DrawTool
@@ -123,7 +123,6 @@ public:
     GraphicsPolygonItem * item;
     int m_nPoints;
     QPointF initialPositions;
-
 };
 
 #endif // DRAWTOOL

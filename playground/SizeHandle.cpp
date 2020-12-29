@@ -16,7 +16,8 @@ SizeHandleRect::SizeHandleRect(QGraphicsItem* parent , int d, bool control)
     ,m_dir(d)
     ,m_controlPoint(control)
     ,m_state(SelectionHandleOff)
-    ,m_color("white")
+    ,m_penColor("black")
+    ,m_brushColor("white")
 {
     this->setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIgnoresTransformations,true);
@@ -34,7 +35,7 @@ void SizeHandleRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     if ( m_controlPoint  )
     {
         if (m_mouseEnter && DrawTool::c_drawShape == selection) {
-            painter->setPen(QPen(m_color, 1, Qt::SolidLine)); // 绘制圆形外边框
+            painter->setPen(QPen(m_penColor, 1, Qt::SolidLine)); // 绘制圆形外边框
             painter->setBrush(Qt::white);
             //painter->drawPoint(rect().center());
             painter->drawRect(rect().center().x()-8,
@@ -42,7 +43,7 @@ void SizeHandleRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                               16,16);
         } else {
             painter->setPen(Qt::NoPen); // 设置圆点无外边框
-            painter->setBrush(m_color);
+            painter->setBrush(m_brushColor);
             painter->drawEllipse(rect().center(),5,5); // 画圆形点
             //painter->drawPoint(rect().center()); // 画方形点
         }

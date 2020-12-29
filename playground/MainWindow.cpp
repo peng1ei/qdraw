@@ -649,7 +649,7 @@ void MainWindow::CreateActions()
     mUiDrawActionGroup->addAction(mUiSelectAct);
 
     mUiDrawActionGroup->addAction(mUiRectAct);
-    //mUiDrawActionGroup->addAction(mUiRoundRectAct);
+    mUiDrawActionGroup->addAction(mUiRoundRectAct);
     mUiDrawActionGroup->addAction(mUiEllipseAct);
     mUiDrawActionGroup->addAction(mUiLineAct);
     mUiDrawActionGroup->addAction(mUiPolylineAct);
@@ -852,7 +852,7 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiSelectAct);
 
     mUiDrawToolBar->addAction(mUiRectAct);
-    //mUiDrawToolBar->addAction(mUiRoundRectAct);
+    mUiDrawToolBar->addAction(mUiRoundRectAct);
     mUiDrawToolBar->addAction(mUiEllipseAct);
     mUiDrawToolBar->addAction(mUiLineAct);
     mUiDrawToolBar->addAction(mUiPolylineAct);

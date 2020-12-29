@@ -8,6 +8,7 @@
 #include <QPainter>
 
 
+
 GridTool::GridTool(const QSize & grid , const QSize & space )
     :m_sizeGrid(grid)
     ,m_sizeGridSpace(20,20)
@@ -84,8 +85,10 @@ GraphicsScene::GraphicsScene(QObject *parent)
     m_view = NULL;
     m_dx=m_dy=0;
     m_grid = new GridTool();
-    QGraphicsItem * item = addRect(QRectF(0,0,0,0));
-    item->setAcceptHoverEvents(true);
+
+    // TODO 为何要添加一个空item?
+    //QGraphicsItem * item = addRect(QRectF(0,0,0,0));
+    //item->setAcceptHoverEvents(true);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -241,6 +244,8 @@ void GraphicsScene::mouseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case QEvent::GraphicsSceneMouseRelease:
         QGraphicsScene::mouseReleaseEvent(mouseEvent);
         break;
+    default:
+        break;
     }
 }
 
@@ -321,11 +326,11 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
         tool->mouseMoveEvent(mouseEvent,this);
-
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void GraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -340,7 +345,6 @@ void GraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvet)
     DrawTool * tool = DrawTool::findTool( DrawTool::c_drawShape );
     if ( tool )
         tool->mouseDoubleClickEvent(mouseEvet,this);
-
 }
 
 void GraphicsScene::keyPressEvent(QKeyEvent *e)

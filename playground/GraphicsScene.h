@@ -15,6 +15,8 @@ class QKeyEvent;
 class QPainter;
 QT_END_NAMESPACE
 
+class InteractiveView;
+
 enum AlignType
 {
     UP_ALIGN=0,
@@ -58,7 +60,8 @@ public:
     GraphicsItemGroup * createGroup(const QList<QGraphicsItem *> &items ,bool isAdd = true);
     void destroyGroup(QGraphicsItemGroup *group);
 
-    void SetCurrentLayer(Layer *layer);
+    void SetCurrentLayer(Layer *layer) { m_curLayer = layer; }
+    Layer* curLayer() { return m_curLayer; }
 
 signals:
     void itemMoved( QGraphicsItem * item , const QPointF & oldPosition );
@@ -84,5 +87,7 @@ protected:
 
 
     Layer *m_curLayer;
+
+    friend class InteractiveView;
 };
 

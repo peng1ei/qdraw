@@ -48,6 +48,7 @@ public:
     virtual bool saveToXml( QXmlStreamWriter * xml ) = 0 ;
     int collidesWithHandle( const QPointF & point ) const
     {
+        // 从最上层的控制点找
         const Handles::const_reverse_iterator hend =  m_handles.rend();
         for (Handles::const_reverse_iterator it = m_handles.rbegin(); it != hend; ++it)
         {
@@ -271,10 +272,6 @@ public:
     QString displayName() const { return tr("ellipse"); }
     virtual bool loadFromXml(QXmlStreamReader * xml );
     virtual bool saveToXml( QXmlStreamWriter * xml );
-
-protected:
-    //void hoverEnterEvent(QGraphicsSceneHoverEvent *e );
-    //void hoverLeaveEvent(QGraphicsSceneHoverEvent *e );
 
 protected:
     void updatehandles();

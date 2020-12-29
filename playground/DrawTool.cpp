@@ -44,13 +44,20 @@ enum SelectMode
 
 SelectMode selectMode = none;
 
+// 用于指示控制的是外接矩形的哪个点
+/**
+ *      LeftTop     Top     RightTop
+ *
+ *      Left                Right
+ *
+ *      LeftBottom  Bottom  RightBottom
+ */
 int nDragHandle = Handle_None;
 
 static void setCursor(GraphicsScene * scene , const QCursor & cursor )
 {
     QGraphicsView * view = scene->view();
-    if (view)
-        view->setCursor(cursor);
+    if (view) view->setCursor(cursor);
 }
 
 DrawTool::DrawTool(DrawShape shape)
@@ -78,7 +85,7 @@ void DrawTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
         //c_drawShape = selection;
     }
 
-    setCursor(scene,Qt::ArrowCursor);
+    setCursor(scene, Qt::ArrowCursor);
 }
 
 void DrawTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -110,6 +117,7 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
     if ( event->button() != Qt::LeftButton ) return;
 
+    // TODO m_hoverSizer什么意思？？？
     if (!m_hoverSizer)
        scene->mouseEvent(event);
 
@@ -122,15 +130,18 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
         item = qgraphicsitem_cast<AbstractShape*>(items.first());
 
     if ( item != 0 ){
-
+        // 碰撞检测，检测当前鼠标点所在的控制点的位置
         nDragHandle = item->collidesWithHandle(event->scenePos());
+
+        // 当前鼠标点在预定义的控制点内（LeftTop ... Left）
         if ( nDragHandle != Handle_None && nDragHandle <= Left )
              selectMode = size;
-        else if ( nDragHandle > Left )
+        else if ( nDragHandle > Left ) // 自定义的控制点
             selectMode = editor;
-        else
+        else // nDragHandle == Handle_None
             selectMode =  move;
 
+        // 如果当前控制点在与控制点内，则计算当前控制点的相对位置的控制点
         if ( nDragHandle!= Handle_None && nDragHandle <= Left ){
             opposite_ = item->opposite(nDragHandle);
             if( opposite_.x() == 0 )
@@ -140,12 +151,12 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
         }
 
         setCursor(scene,Qt::ClosedHandCursor);
+    } else if ( items.count() > 1 )
+        selectMode =  move; // 如果当前选中多个items，则认为是要移动items
 
-    }else if ( items.count() > 1 )
-        selectMode =  move;
-
+    // 当前没有选中任何item
     if( selectMode == none ){
-        selectMode = netSelect;
+        selectMode = netSelect; // 选择多个？？？
         if ( scene->view() ){
             QGraphicsView * view = scene->view();
             view->setDragMode(QGraphicsView::RubberBandDrag);
@@ -167,7 +178,13 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
         }
 
         dashRect = new QGraphicsPathItem(item->shape());
-        dashRect->setPen(Qt::DashLine);
+        QPen tpen = dashRect->pen();
+        tpen.setWidthF(2);
+        tpen.setStyle(Qt::DashLine);
+        tpen.setColor(Qt::white);
+        tpen.setCosmetic(true);
+
+        dashRect->setPen(tpen);
         dashRect->setPos(item->pos());
         dashRect->setTransformOriginPoint(item->transformOriginPoint());
         dashRect->setTransform(item->transform());
@@ -183,10 +200,13 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseMoveEvent(event,scene);
+
     QList<QGraphicsItem *> items = scene->selectedItems();
     AbstractShape * item = 0;
+
     if ( items.count() == 1 ){
         item = qgraphicsitem_cast<AbstractShape*>(items.first());
+
         if ( item != 0 ){
             if ( nDragHandle != Handle_None && selectMode == size ){
                 if (opposite_.isNull()){
@@ -245,7 +265,6 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
 
 void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
-
     DrawTool::mouseReleaseEvent(event,scene);
 
     if ( event->button() != Qt::LeftButton ) return;
@@ -254,6 +273,9 @@ void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     if ( items.count() == 1 ){
         AbstractShape * item = qgraphicsitem_cast<AbstractShape*>(items.first());
         if ( item != 0  && selectMode == move && c_last != c_down ){
+
+             // TODO 是否按比例对齐
+
              item->setPos(initialPositions + c_last - c_down);
              emit scene->itemMoved(item , c_last - c_down );
          }else if ( item !=0 && (selectMode == size || selectMode ==editor) && c_last != c_down ){
@@ -606,10 +628,12 @@ RectTool::RectTool(DrawShape drawShape)
 
 void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    qDebug() << "x scale: " << scene->view()->transform().m11();
+    qDebug() << "y scale: " << scene->view()->transform().m22();
 
     if ( event->button() != Qt::LeftButton ) return;
-
     scene->clearSelection();
+
     DrawTool::mousePressEvent(event,scene);
     switch ( c_drawShape ){
     case rectangle:
@@ -621,20 +645,26 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
     case ellipse:
         item = new GraphicsEllipseItem(QRect(1,1,1,1));
         break;
+    default:
+        break;
     }
     if ( item == 0) return;
 
     item->setPenColor(DrawTool::c_penColor);
     item->setBrushColor(DrawTool::c_brushColor);
 
+    qDebug() << "c_down: " << c_down;
     c_down+=QPoint(2,2);
-    item->setPos(event->scenePos());
+    qDebug() << "c_down 2: " << c_down;
+
+    qDebug() << "event->scenePos: " << event->scenePos();
+
+    item->setPos( event->scenePos());
     scene->addItem(item);
     item->setSelected(true);
 
     selectMode = size;
     nDragHandle = RightBottom;
-
 }
 
 void RectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)

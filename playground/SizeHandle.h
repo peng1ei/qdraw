@@ -37,7 +37,8 @@ public:
     void setState(SelectionHandleState st);
     void move(qreal x, qreal y );
 
-    void setBrushColor(const QColor &color) { m_color = color; }
+    void setPenColor(const QColor &color) { m_penColor = color; }
+    void setBrushColor(const QColor &color) { m_brushColor = color; }
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *e );
@@ -48,7 +49,8 @@ private:
     const int m_dir;
     bool   m_controlPoint;
     SelectionHandleState m_state;
-    QColor m_color;
+    QColor m_penColor;
+    QColor m_brushColor;
     bool m_mouseEnter = false;
     QCursor m_oldCursor;
 };

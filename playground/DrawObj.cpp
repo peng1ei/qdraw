@@ -138,7 +138,6 @@ GraphicsItem::GraphicsItem(QGraphicsItem *parent)
     this->setAcceptHoverEvents(true);
 }
 
-
 QPixmap GraphicsItem::image() {
     QPixmap pixmap(64, 64);
     pixmap.fill(Qt::transparent);
@@ -250,12 +249,11 @@ QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, cons
     return QGraphicsItem::itemChange(change, value);
 }
 
-
 GraphicsRectItem::GraphicsRectItem(const QRect & rect , bool isRound , QGraphicsItem *parent)
     :GraphicsItem(parent)
     ,m_isRound(isRound)
-    ,m_fRatioX(1/10.0)
     ,m_fRatioY(1/3.0)
+    ,m_fRatioX(1/10.0)
 {
 
     m_width = rect.width();
@@ -265,6 +263,7 @@ GraphicsRectItem::GraphicsRectItem(const QRect & rect , bool isRound , QGraphics
     m_localRect = rect;
     m_originPoint = QPointF(0,0);
     if( m_isRound ){
+        // 圆角矩形
         SizeHandleRect *shr = new SizeHandleRect(this, 9 , true);
         m_handles.push_back(shr);
         shr = new SizeHandleRect(this, 10 , true);
@@ -300,6 +299,7 @@ QPainterPath GraphicsRectItem::shape() const
         ry = 0;
     else
         ry = m_height * m_fRatioY + 0.5;
+
     if ( m_isRound )
         path.addRoundedRect(rect(),rx,ry);
     else
@@ -310,6 +310,7 @@ QPainterPath GraphicsRectItem::shape() const
 void GraphicsRectItem::control(int dir, const QPointF & delta)
 {
     QPointF local = mapFromParent(delta);
+    //QPointF local = mapFromScene(delta);
     switch (dir) {
     case 9:
     {
@@ -476,17 +477,23 @@ void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 
 void GraphicsRectItem::updatehandles()
 {
-    qDebug() << "Handles size: " << m_handles.size();
-
     const QRectF &geom = this->boundingRect();
-
-    qDebug() << geom;
-
     GraphicsItem::updatehandles();
     if ( m_isRound ){
-        m_handles[8]->move( geom.right() , geom.top() + geom.height() * m_fRatioY );
-        m_handles[9]->move( geom.right() - geom.width() * m_fRatioX , geom.top());
+        qreal y = geom.top() + geom.height() * m_fRatioY + 0.5;
+        if (y > geom.top() + m_height/2)
+            y = geom.top() + m_height/2;
+
+        qreal x = geom.right() - geom.width() * m_fRatioX - 0.5;
+        if (x < geom.right() - m_width / 2)
+            x = geom.right() - m_width / 2;
+
+        m_handles[8]->move( geom.right() , y);
+        m_handles[9]->move( x, geom.top());
         //m_handles[10]->move(m_originPoint.x(),m_originPoint.y());
+
+        m_handles[8]->setBrushColor(m_brush.color());
+        m_handles[9]->setBrushColor(m_brush.color());
     } else {
         m_handles[0+Left]->move(geom.left(), geom.top());
         m_handles[1+Left]->move(geom.right(), geom.top());
@@ -521,9 +528,6 @@ QRectF RecalcBounds(const QPolygonF&  pts)
 
 void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-   //painter->setPen(pen());
-   //painter->setBrush(brush());
-
    QPen tpen = painter->pen();
    tpen.setWidthF(1);
    tpen.setColor(m_pen.color());
@@ -547,10 +551,11 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
        ry = 0;
    else
        ry = m_height * m_fRatioY + 0.5;
+
    if ( m_isRound )
        painter->drawRoundedRect(rect(),rx,ry);
    else
-       painter->drawRect(rect().toRect());
+       painter->drawRect(m_localRect);
 
 #if 0 // 绘制十字丝标注
    painter->setPen(Qt::blue);
