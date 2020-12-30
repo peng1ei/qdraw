@@ -135,7 +135,7 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
         // 当前鼠标点在预定义的控制点内（LeftTop ... Left）
         if ( nDragHandle != Handle_None && nDragHandle <= Left )
-             selectMode = size;
+             selectMode = editor; // size, 原先是size，但是目前size好像都没用到了
         else if ( nDragHandle > Left ) // 自定义的控制点
             selectMode = editor;
         else // nDragHandle == Handle_None
@@ -210,28 +210,14 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
 
         if ( item != 0 ){
             if ( nDragHandle != Handle_None && selectMode == size ){
-//                if (opposite_.isNull()){
-//                    opposite_ = item->opposite(nDragHandle);
-//                    if( opposite_.x() == 0 )
-//                        opposite_.setX(1);//1
-//                    if (opposite_.y() == 0 )
-//                        opposite_.setY(1);//1
-//                }
                 QPointF opposite_(0,0);
-
-
-
                 QPointF new_delta = item->mapFromScene(c_last) - opposite_;
                 QPointF initial_delta = item->mapFromScene(c_down) - opposite_;
                 if (initial_delta.x() == 0 && initial_delta.y()==0) {
                     initial_delta.setX(1);
                     initial_delta.setY(1);
                 }
-                //QRectF bbox = item->boundingRect();
-                //QPointF initial_delta = QPointF(bbox.right(), bbox.bottom()) - opposite_;
 
-                //double sx = new_delta.x() / initial_delta.x();
-                //double sy = new_delta.y() / initial_delta.y();
                 double sx = new_delta.x();// / initial_delta.x();
                 double sy = new_delta.y();// / initial_delta.y();
 
@@ -245,6 +231,10 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
             } else if ( nDragHandle > Left  && selectMode == editor ){
                 item->control(nDragHandle,c_last);
                 emit scene->itemControl(item,nDragHandle,c_last,c_down);
+            }
+            else if ( nDragHandle <= Left && nDragHandle > Handle_None  && selectMode == editor ){
+                            item->control(nDragHandle,c_last);
+                            emit scene->itemControl(item,nDragHandle,c_last,c_down);
             }
             else if(nDragHandle == Handle_None ){
                  int handle = item->collidesWithHandle(event->scenePos());

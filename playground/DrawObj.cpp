@@ -128,7 +128,10 @@ GraphicsItem::GraphicsItem(QGraphicsItem *parent)
     // handles
     m_handles.reserve(Left);
     for (int i = LeftTop; i <= Left; ++i) {
-        SizeHandleRect *shr = new SizeHandleRect(this,i);
+        SizeHandleRect *shr = new SizeHandleRect(this,i,true);
+        //shr->setPenColor(Qt::darkBlue);
+        //shr->setBrushColor(Qt::white);
+        //shr->setState(SelectionHandleState::SelectionHandleActive);
         m_handles.push_back(shr);
     }
 
@@ -255,7 +258,6 @@ GraphicsRectItem::GraphicsRectItem(const QRectF & rect , bool isRound , QGraphic
     ,m_fRatioY(1/3.0)
     ,m_fRatioX(1/10.0)
 {
-
     m_width = rect.width();
     m_height = rect.height();
     m_initialRect = rect;
@@ -328,6 +330,9 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             if(H==0)
                 H=1;
             m_fRatioY = std::abs(((float)(delta1.top()-y)))/H;
+
+            prepareGeometryChange();
+            updatehandles();
         }
             break;
         case 10:
@@ -342,6 +347,9 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             if(W==0)
                 W=1;
             m_fRatioX = std::abs(((float)(delta1.right()-x)))/W;
+
+            prepareGeometryChange();
+            updatehandles();
             break;
         }
         case 11:
@@ -353,16 +361,110 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             m_originPoint = local;
         }
             break;
+        case 1:
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+                setPos(delta);
+                m_localRect = QRectF(0,0,oldRect.width()-local.x(),oldRect.height()-local.y());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 3:
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+                //setPos(delta);
+                //QPointF p = pos();
+                //p.setY(delta.y());
+                //setPos(p);
+                setY(delta.y());
+                m_localRect = QRectF(0,0,local.x(),oldRect.height() - local.y());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 5:
+            {
+                prepareGeometryChange();
+                m_localRect = QRectF(0,0, local.x(), local.y());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 7:
+        case 12: // left-bottom
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+                setX(delta.x());
+                m_localRect = QRectF(0,0,oldRect.width() - local.x(),local.y());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 2: // Top
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+                setY(delta.y());
+                m_localRect = QRectF(0,0,oldRect.width(),oldRect.height() - local.y());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 6: // Bottom
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                m_localRect = QRectF(0,0,oldRect.width(),local.y());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 4: // Right
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+                m_localRect = QRectF(0,0,local.x(),oldRect.height());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
+        case 8: // Left
+            {
+                QRectF oldRect = m_localRect;
+                prepareGeometryChange();
+                setX(delta.x());
+                m_localRect = QRectF(0,0, oldRect.width() - local.x(),oldRect.height());
+                m_width = m_localRect.width();
+                m_height = m_localRect.height();
+                updatehandles();
+            }
+            break;
        default:
             break;
         }
-
-        prepareGeometryChange();
-        updatehandles();
+        //prepareGeometryChange();
+        //updatehandles();
         return;
     }
 
     switch (dir) {
+    case 1:
     case 9:// left-top
         {
             QRectF oldRect = m_localRect;
@@ -375,6 +477,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
+    case 3:
     case 10: // right-top
         {
             QRectF oldRect = m_localRect;
@@ -391,6 +494,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
+    case 5:
     case 11: // right-bottom
         {
             prepareGeometryChange();
@@ -400,6 +504,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
+    case 7:
     case 12: // left-bottom
         {
             QRectF oldRect = m_localRect;
@@ -407,6 +512,50 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
             setX(delta.x());
             m_localRect = QRectF(0,0,oldRect.width() - local.x(),local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 2: // Top
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            setY(delta.y());
+            m_localRect = QRectF(0,0,oldRect.width(),oldRect.height() - local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 6: // Bottom
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            m_localRect = QRectF(0,0,oldRect.width(),local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 4: // Right
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            m_localRect = QRectF(0,0,local.x(),oldRect.height());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 8: // Left
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            setX(delta.x());
+            m_localRect = QRectF(0,0, oldRect.width() - local.x(),oldRect.height());
             m_width = m_localRect.width();
             m_height = m_localRect.height();
             updatehandles();
@@ -421,6 +570,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
 
 void GraphicsRectItem::stretch(int handle , double sx, double sy, const QPointF & origin)
 {
+    Q_UNUSED(handle)
     QTransform trans  ;
 
 #if 0
@@ -442,11 +592,6 @@ void GraphicsRectItem::stretch(int handle , double sx, double sy, const QPointF 
     qDebug() << "origin: " << origin;
 
     //opposite_ = origin;
-
-//    QPointF origin0 = QPointF(m_localRect.x()+m_width, m_localRect.y() + m_height);
-//    trans.translate(origin0.x(),origin0.y());
-//    trans.scale(sx,sy);
-//    trans.translate(-origin0.x(),-origin0.y());
 
     trans.translate(origin.x(),origin.y());
     trans.scale(sx,sy);
@@ -1317,6 +1462,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
    default:
         break;
     }
+
     prepareGeometryChange();
     if ( m_startAngle > m_spanAngle )
         m_startAngle-=360;
@@ -1331,6 +1477,105 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
         m_spanAngle = 400;
     }
     updatehandles();
+
+    switch (dir) {
+    case 1:
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            setPos(delta);
+            m_localRect = QRectF(0,0,oldRect.width()-local.x(),oldRect.height()-local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 3:
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            //setPos(delta);
+            //QPointF p = pos();
+            //p.setY(delta.y());
+            //setPos(p);
+            setY(delta.y());
+            m_localRect = QRectF(0,0,local.x(),oldRect.height() - local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 5:
+        {
+            prepareGeometryChange();
+            m_localRect = QRectF(0,0, local.x(), local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 7:
+    case 12: // left-bottom
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            setX(delta.x());
+            m_localRect = QRectF(0,0,oldRect.width() - local.x(),local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 2: // Top
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            setY(delta.y());
+            m_localRect = QRectF(0,0,oldRect.width(),oldRect.height() - local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 6: // Bottom
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            m_localRect = QRectF(0,0,oldRect.width(),local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 4: // Right
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            m_localRect = QRectF(0,0,local.x(),oldRect.height());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 8: // Left
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            setX(delta.x());
+            m_localRect = QRectF(0,0, oldRect.width() - local.x(),oldRect.height());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 QRectF GraphicsEllipseItem::boundingRect() const
