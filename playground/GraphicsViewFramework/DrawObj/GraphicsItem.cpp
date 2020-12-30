@@ -1,23 +1,24 @@
 #include "GraphicsItem.h"
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+//#include <QGraphicsDropShadowEffect>
 
 namespace gvf {
 
 GraphicsItem::GraphicsItem(QGraphicsItem *parent)
     :AbstractShapeType<QGraphicsItem>(parent)
 {
-    /*
-    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
-    effect->setBlurRadius(4);
-    setGraphicsEffect(effect);
-   */
+//    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+//    effect->setBlurRadius(4);
+//    setGraphicsEffect(effect);
+
 
     // 预定义外界矩形的角点，比如当选择某个item的时候，可以显示这些角点
     // handles
     m_handles.reserve(Left);
     for (int i = LeftTop; i <= Left; ++i) {
         SizeHandleRect *shr = new SizeHandleRect(this,i,true);
+        shr->setZValue(1);
         m_handles.push_back(shr);
     }
 
