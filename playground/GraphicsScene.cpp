@@ -189,7 +189,7 @@ void GraphicsScene::align(AlignType alignType)
                qreal fx = width / aitem->width();
                qreal fy = height / aitem->height();
                if ( fx == 1.0 && fy == 1.0 ) break;
-               aitem->stretch(RightBottom,fx,fy,aitem->opposite(RightBottom));
+               ///aitem->stretch(RightBottom,fx,fy,aitem->opposite(RightBottom));
                aitem->updateCoordinate();
                emit itemResize(aitem,RightBottom,QPointF(fx,fy));
            }
@@ -201,7 +201,7 @@ void GraphicsScene::align(AlignType alignType)
             if ( aitem ){
                 qreal fx = width / aitem->width();
                 if ( fx == 1.0 ) break;
-                aitem->stretch(Right,fx,1,aitem->opposite(Right));
+                //aitem->stretch(Right,fx,1,aitem->opposite(Right));
                 aitem->updateCoordinate();
                 emit itemResize(aitem,Right,QPointF(fx,1));
             }
@@ -215,7 +215,7 @@ void GraphicsScene::align(AlignType alignType)
 
                 qreal fy = height / aitem->height();
                 if (fy == 1.0 ) break ;
-                aitem->stretch(Bottom,1,fy,aitem->opposite(Bottom));
+                ///aitem->stretch(Bottom,1,fy,aitem->opposite(Bottom));
                 aitem->updateCoordinate();
                 emit itemResize(aitem,Bottom,QPointF(1,fy));
             }

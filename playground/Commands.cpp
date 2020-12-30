@@ -264,7 +264,7 @@ ResizeShapeCommand::ResizeShapeCommand(QGraphicsItem *item,
     myItem = item;
     handle_ = handle;
     scale_  = QPointF(scale) ;
-    opposite_ = Handle_None;
+    //opposite_ = Handle_None;
     bResized = true;       
 }
 
@@ -275,11 +275,12 @@ void ResizeShapeCommand::undo()
 
     AbstractShape * item = qgraphicsitem_cast<AbstractShape*>(myItem);
     if ( item ){
-        if ( Handle_None != opposite_ ){
-            handle = opposite_;
-        }
+//        if ( Handle_None != opposite_ ){
+//            handle = opposite_;
+//        }
 
-        item->stretch(handle,1./scale_.x(),1./scale_.y(),item->opposite(handle));
+        //item->stretch(handle,1./scale_.x(),1./scale_.y(),item->opposite(handle));
+        item->stretch(handle,1./scale_.x(),1./scale_.y(),QPointF(0,0));
         item->updateCoordinate();
         item->update();
     }
@@ -295,7 +296,7 @@ void ResizeShapeCommand::redo()
     if ( !bResized ){
         AbstractShape * item = qgraphicsitem_cast<AbstractShape*>(myItem);
         if ( item ){
-            item->stretch(handle,scale_.x(),scale_.y(),item->opposite(handle));
+            //item->stretch(handle,scale_.x(),scale_.y(),item->opposite(handle));
             item->updateCoordinate();
             item->update();
         }
@@ -321,12 +322,12 @@ bool ResizeShapeCommand::mergeWith(const QUndoCommand *command)
 
     AbstractShape * ab = qgraphicsitem_cast<AbstractShape*>(item);
 
-    opposite_ = ab->swapHandle(cmd->handle_,cmd->scale_);
+    ///opposite_ = ab->swapHandle(cmd->handle_,cmd->scale_);
 
     handle_ = cmd->handle_;
     scale_ = cmd->scale_;
-    setText(QObject::tr(" mergeWith Resize %1,%2,%3,%4")
-        .arg(scale_.x(),8,'f',2).arg(scale_.y() ,8,'f',2).arg(handle_).arg(opposite_));
+//    setText(QObject::tr(" mergeWith Resize %1,%2,%3,%4")
+//        .arg(scale_.x(),8,'f',2).arg(scale_.y() ,8,'f',2).arg(handle_).arg(opposite_));
 
     return true;
 }

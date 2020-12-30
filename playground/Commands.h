@@ -36,7 +36,7 @@ public:
 private:
     QGraphicsItem  *myItem;
     int handle_;
-    int opposite_;
+    //int opposite_;
     QPointF scale_;
     bool bResized;
 };

@@ -159,7 +159,7 @@ void GraphicsItem::updatehandles()
 
     const Handles::iterator hend =  m_handles.end();
     for (Handles::iterator it = m_handles.begin(); it != hend; ++it) {
-        SizeHandleRect *hndl = *it;;
+        SizeHandleRect *hndl = *it;
         switch (hndl->dir()) {
         case LeftTop:
             hndl->move(geom.x() , geom.y() );
@@ -249,7 +249,7 @@ QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, cons
     return QGraphicsItem::itemChange(change, value);
 }
 
-GraphicsRectItem::GraphicsRectItem(const QRect & rect , bool isRound , QGraphicsItem *parent)
+GraphicsRectItem::GraphicsRectItem(const QRectF & rect , bool isRound , QGraphicsItem *parent)
     :GraphicsItem(parent)
     ,m_isRound(isRound)
     ,m_fRatioY(1/3.0)
@@ -309,55 +309,121 @@ QPainterPath GraphicsRectItem::shape() const
 
 void GraphicsRectItem::control(int dir, const QPointF & delta)
 {
+    qDebug() << "delta: " << delta;
     QPointF local = mapFromParent(delta);
-    //QPointF local = mapFromScene(delta);
+    qDebug() << "local: " << local;
+    qDebug() << "local scene: " << mapFromScene(delta);
+
+    if (m_isRound) {
+        switch (dir) {
+        case 9:
+        {
+            QRectF delta1 = rect();
+            int y = local.y();
+            if(y> delta1.center().y() )
+                y = delta1.center().y();
+            if(y<delta1.top())
+                y=delta1.top();
+            int H= delta1.height();
+            if(H==0)
+                H=1;
+            m_fRatioY = std::abs(((float)(delta1.top()-y)))/H;
+        }
+            break;
+        case 10:
+        {
+            QRectF delta1 = rect();
+            int x = local.x();
+            if(x < delta1.center().x() )
+                x = delta1.center().x();
+            if(x>delta1.right())
+                x=delta1.right();
+            int W= delta1.width();
+            if(W==0)
+                W=1;
+            m_fRatioX = std::abs(((float)(delta1.right()-x)))/W;
+            break;
+        }
+        case 11:
+        {
+            // TODO
+            //setTransform(transform().translate(-local.x(),-local.y()));
+            //setTransformOriginPoint(local.x(),local.y());
+            //setTransform(transform().translate(local.x(),local.y()));
+            m_originPoint = local;
+        }
+            break;
+       default:
+            break;
+        }
+
+        prepareGeometryChange();
+        updatehandles();
+        return;
+    }
+
     switch (dir) {
-    case 9:
-    {
-        QRectF delta1 = rect();
-        int y = local.y();
-        if(y> delta1.center().y() )
-            y = delta1.center().y();
-        if(y<delta1.top())
-            y=delta1.top();
-        int H= delta1.height();
-        if(H==0)
-            H=1;
-        m_fRatioY = std::abs(((float)(delta1.top()-y)))/H;
-    }
+    case 9:// left-top
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            setPos(delta);
+            m_localRect = QRectF(0,0,oldRect.width()-local.x(),oldRect.height()-local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
         break;
-    case 10:
-    {
-        QRectF delta1 = rect();
-        int x = local.x();
-        if(x < delta1.center().x() )
-            x = delta1.center().x();
-        if(x>delta1.right())
-            x=delta1.right();
-        int W= delta1.width();
-        if(W==0)
-            W=1;
-        m_fRatioX = std::abs(((float)(delta1.right()-x)))/W;
+    case 10: // right-top
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            //setPos(delta);
+            //QPointF p = pos();
+            //p.setY(delta.y());
+            //setPos(p);
+            setY(delta.y());
+            m_localRect = QRectF(0,0,local.x(),oldRect.height() - local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 11: // right-bottom
+        {
+            prepareGeometryChange();
+            m_localRect = QRectF(0,0, local.x(), local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    case 12: // left-bottom
+        {
+            QRectF oldRect = m_localRect;
+            prepareGeometryChange();
+            // TODO 修改Item在Scene的坐标不知道会不会带来其它问题
+            setX(delta.x());
+            m_localRect = QRectF(0,0,oldRect.width() - local.x(),local.y());
+            m_width = m_localRect.width();
+            m_height = m_localRect.height();
+            updatehandles();
+        }
+        break;
+    default:
         break;
     }
-    case 11:
-    {
-//        setTransform(transform().translate(-local.x(),-local.y()));
-//        setTransformOriginPoint(local.x(),local.y());
-//        setTransform(transform().translate(local.x(),local.y()));
-        m_originPoint = local;
-    }
-        break;
-   default:
-        break;
-    }
-    prepareGeometryChange();
-    updatehandles();
+
+    qDebug() << "m_localRect: " << m_localRect;
 }
 
 void GraphicsRectItem::stretch(int handle , double sx, double sy, const QPointF & origin)
 {
     QTransform trans  ;
+
+#if 0
     switch (handle) {
     case Right:
     case Left:
@@ -370,19 +436,32 @@ void GraphicsRectItem::stretch(int handle , double sx, double sy, const QPointF 
     default:
         break;
     }
+#endif
 
-    opposite_ = origin;
+    qDebug() << "sx: " << sx << " sy: " << sy;
+    qDebug() << "origin: " << origin;
+
+    //opposite_ = origin;
+
+//    QPointF origin0 = QPointF(m_localRect.x()+m_width, m_localRect.y() + m_height);
+//    trans.translate(origin0.x(),origin0.y());
+//    trans.scale(sx,sy);
+//    trans.translate(-origin0.x(),-origin0.y());
 
     trans.translate(origin.x(),origin.y());
     trans.scale(sx,sy);
     trans.translate(-origin.x(),-origin.y());
 
     prepareGeometryChange();
-    m_localRect = trans.mapRect(m_initialRect);
+
+    qDebug() << "m_initialRect: " << m_initialRect;
+
+    // [by pl]
+    //m_localRect = trans.mapRect(m_initialRect);
+    m_localRect = trans.mapRect(QRectF(0,0,1,1));
     m_width = m_localRect.width();
     m_height = m_localRect.height();
     updatehandles();
-
 }
 
 void GraphicsRectItem::updateCoordinate()
@@ -394,18 +473,24 @@ void GraphicsRectItem::updateCoordinate()
     pt2 = mapToScene(m_localRect.center());
     delta = pt1 - pt2;
 
+    qDebug() << "m_localRect: " << m_localRect;
     if (!parentItem() ){
         prepareGeometryChange();
-        m_localRect = QRectF(-m_width/2,-m_height/2,m_width,m_height);
+        //[by pl]
+        //m_localRect = QRectF(-m_width/2,-m_height/2,m_width,m_height);
+        m_localRect = QRectF(0,0,m_width,m_height);
         m_width = m_localRect.width();
         m_height = m_localRect.height();
         setTransform(transform().translate(delta.x(),delta.y()));
         setTransformOriginPoint(m_localRect.center());
-        moveBy(-delta.x(),-delta.y());
+        //moveBy(-delta.x(),-delta.y());
         setTransform(transform().translate(-delta.x(),-delta.y()));
-        opposite_ = QPointF(0,0);
+        //opposite_ = QPointF(0,0);
         updatehandles();
     }
+
+    qDebug() << "m_localRect 2: " << m_localRect;
+
     m_initialRect = m_localRect;
 }
 
@@ -465,14 +550,14 @@ void GraphicsRectItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
     m_alpha = 100;
     update();
-    QGraphicsItem::hoverEnterEvent(e);
+    //QGraphicsItem::hoverEnterEvent(e);
 }
 
 void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
     m_alpha = 50;
     update();
-    QGraphicsItem::hoverLeaveEvent(e);
+    //QGraphicsItem::hoverLeaveEvent(e);
 }
 
 void GraphicsRectItem::updatehandles()
@@ -495,6 +580,7 @@ void GraphicsRectItem::updatehandles()
         m_handles[8]->setBrushColor(m_brush.color());
         m_handles[9]->setBrushColor(m_brush.color());
     } else {
+#if 1
         m_handles[0+Left]->move(geom.left(), geom.top());
         m_handles[1+Left]->move(geom.right(), geom.top());
         m_handles[2+Left]->move(geom.right(), geom.bottom());
@@ -504,6 +590,7 @@ void GraphicsRectItem::updatehandles()
         m_handles[1+Left]->setBrushColor(m_brush.color());
         m_handles[2+Left]->setBrushColor(m_brush.color());
         m_handles[3+Left]->setBrushColor(m_brush.color());
+#endif
     }
 }
 
@@ -563,7 +650,7 @@ void GraphicsRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
    painter->drawLine(QLine(QPoint(opposite_.x(),opposite_.y()-6),QPoint(opposite_.x(),opposite_.y()+6)));
 #endif
 
-   return;
+   //return;
    if (option->state & QStyle::State_Selected)
        qt_graphicsItem_highlightSelected(this, painter, option);
 /*
@@ -1160,7 +1247,7 @@ void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
        painter->drawPolyline(m_points);
     }
 
-   return;
+   ///return;
    // 绘制外接矩形，个人认为可以不必画出
    if (option->state & QStyle::State_Selected)
        qt_graphicsItem_highlightSelected(this, painter, option);
@@ -1360,7 +1447,7 @@ void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
         painter->drawPie(m_localRect, startAngle * 16 , (endAngle-startAngle) * 16);
 
 
-    return;
+    ///return;
     if (option->state & QStyle::State_Selected)
         qt_graphicsItem_highlightSelected(this, painter, option);
 }
@@ -1545,14 +1632,14 @@ void GraphicsPolygonItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
     m_alpha = 100;
     update();
-    QGraphicsItem::hoverEnterEvent(e);
+    //QGraphicsItem::hoverEnterEvent(e);
 }
 
 void GraphicsPolygonItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
     m_alpha = 50;
     update();
-    QGraphicsItem::hoverLeaveEvent(e);
+    //QGraphicsItem::hoverLeaveEvent(e);
 }
 
 void GraphicsPolygonItem::updatehandles()
@@ -1599,7 +1686,7 @@ void GraphicsPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     qDebug() << "Polygon point size: " << m_points.size();
 
 
-    return;
+    //return;
 
     // 绘制外接矩形，个人认为可以不必画出
     if (option->state & QStyle::State_Selected)

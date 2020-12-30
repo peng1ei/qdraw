@@ -32,7 +32,7 @@ public:
         :BaseType(parent)
     {
         m_pen=QPen(Qt::NoPen);
-        m_brush= QBrush(QColor(rand() % 32 * 8, rand() % 32 * 8, rand() % 32 * 8));
+        //m_brush= QBrush(QColor(rand() % 32 * 8, rand() % 32 * 8, rand() % 32 * 8));
         m_width = m_height = 0;
     }
     virtual ~AbstractShapeType(){}
@@ -127,36 +127,36 @@ public:
         }
         return dir;
     }
-    virtual QPointF opposite( int handle ) {
-        QPointF pt;
-        switch (handle) {
-        case Right:
-            pt = m_handles.at(Left-1)->pos();
-            break;
-        case RightTop:
-            pt = m_handles[LeftBottom-1]->pos();
-            break;
-        case RightBottom:
-            pt = m_handles[LeftTop-1]->pos();
-            break;
-        case LeftBottom:
-            pt = m_handles[RightTop-1]->pos();
-            break;
-        case Bottom:
-            pt = m_handles[Top-1]->pos();
-            break;
-        case LeftTop:
-            pt = m_handles[RightBottom-1]->pos();
-            break;
-        case Left:
-            pt = m_handles[Right-1]->pos();
-            break;
-        case Top:
-            pt = m_handles[Bottom-1]->pos();
-            break;
-         }
-        return pt;
-    }
+//    virtual QPointF opposite( int handle ) {
+//        QPointF pt;
+//        switch (handle) {
+//        case Right:
+//            pt = m_handles.at(Left-1)->pos();
+//            break;
+//        case RightTop:
+//            pt = m_handles[LeftBottom-1]->pos();
+//            break;
+//        case RightBottom:
+//            pt = m_handles[LeftTop-1]->pos();
+//            break;
+//        case LeftBottom:
+//            pt = m_handles[RightTop-1]->pos();
+//            break;
+//        case Bottom:
+//            pt = m_handles[Top-1]->pos();
+//            break;
+//        case LeftTop:
+//            pt = m_handles[RightBottom-1]->pos();
+//            break;
+//        case Left:
+//            pt = m_handles[Right-1]->pos();
+//            break;
+//        case Top:
+//            pt = m_handles[Bottom-1]->pos();
+//            break;
+//         }
+//        return pt;
+//    }
 
     QColor brushColor() const {return m_brush.color();}
     QBrush brush() const {return m_brush;}
@@ -229,7 +229,7 @@ protected:
 class GraphicsRectItem : public GraphicsItem
 {
 public:
-    GraphicsRectItem(const QRect & rect , bool isRound = false ,QGraphicsItem * parent = 0 );
+    GraphicsRectItem(const QRectF & rect , bool isRound = false ,QGraphicsItem * parent = 0 );
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void control(int dir, const QPointF & delta);
@@ -254,7 +254,7 @@ protected:
     qreal m_fRatioY;
     qreal m_fRatioX;
     QRectF m_initialRect;
-    QPointF opposite_;
+    //QPointF opposite_;
     QPointF m_originPoint;
 
     int m_alpha = 50;

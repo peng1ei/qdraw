@@ -108,7 +108,7 @@ SelectTool::SelectTool()
 {
     dashRect = 0;
     selLayer = 0;
-    opposite_ = QPointF();
+    //opposite_ = QPointF();
 }
 
 void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -143,11 +143,11 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
         // 如果当前控制点在与控制点内，则计算当前控制点的相对位置的控制点
         if ( nDragHandle!= Handle_None && nDragHandle <= Left ){
-            opposite_ = item->opposite(nDragHandle);
-            if( opposite_.x() == 0 )
-                opposite_.setX(1);
-            if (opposite_.y() == 0 )
-                opposite_.setY(1);
+//            opposite_ = item->opposite(nDragHandle);
+//            if( opposite_.x() == 0 )
+//                opposite_.setX(1);
+//            if (opposite_.y() == 0 )
+//                opposite_.setY(1);
         }
 
         setCursor(scene,Qt::ClosedHandCursor);
@@ -191,6 +191,7 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
         dashRect->setRotation(item->rotation());
         dashRect->setScale(item->scale());
         dashRect->setZValue(item->zValue());
+
         scene->addItem(dashRect);
 
         initialPositions = item->pos();
@@ -209,22 +210,32 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
 
         if ( item != 0 ){
             if ( nDragHandle != Handle_None && selectMode == size ){
-                if (opposite_.isNull()){
-                    opposite_ = item->opposite(nDragHandle);
-                    if( opposite_.x() == 0 )
-                        opposite_.setX(1);
-                    if (opposite_.y() == 0 )
-                        opposite_.setY(1);
-                }
+//                if (opposite_.isNull()){
+//                    opposite_ = item->opposite(nDragHandle);
+//                    if( opposite_.x() == 0 )
+//                        opposite_.setX(1);//1
+//                    if (opposite_.y() == 0 )
+//                        opposite_.setY(1);//1
+//                }
+                QPointF opposite_(0,0);
+
+
 
                 QPointF new_delta = item->mapFromScene(c_last) - opposite_;
                 QPointF initial_delta = item->mapFromScene(c_down) - opposite_;
+                if (initial_delta.x() == 0 && initial_delta.y()==0) {
+                    initial_delta.setX(1);
+                    initial_delta.setY(1);
+                }
+                //QRectF bbox = item->boundingRect();
+                //QPointF initial_delta = QPointF(bbox.right(), bbox.bottom()) - opposite_;
 
-                double sx = new_delta.x() / initial_delta.x();
-                double sy = new_delta.y() / initial_delta.y();
+                //double sx = new_delta.x() / initial_delta.x();
+                //double sy = new_delta.y() / initial_delta.y();
+                double sx = new_delta.x();// / initial_delta.x();
+                double sy = new_delta.y();// / initial_delta.y();
 
                 item->stretch(nDragHandle, sx , sy , opposite_);
-
                 emit scene->itemResize(item,nDragHandle,QPointF(sx,sy));
 
               //  qDebug()<<"scale:"<<nDragHandle<< item->mapToScene(opposite_)<< sx << " ，" << sy
@@ -260,7 +271,6 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     {
         scene->mouseEvent(event);
     }
-
 }
 
 void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -273,9 +283,6 @@ void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     if ( items.count() == 1 ){
         AbstractShape * item = qgraphicsitem_cast<AbstractShape*>(items.first());
         if ( item != 0  && selectMode == move && c_last != c_down ){
-
-             // TODO 是否按比例对齐
-
              item->setPos(initialPositions + c_last - c_down);
              emit scene->itemMoved(item , c_last - c_down );
          }else if ( item !=0 && (selectMode == size || selectMode ==editor) && c_last != c_down ){
@@ -307,7 +314,7 @@ void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     selectMode = none;
     nDragHandle = Handle_None;
     m_hoverSizer = false;
-    opposite_ = QPointF();
+    //opposite_ = QPointF();
     scene->mouseEvent(event);
 }
 
@@ -360,7 +367,7 @@ void RubberBandZoomTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, Graphic
         if ( item != 0 ){
             if ( nDragHandle != Handle_None && selectMode == size ){
                 if (opposite_.isNull()){
-                    opposite_ = item->opposite(nDragHandle);
+                    //opposite_ = item->opposite(nDragHandle);
                     if( opposite_.x() == 0 )
                         opposite_.setX(1);
                     if (opposite_.y() == 0 )
@@ -637,10 +644,10 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
     DrawTool::mousePressEvent(event,scene);
     switch ( c_drawShape ){
     case rectangle:
-        item = new GraphicsRectItem(QRect(1,1,1,1));
+        item = new GraphicsRectItem(QRectF(0,0,1,1));
         break;
     case roundrect:
-        item = new GraphicsRectItem(QRect(1,1,1,1),true);
+        item = new GraphicsRectItem(QRectF(1,1,1,1),true);
         break;
     case ellipse:
         item = new GraphicsEllipseItem(QRect(1,1,1,1));
@@ -654,15 +661,20 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
     item->setBrushColor(DrawTool::c_brushColor);
 
     qDebug() << "c_down: " << c_down;
-    c_down+=QPoint(2,2);
+    //c_down+=QPoint(2,2);
     qDebug() << "c_down 2: " << c_down;
 
     qDebug() << "event->scenePos: " << event->scenePos();
 
-    item->setPos( event->scenePos());
+    // 项目的位置在父坐标中描述其原点（本地坐标（0，0））
+    // 即item在父坐标中的位置就是item坐标系的原点
+    item->setPos( event->scenePos() );
     scene->addItem(item);
-    item->setSelected(true);
 
+    qDebug() << "event->scenePos(): " << event->scenePos();
+    qDebug() << "item event->scenePos(): " << item->mapFromScene(event->scenePos());
+
+    item->setSelected(true);
     selectMode = size;
     nDragHandle = RightBottom;
 }
@@ -678,7 +690,7 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     //DrawTool::mouseMoveEvent(event,scene);
     selectTool.mouseReleaseEvent(event,scene);
 
-    if ( event->scenePos() == (c_down-QPoint(2,2))){
+    if ( event->scenePos() == (c_down/*-QPoint(2,2)*/)){
 
        if ( item != 0){
          item->setSelected(false);
@@ -748,7 +760,7 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
         }
         */
     }
-    item->addPoint(c_down+QPoint(1,0));
+    item->addPoint(c_down+QPoint(0,0)); //QPoint(1,0)
     m_nPoints++;
     selectMode = size ;
     nDragHandle = item->handleCount();
@@ -788,6 +800,8 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
 
         scene->clearSelection();
     }
+
+    scene->clearSelection();
 }
 
 void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)

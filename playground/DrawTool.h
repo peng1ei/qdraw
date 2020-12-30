@@ -64,7 +64,7 @@ public:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene ) ;
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , GraphicsScene * scene );
     QPointF initialPositions;
-    QPointF opposite_;
+    //QPointF opposite_;
     QGraphicsPathItem * dashRect;
     GraphicsItemGroup * selLayer;
 };
