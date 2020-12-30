@@ -14,13 +14,15 @@ GraphicsEllipseItem::GraphicsEllipseItem(const QRect & rect ,QGraphicsItem *pare
 
     m_startAngle = 40;
     m_spanAngle  = 400;
-    SizeHandleRect *shr = new SizeHandleRect(this, 9 , true);
+
+    // TODO 与Rect重复添加
+    SizeHandleRect *shr = new SizeHandleRect(this, Handle_Shape+1 , true);
     shr->setHandleType(SelectionHandleType::ShapeHandle);
     m_handles.push_back(shr);
-    shr = new SizeHandleRect(this, 10 , true);
+    shr = new SizeHandleRect(this, Handle_Shape+2 , true);
     shr->setHandleType(SelectionHandleType::ShapeHandle);
     m_handles.push_back(shr);
-    shr = new SizeHandleRect(this, 11 , true);
+    shr = new SizeHandleRect(this, Handle_Shape+3 , true);
     shr->setHandleType(SelectionHandleType::ShapeHandle);
     m_handles.push_back(shr);
     updatehandles();
@@ -51,14 +53,14 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
     QPointF local = mapFromScene(delta);
 
     switch (dir) {
-    case 9:
+    case Handle_Shape + 1:
     {
         qreal len_y = local.y() - m_localRect.center().y();
         qreal len_x = local.x() - m_localRect.center().x();
         m_startAngle = -atan2(len_y,len_x)*180/M_PI;
     }
         break;
-    case 10:
+    case Handle_Shape + 2:
     {
         qreal len_y = local.y() - m_localRect.center().y();
         qreal len_x = local.x() - m_localRect.center().x();
@@ -85,7 +87,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
     updatehandles();
 
     switch (dir) {
-    case 1:
+    case LeftTop:
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -97,7 +99,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 3:
+    case RightTop:
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -113,7 +115,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 5:
+    case RightBottom:
         {
             prepareGeometryChange();
             m_localRect = QRectF(0,0, local.x(), local.y());
@@ -122,8 +124,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 7:
-    case 12: // left-bottom
+    case LeftBottom:
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -135,7 +136,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 2: // Top
+    case Top: // Top
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -147,7 +148,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 6: // Bottom
+    case Bottom: // Bottom
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -157,7 +158,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 4: // Right
+    case Right: // Right
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -168,7 +169,7 @@ void GraphicsEllipseItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 8: // Left
+    case Left: // Left
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -240,16 +241,16 @@ void GraphicsEllipseItem::updatehandles()
     qreal x = (m_width/2) * cos( -m_startAngle * M_PI / 180 );
     qreal y = (m_height/2) * sin( -m_startAngle * M_PI / 180);
 
-    m_handles.at(8)->move(x-delta.x(),y-delta.y());
+    m_handles.at(Handle_Shape + 0)->move(x-delta.x(),y-delta.y());
     x = (m_width/2) * cos( -m_spanAngle * M_PI / 180);
     y = (m_height/2) * sin(-m_spanAngle * M_PI / 180);
-    m_handles.at(9)->move(x-delta.x(),y-delta.y());
+    m_handles.at(Handle_Shape + 1)->move(x-delta.x(),y-delta.y());
 
-    m_handles.at(10)->move(m_localRect.center().x(), m_localRect.center().y());
+    m_handles.at(Handle_Shape + 2)->move(m_localRect.center().x(), m_localRect.center().y());
 
-    m_handles.at(8)->setBrushColor(m_brush.color());
-    m_handles.at(9)->setBrushColor(m_brush.color());
-    m_handles.at(10)->setBrushColor(m_brush.color());
+    m_handles.at(Handle_Shape + 0)->setBrushColor(m_brush.color());
+    m_handles.at(Handle_Shape + 1)->setBrushColor(m_brush.color());
+    m_handles.at(Handle_Shape + 2)->setBrushColor(m_brush.color());
 }
 
 void GraphicsEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

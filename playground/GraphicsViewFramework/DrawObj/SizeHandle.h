@@ -18,7 +18,18 @@ enum { SELECTION_HANDLE_SIZE = 6, SELECTION_MARGIN = 10 };
 enum SelectionHandleState { SelectionHandleOff, SelectionHandleInactive, SelectionHandleActive };
 
 // 外界矩形的角点和边框中点
-enum { Handle_None = 0 , LeftTop = 1 , Top, RightTop, Right, RightBottom, Bottom, LeftBottom, Left, Handle_Shape };
+enum {
+    Handle_None = 0 ,
+    LeftTop = 1 ,
+    Top,
+    RightTop,
+    Right,
+    RightBottom,
+    Bottom,
+    LeftBottom,
+    Left,
+    Handle_Shape = Left
+};
 
 enum SelectionHandleType { EightPointHandle = 0, SizeHandle, ShapeHandle };
 

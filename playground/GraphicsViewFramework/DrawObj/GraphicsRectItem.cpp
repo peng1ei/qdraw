@@ -19,20 +19,22 @@ GraphicsRectItem::GraphicsRectItem(const QRectF & rect , bool isRound , QGraphic
     m_originPoint = QPointF(0,0);
     if( m_isRound ){
         // 圆角矩形
-        SizeHandleRect *shr = new SizeHandleRect(this, 9 , true);
+        SizeHandleRect *shr = new SizeHandleRect(this, Handle_Shape + 1 , true);
         shr->setHandleType(SelectionHandleType::ShapeHandle);
         m_handles.push_back(shr);
-        shr = new SizeHandleRect(this, 10 , true);
+        shr = new SizeHandleRect(this, Handle_Shape + 2 , true);
         shr->setHandleType(SelectionHandleType::ShapeHandle);
         m_handles.push_back(shr);
+
         //shr = new SizeHandleRect(this, 11 , true);
         //m_handles.push_back(shr);
     } else {
         // 直角矩形
         for (int i = 1; i <= 4; i++) {
-            SizeHandleRect *shr = new SizeHandleRect(this, i+Left , true);
+            SizeHandleRect *shr = new SizeHandleRect(this, Handle_Shape + i, true);
             shr->setHandleType(SelectionHandleType::ShapeHandle);
             m_handles.push_back(shr);
+            //m_handles.push_back(shr);
         }
     }
 
@@ -74,7 +76,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
 
     if (m_isRound) {
         switch (dir) {
-        case 9:
+        case Handle_Shape + 1:
         {
             QRectF delta1 = rect();
             int y = local.y();
@@ -91,7 +93,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
             break;
-        case 10:
+        case Handle_Shape + 2:
         {
             QRectF delta1 = rect();
             int x = local.x();
@@ -108,7 +110,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
             break;
         }
-        case 11:
+        case Handle_Shape + 3:
         {
             // TODO
             //setTransform(transform().translate(-local.x(),-local.y()));
@@ -117,7 +119,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             m_originPoint = local;
         }
             break;
-        case 1:
+        case LeftTop:
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -129,7 +131,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 3:
+        case RightTop:
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -145,7 +147,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 5:
+        case RightBottom:
             {
                 prepareGeometryChange();
                 m_localRect = QRectF(0,0, local.x(), local.y());
@@ -154,8 +156,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 7:
-        case 12: // left-bottom
+        case LeftBottom:// left-bottom
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -167,7 +168,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 2: // Top
+        case Top: // Top
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -179,7 +180,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 6: // Bottom
+        case Bottom: // Bottom
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -189,7 +190,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 4: // Right
+        case Right: // Right
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -200,7 +201,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
                 updatehandles();
             }
             break;
-        case 8: // Left
+        case Left: // Left
             {
                 QRectF oldRect = m_localRect;
                 prepareGeometryChange();
@@ -214,14 +215,12 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
        default:
             break;
         }
-        //prepareGeometryChange();
-        //updatehandles();
         return;
     }
 
     switch (dir) {
-    case 1:
-    case 9:// left-top
+    case LeftTop:
+    case Handle_Shape+1:// left-top
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -233,8 +232,8 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 3:
-    case 10: // right-top
+    case RightTop:
+    case Handle_Shape+2: // right-top
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -250,8 +249,8 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 5:
-    case 11: // right-bottom
+    case RightBottom:
+    case Handle_Shape+3: // right-bottom
         {
             prepareGeometryChange();
             m_localRect = QRectF(0,0, local.x(), local.y());
@@ -260,8 +259,8 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 7:
-    case 12: // left-bottom
+    case LeftBottom:
+    case Handle_Shape+4: // left-bottom
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -273,7 +272,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 2: // Top
+    case Top: // Top
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -285,7 +284,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 6: // Bottom
+    case Bottom: // Bottom
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -295,7 +294,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 4: // Right
+    case Right: // Right
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -306,7 +305,7 @@ void GraphicsRectItem::control(int dir, const QPointF & delta)
             updatehandles();
         }
         break;
-    case 8: // Left
+    case Left: // Left
         {
             QRectF oldRect = m_localRect;
             prepareGeometryChange();
@@ -474,23 +473,23 @@ void GraphicsRectItem::updatehandles()
         if (x < geom.right() - m_width / 2)
             x = geom.right() - m_width / 2;
 
-        m_handles[8]->move( geom.right() , y);
-        m_handles[9]->move( x, geom.top());
-        //m_handles[10]->move(m_originPoint.x(),m_originPoint.y());
+        m_handles[Handle_Shape+0]->move( geom.right() , y);
+        m_handles[Handle_Shape+1]->move( x, geom.top());
+        //m_handles[Handle_Shape+2]->move(m_originPoint.x(),m_originPoint.y());
 
-        m_handles[8]->setBrushColor(m_brush.color());
-        m_handles[9]->setBrushColor(m_brush.color());
+        m_handles[Handle_Shape+0]->setBrushColor(m_brush.color());
+        m_handles[Handle_Shape+1]->setBrushColor(m_brush.color());
     } else {
 #if 1
-        m_handles[0+Left]->move(geom.left(), geom.top());
-        m_handles[1+Left]->move(geom.right(), geom.top());
-        m_handles[2+Left]->move(geom.right(), geom.bottom());
-        m_handles[3+Left]->move(geom.left(), geom.bottom());
+        m_handles[Handle_Shape+0]->move(geom.left(), geom.top());
+        m_handles[Handle_Shape+1]->move(geom.right(), geom.top());
+        m_handles[Handle_Shape+2]->move(geom.right(), geom.bottom());
+        m_handles[Handle_Shape+3]->move(geom.left(), geom.bottom());
 
-        m_handles[0+Left]->setBrushColor(m_brush.color());
-        m_handles[1+Left]->setBrushColor(m_brush.color());
-        m_handles[2+Left]->setBrushColor(m_brush.color());
-        m_handles[3+Left]->setBrushColor(m_brush.color());
+        m_handles[Handle_Shape+0]->setBrushColor(m_brush.color());
+        m_handles[Handle_Shape+1]->setBrushColor(m_brush.color());
+        m_handles[Handle_Shape+2]->setBrushColor(m_brush.color());
+        m_handles[Handle_Shape+3]->setBrushColor(m_brush.color());
 #endif
     }
 }
