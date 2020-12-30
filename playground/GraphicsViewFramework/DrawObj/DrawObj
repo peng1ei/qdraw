@@ -1,0 +1,9 @@
+#pragma once
+#include "AbstractShapeType.hpp"
+#include "GraphicsItem.h"
+#include "GraphicsItemGroup.h"
+#include "GraphicsRectItem.h"
+#include "GraphicsEllipseItem.h"
+#include "GraphicsPolygonItem.h"
+#include "GraphicsLineItem.h"
+#include "GraphicsBezier.h"

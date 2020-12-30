@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "GraphicsView.h"
+#include "GraphicsViewFramework/GraphicsView.h"
+#include "GraphicsViewFramework/GraphicsScene.h"
+#include "GraphicsViewFramework/ObjectController.h"
 #include <QMainWindow>
 #include <QGraphicsItemGroup>
 #include <QGraphicsRectItem>
@@ -11,7 +13,6 @@ class QGraphicsItemGroup;
 class QGraphicsScene;
 class QGraphicsRectItem;
 class QGraphicsItem;
-class ProgressBarDialog;
 QT_END_NAMESPACE
 
 QT_BEGIN_NAMESPACE
@@ -39,14 +40,15 @@ class QLabel;
 class QResizeEvent;
 class QListView;
 class QStringListModel;
-class ImageFileListProviderThd;
 class QEvent;
 QT_END_NAMESPACE
 
+class ProgressBarDialog;
 class ObjectController;
 class GraphicsScene;
 class ImageFileListModel;
 class ColorCombox;
+class ImageFileListProviderThd;
 
 class Layer : public QGraphicsItemGroup {
 public:
@@ -153,10 +155,10 @@ private:
     Layer *mLayer0;
     Layer *mLayer1;
 
-    InteractiveView *mView;
-    GraphicsScene *mScene;
+    gvf::GraphicsView *mView;
+    gvf::GraphicsScene *mScene;
 
-    InteractiveView *mEyeView;
+    gvf::GraphicsView *mEyeView;
     
     // Menu and ToolBar
     QMenu *mUiMenu;
@@ -246,7 +248,7 @@ private:
     
     //property editor
     QDockWidget *mUiDockProperty;
-    ObjectController *mPropertyEditor;
+    gvf::ObjectController *mPropertyEditor;
     QObject *mTheControlledObject;
 
     // QDockWidget imagelist

@@ -41,20 +41,33 @@ win32: QMAKE_CXXFLAGS_WARN_ON += -wd4819
 
 INCLUDEPATH += Utils/
 INCLUDEPATH += Utils/ColorWidget/
+INCLUDEPATH += GraphicsViewFramework/
 
 SOURCES += \
-    Commands.cpp \
-    CustomProperty.cpp \
-    DrawObj.cpp \
-    DrawTool.cpp \
-    GraphicsScene.cpp \
-    GraphicsView.cpp \
-    ImageProvider/ImageProvider.cpp \
+    GraphicsViewFramework/Commands.cpp \
+    GraphicsViewFramework/CustomProperty.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsBezier.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsEllipseItem.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsItem.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsItemGroup.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsLineItem.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsPolygonItem.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsRectItem.cpp \
+    GraphicsViewFramework/DrawObj/ShapeMimeData.cpp \
+    GraphicsViewFramework/DrawObj/SizeHandle.cpp \
+    GraphicsViewFramework/DrawTool/DrawTool.cpp \
+    GraphicsViewFramework/DrawTool/PanTool.cpp \
+    GraphicsViewFramework/DrawTool/PolygonTool.cpp \
+    GraphicsViewFramework/DrawTool/RectTool.cpp \
+    GraphicsViewFramework/DrawTool/RotationTool.cpp \
+    GraphicsViewFramework/DrawTool/RubberBandZoomTool.cpp \
+    GraphicsViewFramework/DrawTool/SelectTool.cpp \
+    GraphicsViewFramework/GraphicsScene.cpp \
+    GraphicsViewFramework/GraphicsView.cpp \
+    GraphicsViewFramework/ObjectController.cpp \
+    GraphicsViewFramework/RuleBar.cpp \
     TreeView/Layer.cpp \
     TreeView/Node.cpp \
-    ObjectController.cpp \
-    RuleBar.cpp \
-    SizeHandle.cpp \
     TreeView/TreeView.cpp \
     Utils/ColorWidget/ColorCombox.cpp \
     Utils/ColorWidget/colormodel.cpp \
@@ -68,19 +81,33 @@ SOURCES += \
     MainWindow.cpp
 
 HEADERS += \
-    Commands.h \
-    CustomProperty.h \
-    DrawObj.h \
-    DrawTool.h \
-    GraphicsScene.h \
-    GraphicsView.h \
-    ImageProvider/ImageProvider.h \
+    GraphicsViewFramework/Commands.h \
+    GraphicsViewFramework/CustomProperty.h \
+    GraphicsViewFramework/DrawObj/AbstractShapeType.hpp \
+    GraphicsViewFramework/DrawObj/DrawObj \
+    GraphicsViewFramework/DrawObj/GraphicsBezier.h \
+    GraphicsViewFramework/DrawObj/GraphicsEllipseItem.h \
+    GraphicsViewFramework/DrawObj/GraphicsItem.h \
+    GraphicsViewFramework/DrawObj/GraphicsItemGroup.h \
+    GraphicsViewFramework/DrawObj/GraphicsLineItem.h \
+    GraphicsViewFramework/DrawObj/GraphicsPolygonItem.h \
+    GraphicsViewFramework/DrawObj/GraphicsRectItem.h \
+    GraphicsViewFramework/DrawObj/ShapeMimeData.h \
+    GraphicsViewFramework/DrawObj/SizeHandle.h \
+    GraphicsViewFramework/DrawTool/DrawTool.h \
+    GraphicsViewFramework/DrawTool/PanTool.h \
+    GraphicsViewFramework/DrawTool/PolygonTool.h \
+    GraphicsViewFramework/DrawTool/RectTool.h \
+    GraphicsViewFramework/DrawTool/RotationTool.h \
+    GraphicsViewFramework/DrawTool/RubberBandZoomTool.h \
+    GraphicsViewFramework/DrawTool/SelectTool.h \
+    GraphicsViewFramework/GraphicsScene.h \
+    GraphicsViewFramework/GraphicsView.h \
+    GraphicsViewFramework/ObjectController.h \
+    GraphicsViewFramework/RuleBar.h \
     MainWindow.h \
     TreeView/Layer.h \
     TreeView/Node.h \
-    ObjectController.h \
-    RuleBar.h \
-    SizeHandle.h \
     TreeView/TreeView.h \
     Utils/ColorWidget/ColorCombox.h \
     Utils/ColorWidget/colormodel.h \

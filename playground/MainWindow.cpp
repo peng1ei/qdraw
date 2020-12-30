@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 #if 0
-    mView = new InteractiveView;
+    mView = new GraphicsView;
     //setCentralWidget(mView);
 
 
@@ -99,8 +99,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowIcon(QIcon(":/image/icons/via.ico"));
 
-    DrawTool::c_penColor = QColor(mUiPenColorCombox->getColor());
-    DrawTool::c_brushColor = QColor(mUiBrushColorCombox->getColor());
+    gvf::DrawTool::c_penColor = QColor(mUiPenColorCombox->getColor());
+    gvf::DrawTool::c_brushColor = QColor(mUiBrushColorCombox->getColor());
 }
 
 MainWindow::~MainWindow()
@@ -195,23 +195,23 @@ void MainWindow::OnAddShape()
 {
     // TODO 当绘图工具发生变化时，应对外发出工具改变信号，并传出当前的工具类型
     if ( sender() == mUiSelectAct )
-        DrawTool::c_drawShape = selection;
+        gvf::DrawTool::c_drawShape = gvf::selection;
     else if (sender() == mUiLineAct )
-        DrawTool::c_drawShape = line;
+        gvf::DrawTool::c_drawShape = gvf::line;
     else if ( sender() == mUiRectAct )
-        DrawTool::c_drawShape = rectangle;
+        gvf::DrawTool::c_drawShape = gvf::rectangle;
     else if ( sender() == mUiRoundRectAct )
-        DrawTool::c_drawShape = roundrect;
+        gvf::DrawTool::c_drawShape = gvf::roundrect;
     else if ( sender() == mUiEllipseAct )
-        DrawTool::c_drawShape = ellipse ;
+        gvf::DrawTool::c_drawShape = gvf::ellipse ;
     else if ( sender() == mUiPolygonAct )
-        DrawTool::c_drawShape = polygon;
+        gvf::DrawTool::c_drawShape = gvf::polygon;
     else if ( sender() == mUiBezierAct )
-        DrawTool::c_drawShape = bezier ;
+        gvf::DrawTool::c_drawShape = gvf::bezier ;
     else if (sender() == mUiRotateAct )
-        DrawTool::c_drawShape = rotation;
+        gvf::DrawTool::c_drawShape = gvf::rotation;
     else if (sender() == mUiPolylineAct )
-        DrawTool::c_drawShape = polyline;
+        gvf::DrawTool::c_drawShape = gvf::polyline;
 
     if ( sender() != mUiSelectAct && sender() != mUiRotateAct ){
         mScene->clearSelection();
@@ -226,12 +226,12 @@ void MainWindow::OnAddShape()
 
 void MainWindow::OnSelectColor()
 {
-    QColor color=QColorDialog::getColor(DrawTool::c_brushColor,this);
+    QColor color=QColorDialog::getColor(gvf::DrawTool::c_brushColor,this);
     if(!color.isValid())
         return;
 
-    DrawTool::c_penColor = color;
-    DrawTool::c_brushColor = color;
+    gvf::DrawTool::c_penColor = color;
+    gvf::DrawTool::c_brushColor = color;
 }
 
 void MainWindow::OnNewFile()
@@ -377,7 +377,7 @@ void MainWindow::OnZoomOne()
 
 void MainWindow::OnZoomToRect()
 {
-    DrawTool::c_drawShape = rubberbandzoom;
+    gvf::DrawTool::c_drawShape = gvf::rubberbandzoom;
     //mView->ZoomToRect(); // TODO
     //mView->SetPan(false);
     mView->setCursor(QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
@@ -385,7 +385,7 @@ void MainWindow::OnZoomToRect()
 
 void MainWindow::OnPan()
 {
-    DrawTool::c_drawShape = pan;
+    gvf::DrawTool::c_drawShape = gvf::pan;
     //mView->SetPan(true);
     mView->setCursor(Qt::ClosedHandCursor);
 }
@@ -444,13 +444,13 @@ void MainWindow::OnImageListViewDoubleClicked(const QModelIndex &index)
 
 void MainWindow::OnPenColorChanged(QColor color)
 {
-    DrawTool::c_penColor = color;
+    gvf::DrawTool::c_penColor = color;
 
 }
 
 void MainWindow::OnBrushColorChanged(QColor color)
 {
-    DrawTool::c_brushColor = color;
+    gvf::DrawTool::c_brushColor = color;
 }
 
 void MainWindow::OnItemSelected()
@@ -814,7 +814,7 @@ void MainWindow::CreateMenus()
     //QAction *a1 = new QAction("aaaa");
     //mContextMenu->addAction(a1);
 //    mView->setContextMenuPolicy(Qt::CustomContextMenu);
-//    connect(mView,&InteractiveView::customContextMenuRequested,[=](const QPoint &pos)
+//    connect(mView,&GraphicsView::customContextMenuRequested,[=](const QPoint &pos)
 //    {
 //        //qDebug()<<pos;//参数pos用来传递右键点击时的鼠标的坐标，这个坐标一般是相对于控件左上角而言的
 //        mContextMenu->exec(QCursor::pos());
@@ -923,7 +923,7 @@ void MainWindow::CreatePropertyEditor()
     mUiDockProperty = new QDockWidget(this);
     addDockWidget(Qt::RightDockWidgetArea, mUiDockProperty);
 
-    mPropertyEditor = new ObjectController(this);
+    mPropertyEditor = new gvf::ObjectController(this);
     mUiDockProperty->setWidget(mPropertyEditor);
 }
 
@@ -934,7 +934,7 @@ void MainWindow::CreateStatusBar()
     mUiMousePosFromViewInfo->setAlignment(Qt::AlignHCenter);
     statusBar()->addWidget(mUiMousePosFromViewInfo);
 
-    connect(mView, &InteractiveView::posFromViewChanged,
+    connect(mView, &gvf::GraphicsView::posFromViewChanged,
             this, &MainWindow::OnPosFromViewChanged);
 
     mUiMousePosFromSceneInfo = new QLabel(tr(" scene:  "));
@@ -942,7 +942,7 @@ void MainWindow::CreateStatusBar()
     mUiMousePosFromSceneInfo->setAlignment(Qt::AlignHCenter);
     statusBar()->addWidget(mUiMousePosFromSceneInfo);
 
-    connect(mView, &InteractiveView::posFromSceneChanged,
+    connect(mView, &gvf::GraphicsView::posFromSceneChanged,
             this, &MainWindow::OnPosFromSceneChanged);
 
     mUiScaleInfo = new QLabel(tr(" scale: 100% "));
@@ -950,7 +950,7 @@ void MainWindow::CreateStatusBar()
     mUiScaleInfo->setAlignment(Qt::AlignHCenter);
     statusBar()->addWidget(mUiScaleInfo);
 
-    connect(mView, &InteractiveView::scaleChanged,
+    connect(mView, &gvf::GraphicsView::scaleChanged,
             this, &MainWindow::OnScaleChanged);
 }
 
@@ -974,7 +974,7 @@ void MainWindow::InitGraphicsView()
 {
     //--------------------------------------------------------
     // 创建Scene
-    mScene = new GraphicsScene(this);
+    mScene = new gvf::GraphicsScene(this);
     //QRectF rc = QRectF(0 , 0 , 800, 600);
     //mScene->setSceneRect(rc);
     
@@ -998,7 +998,7 @@ void MainWindow::InitGraphicsView()
 
     //----------------------------------------------------------------
     // 创建 View
-    mView = new InteractiveView(this);
+    mView = new gvf::GraphicsView(this);
     mView->setScene(mScene);
     mScene->setView(mView);
     connect(mView,SIGNAL(posFromSceneChanged(double,double)),this,SLOT(OnPosFromSceneChanged(double,double)));
@@ -1024,7 +1024,7 @@ void MainWindow::InitGraphicsView()
     setCentralWidget(mView);
 
     // TODO 鹰眼图
-    mEyeView = new InteractiveView;
+    mEyeView = new gvf::GraphicsView;
     mEyeView->setScene(mScene);
     mEyeView->SetRuleBarVisiable(false);
     mEyeView->setMinimumSize(256,256);
