@@ -373,7 +373,7 @@ void GraphicsRectItem::updateCoordinate()
     pt2 = mapToScene(m_localRect.center());
     delta = pt1 - pt2;
 
-    qDebug() << "m_localRect: " << m_localRect;
+    //qDebug() << "m_localRect: " << m_localRect;
     if (!parentItem() ){
         prepareGeometryChange();
         //[by pl]
@@ -389,7 +389,7 @@ void GraphicsRectItem::updateCoordinate()
         updatehandles();
     }
 
-    qDebug() << "m_localRect 2: " << m_localRect;
+    //qDebug() << "m_localRect 2: " << m_localRect;
 
     m_initialRect = m_localRect;
 }

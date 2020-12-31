@@ -55,6 +55,7 @@ public:
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *e );
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *e );
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

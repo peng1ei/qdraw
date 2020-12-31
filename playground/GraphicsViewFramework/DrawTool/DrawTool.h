@@ -38,7 +38,7 @@ enum DrawShape
 
 enum SelectMode
 {
-    none,
+    none = 0,
     netSelect,
     move,
     size,

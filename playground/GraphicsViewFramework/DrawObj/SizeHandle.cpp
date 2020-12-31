@@ -93,7 +93,8 @@ void SizeHandleRect::setHandleType(SelectionHandleType type)
 
 void SizeHandleRect::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
-    if (m_controlPoint && DrawTool::c_drawShape == selection) {
+    // TODO 是否需要加 m_dir判断???
+    if (m_controlPoint && DrawTool::c_drawShape == selection && m_dir <= Left) {
         m_mouseEnter = true;
         m_oldCursor = cursor();
         setCursor(Qt::PointingHandCursor);
@@ -103,9 +104,19 @@ void SizeHandleRect::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
     QGraphicsRectItem::hoverEnterEvent(e);
 }
 
+void SizeHandleRect::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (m_controlPoint && DrawTool::c_drawShape == selection && m_dir <= Left) {
+        setCursor(Qt::PointingHandCursor);
+        update();
+    }
+
+    QGraphicsRectItem::hoverMoveEvent(event);
+}
+
 void SizeHandleRect::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
-    if (m_controlPoint && DrawTool::c_drawShape == selection) {
+    if (m_controlPoint && DrawTool::c_drawShape == selection && m_dir <= Left) {
         m_mouseEnter = false;
         setCursor(m_oldCursor);
         update();
