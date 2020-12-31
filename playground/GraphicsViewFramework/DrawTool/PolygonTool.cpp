@@ -63,6 +63,8 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
     m_nPoints++;
     selectMode = size ;
     nDragHandle = item->handleCount();
+
+    setCursor(scene, Qt::CrossCursor);
 }
 
 void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -119,6 +121,8 @@ void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, Graphic
 
     // 会清除多边形的角点
     scene->clearSelection();
+
+    setCursor(scene, Qt::ArrowCursor);
 }
 
 } // namespace gvf

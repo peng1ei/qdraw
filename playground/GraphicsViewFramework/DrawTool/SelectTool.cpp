@@ -99,6 +99,9 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
         initialPositions = item->pos();
     }
+
+    if (DrawTool::c_drawShape == selection)
+        setCursor(scene, Qt::ArrowCursor);
 }
 
 void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -164,6 +167,10 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     {
         scene->mouseEvent(event);
     }
+
+    if (DrawTool::c_drawShape == selection) {
+        setCursor(scene, Qt::ArrowCursor);
+    }
 }
 
 void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -209,6 +216,9 @@ void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     m_hoverSizer = false;
     //opposite_ = QPointF();
     scene->mouseEvent(event);
+
+    if (DrawTool::c_drawShape == selection)
+        setCursor(scene, Qt::ArrowCursor);
 }
 
 }// namespace gvf

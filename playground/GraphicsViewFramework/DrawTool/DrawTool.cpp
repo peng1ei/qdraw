@@ -45,7 +45,7 @@ int nDragHandle = Handle_None;
 void setCursor(GraphicsScene * scene , const QCursor & cursor )
 {
     QGraphicsView * view = scene->view();
-    if (view) view->setCursor(cursor);
+    if (view) view->viewport()->setCursor(cursor);
 }
 
 DrawTool::DrawTool(DrawShape shape)
@@ -57,28 +57,30 @@ DrawTool::DrawTool(DrawShape shape)
 
 void DrawTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    Q_UNUSED(scene)
     c_down = event->scenePos();
     c_last = event->scenePos();
 }
 
 void DrawTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    Q_UNUSED(scene)
     c_last = event->scenePos();
 }
 
 void DrawTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    Q_UNUSED(scene)
     if (event->scenePos() == c_down ) {
         // TODO 在切换其他工具之前一直保持当前工具状态
         //c_drawShape = selection;
     }
-
-    setCursor(scene, Qt::ArrowCursor);
 }
 
 void DrawTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
-
+    Q_UNUSED(event)
+    Q_UNUSED(scene)
 }
 
 DrawTool *DrawTool::findTool(DrawShape drawShape)

@@ -63,12 +63,14 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
     item->setSelected(true);
     selectMode = size;
     nDragHandle = RightBottom;
+
+    setCursor(scene, Qt::CrossCursor);
 }
 
 void RectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     selectTool.mouseMoveEvent(event,scene);
-    setCursor(scene,Qt::CrossCursor);
+    setCursor(scene, Qt::CrossCursor);
 }
 
 void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -92,9 +94,9 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     // TODO 在切换其他工具之前一直保持当前工具状态
     //c_drawShape = selection;
 
-    setCursor(scene,Qt::CrossCursor);
-
     scene->clearSelection();
+
+    setCursor(scene, Qt::CrossCursor);
 }
 
 }// namespace gvf

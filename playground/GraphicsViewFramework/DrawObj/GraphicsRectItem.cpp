@@ -448,9 +448,11 @@ bool GraphicsRectItem::saveToXml(QXmlStreamWriter * xml)
 
 void GraphicsRectItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
+
     m_alpha = 100;
     update();
     //QGraphicsItem::hoverEnterEvent(e);
+    //setCursor(Qt::OpenHandCursor);
 }
 
 void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
@@ -458,6 +460,7 @@ void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
     m_alpha = 50;
     update();
     //QGraphicsItem::hoverLeaveEvent(e);
+    //setCursor(Qt::ArrowCursor);
 }
 
 void GraphicsRectItem::updatehandles()

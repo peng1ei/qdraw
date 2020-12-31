@@ -23,7 +23,7 @@ class GraphicsItemGroup;
 
 enum DrawShape
 {
-    selection ,
+    selection = 0 ,
     rotation  ,
     line ,
     rectangle ,

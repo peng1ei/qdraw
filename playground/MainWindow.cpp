@@ -220,8 +220,6 @@ void MainWindow::OnAddShape()
     if (sender() == mUiSelectAct || sender() == mUiRotateAct) {
         mView->setCursor(Qt::ArrowCursor);
     }
-
-    //mView->SetPan(false);
 }
 
 void MainWindow::OnSelectColor()
@@ -378,16 +376,13 @@ void MainWindow::OnZoomOne()
 void MainWindow::OnZoomToRect()
 {
     gvf::DrawTool::c_drawShape = gvf::rubberbandzoom;
-    //mView->ZoomToRect(); // TODO
-    //mView->SetPan(false);
     mView->setCursor(QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
 }
 
 void MainWindow::OnPan()
 {
     gvf::DrawTool::c_drawShape = gvf::pan;
-    //mView->SetPan(true);
-    mView->setCursor(Qt::ClosedHandCursor);
+    mView->setCursor(Qt::OpenHandCursor);
 }
 
 void MainWindow::OnDeleteItem()
@@ -777,7 +772,7 @@ void MainWindow::CreateMenus()
     shapeTool->addAction(mUiPolygonAct);
     //shapeTool->addAction(mUiBezierAct);
     shapeTool->addAction(mUiRotateAct);
-    shapeTool->addAction(mUiSelectAct);
+    //shapeTool->addAction(mUiSelectAct);
     toolMenu->addMenu(shapeTool);
 
 #if 0

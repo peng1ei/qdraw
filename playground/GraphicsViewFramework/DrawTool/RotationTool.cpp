@@ -57,6 +57,8 @@ void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
                 dashRect->setZValue(item->zValue());
                 scene->addItem(dashRect);
                 setCursor(scene,QCursor((QPixmap(":/icons/rotate.png"))));
+
+                return;
             }
             else{
                     // TODO 在切换其他工具之前一直保持当前工具状态
@@ -110,6 +112,7 @@ void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
             if ( handle != Handle_None){
                 setCursor(scene,QCursor((QPixmap(":/image/icons/rotate.png"))));
                 m_hoverSizer = true;
+                return;
             }else{
                 setCursor(scene,Qt::ArrowCursor);
                 m_hoverSizer = false;
@@ -118,6 +121,9 @@ void RotationTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
     }
 
     scene->mouseEvent(event);
+
+    if (!m_hoverSizer)
+        setCursor(scene,Qt::ArrowCursor);
 }
 
 void RotationTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)

@@ -1,4 +1,5 @@
 #include "PanTool.h"
+#include "../GraphicsScene.h"
 
 namespace gvf {
 
@@ -13,6 +14,7 @@ void PanTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *sc
 {
     Q_UNUSED(event)
     Q_UNUSED(scene)
+    setCursor(scene, Qt::ClosedHandCursor);
 }
 
 void PanTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -25,6 +27,7 @@ void PanTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
 {
     Q_UNUSED(event)
     Q_UNUSED(scene)
+    setCursor(scene, Qt::OpenHandCursor);
 }
 
 }// namespace gvf

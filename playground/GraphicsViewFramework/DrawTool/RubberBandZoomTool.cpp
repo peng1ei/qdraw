@@ -152,7 +152,6 @@ void RubberBandZoomTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, Grap
     scene->mouseEvent(event);
 
     scene->clearSelection();
-
 }
 
 }// namespace gvf
