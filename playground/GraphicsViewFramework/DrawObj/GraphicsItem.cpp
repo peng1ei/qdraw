@@ -1,4 +1,5 @@
 #include "GraphicsItem.h"
+#include "DrawTool/DrawTool.h"
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 //#include <QGraphicsDropShadowEffect>
@@ -113,7 +114,8 @@ bool GraphicsItem::writeBaseAttributes(QXmlStreamWriter *xml)
 QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     // TODO 添加DrawTool的状态判断
-    if ( change == QGraphicsItem::ItemSelectedHasChanged) {
+    if ( change == QGraphicsItem::ItemSelectedHasChanged
+         && DrawTool::c_drawShape == selection) {
         QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(parentItem());
         if (!g)
             // [2020-12-26 23:25 by pl] 无论Item是否被选中，都显示角点标注

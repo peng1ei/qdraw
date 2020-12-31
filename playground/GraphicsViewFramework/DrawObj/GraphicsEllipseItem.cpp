@@ -6,7 +6,9 @@ GraphicsEllipseItem::GraphicsEllipseItem(const QRect & rect ,QGraphicsItem *pare
     :GraphicsRectItem(rect,parent)
 {
     qDebug() << "m_handles size before: " << m_handles.size();
+
     for (int i = 0; i < 4; i++) {
+        delete m_handles.back();
         m_handles.pop_back();
     }
 

@@ -88,6 +88,7 @@ void SizeHandleRect::move(qreal x, qreal y)
 void SizeHandleRect::setHandleType(SelectionHandleType type)
 {
     m_type = type;
+    m_type == EightPointHandle ? hide() : show();
 }
 
 void SizeHandleRect::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
