@@ -41,5 +41,7 @@
         <file>image/icons/zoomrectcur.png</file>
         <file>image/icons/pan.png</file>
         <file>image/icons/color.png</file>
+        <file>image/icons/select_clear.png</file>
+        <file>image/icons/delete.png</file>
     </qresource>
 </RCC>

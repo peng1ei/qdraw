@@ -387,7 +387,20 @@ void MainWindow::OnPan()
 
 void MainWindow::OnDeleteItem()
 {
-    
+    qDebug()<<"deleteItem";
+    if (mScene->selectedItems().isEmpty())
+        return;
+
+    auto items = mScene->selectedItems();
+    foreach (QGraphicsItem *item, items) {
+        QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(item->parentItem());
+        if ( !g )
+            mScene->removeItem(item);
+    }
+
+    // TODO 使用堆栈操作
+    //QUndoCommand *deleteCommand = new RemoveShapeCommand(scene);
+    //undoStack->push(deleteCommand);
 }
 
 void MainWindow::OnPosFromSceneChanged(double x, double y)
@@ -446,6 +459,11 @@ void MainWindow::OnPenColorChanged(QColor color)
 void MainWindow::OnBrushColorChanged(QColor color)
 {
     gvf::DrawTool::c_brushColor = color;
+}
+
+void MainWindow::OnSelectClear()
+{
+    mScene->clearSelection();
 }
 
 void MainWindow::OnItemSelected()
@@ -692,6 +710,7 @@ void MainWindow::CreateActions()
     connect(mUiSelectColorAct,SIGNAL(triggered()),this,SLOT(OnSelectColor()));
 
     mUiDeleteAct = new QAction(tr("&Delete"), this);
+    mUiDeleteAct->setIcon(QIcon(":/image/icons/delete.png"));
     mUiDeleteAct->setShortcut(QKeySequence::Delete);
 
     mUiUndoAct = mUiUndoStack->createUndoAction(this,tr("undo"));
@@ -719,9 +738,13 @@ void MainWindow::CreateActions()
     mUiCutAct = new QAction(QIcon(":/image/icons/cut.png"),tr("cut"),this);
     mUiCutAct->setShortcut(QKeySequence::Cut);
 
+    mUiSelecteClearAct = new QAction(QIcon(":/image/icons/select_clear.png"),tr("select clear"),this);;
+    mUiSelecteClearAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+
     connect(mUiCopyAct,SIGNAL(triggered()),this,SLOT(OnCopy()));
     connect(mUiPasteAct,SIGNAL(triggered()),this,SLOT(OnPaste()));
     connect(mUiCutAct,SIGNAL(triggered()),this,SLOT(OnCut()));
+    connect(mUiSelecteClearAct,SIGNAL(triggered()),this,SLOT(OnSelectClear()));
 
     connect(mUiZoomInAct , SIGNAL(triggered()),this,SLOT(OnZoomIn()));
     connect(mUiZoomOutAct , SIGNAL(triggered()),this,SLOT(OnZoomOut()));
@@ -849,6 +872,8 @@ void MainWindow::CreateToolbars()
 
     mUiEditToolBar->addAction(mUiUndoAct);
     mUiEditToolBar->addAction(mUiRedoAct);
+    mUiEditToolBar->addAction(mUiSelecteClearAct);
+    mUiEditToolBar->addAction(mUiDeleteAct);
 
     mUiImgBrowseControlToolBar = addToolBar(tr("browse"));
 

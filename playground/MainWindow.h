@@ -132,6 +132,8 @@ public slots:
     void OnPenColorChanged(QColor color);
     void OnBrushColorChanged(QColor color);
 
+    void OnSelectClear();
+
 private:
     void SetLayerVisiable(Layer *layer, bool visiable);
     
@@ -200,6 +202,7 @@ private:
     QAction  * mUiCopyAct;
     QAction  * mUiPasteAct;
     QAction  * mUiCutAct;
+    QAction  * mUiSelecteClearAct;
 
     // image browse control
     QToolBar * mUiImgBrowseControlToolBar;
