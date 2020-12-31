@@ -33,10 +33,10 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
         item = new GraphicsRectItem(QRectF(0,0,1,1));
         break;
     case roundrect:
-        item = new GraphicsRectItem(QRectF(1,1,1,1),true);
+        item = new GraphicsRectItem(QRectF(0,0,1,1),true);
         break;
     case ellipse:
-        item = new GraphicsEllipseItem(QRect(1,1,1,1));
+        item = new GraphicsEllipseItem(QRect(0,0,1,1));
         break;
     default:
         break;

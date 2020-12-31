@@ -72,7 +72,7 @@ void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     DrawTool::mouseMoveEvent(event,scene);
     setCursor(scene,Qt::CrossCursor);
 
-//    selectTool.mouseMoveEvent(event,scene);
+    //selectTool.mouseMoveEvent(event,scene);
 
     if ( item != 0 ){
         if ( nDragHandle != Handle_None && selectMode == size ){

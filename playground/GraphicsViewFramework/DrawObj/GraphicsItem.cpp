@@ -185,6 +185,9 @@ QPainterPath qt_graphicsItem_shapeFromPath(const QPainterPath &path, const QPen 
 void qt_graphicsItem_highlightSelected(
     QGraphicsItem *item, QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
+    if (DrawTool::c_drawShape != selection)
+        return;
+
     const QRectF murect = painter->transform().mapRect(QRectF(0, 0, 1, 1));
     if (qFuzzyIsNull(qMax(murect.width(), murect.height())))
         return;
@@ -234,7 +237,7 @@ void qt_graphicsItem_highlightSelected(
 #else
     painter->setPen(QPen(QColor("lightskyblue"), 0, Qt::SolidLine));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(item->boundingRect().adjusted(-pad, -pad, pad, pad));
+    painter->drawRect(item->boundingRect().adjusted(-0, -0, 0, 0));
 #endif
 }
 

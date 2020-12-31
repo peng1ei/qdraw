@@ -174,7 +174,10 @@ void GraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setPen(tpen);
 
     if ( m_points.size() > 1)
-    painter->drawLine(m_points.at(0),m_points.at(1));
+        painter->drawLine(m_points.at(0),m_points.at(1));
+
+    if (option->state & QStyle::State_Selected)
+        qt_graphicsItem_highlightSelected(this, painter, option);
 }
 
 }// namespace gvf

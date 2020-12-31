@@ -18,7 +18,7 @@ SizeHandleRect::SizeHandleRect(QGraphicsItem* parent , int d, bool control)
     ,m_dir(d)
     ,m_controlPoint(control)
     ,m_state(SelectionHandleOff)
-    ,m_penColor("black")
+    ,m_penColor("white")
     ,m_brushColor("white")
     ,m_type(EightPointHandle)
 {

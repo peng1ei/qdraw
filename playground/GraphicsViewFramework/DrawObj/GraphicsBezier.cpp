@@ -6,7 +6,7 @@ GraphicsBezier::GraphicsBezier(bool bbezier,QGraphicsItem *parent)
     :GraphicsPolygonItem(parent)
     ,m_isBezier(bbezier)
 {
-    m_brush = QBrush(Qt::NoBrush);
+    //m_brush = QBrush(Qt::NoBrush);
 }
 
 QPainterPath GraphicsBezier::shape() const
@@ -108,7 +108,8 @@ void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     }
     painter->drawPath(path);
 
-   if (option->state & QStyle::State_Selected){
+    // 暂时不知道是干嘛的
+    if (option->state & QStyle::State_Selected){
        //painter->setPen(QPen(Qt::lightGray, 0, Qt::SolidLine));
        painter->setBrush(Qt::NoBrush);
        painter->drawPolyline(m_points);

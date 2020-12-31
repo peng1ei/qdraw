@@ -139,8 +139,8 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
                     initial_delta.setY(1);
                 }
 
-                double sx = new_delta.x();// / initial_delta.x();
-                double sy = new_delta.y();// / initial_delta.y();
+                double sx = new_delta.x() / initial_delta.x();
+                double sy = new_delta.y() / initial_delta.y();
 
                 item->stretch(nDragHandle, sx , sy , opposite_);
                 emit scene->itemResize(item,nDragHandle,QPointF(sx,sy));

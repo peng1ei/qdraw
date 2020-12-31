@@ -7,7 +7,7 @@ GraphicsPolygonItem::GraphicsPolygonItem(QGraphicsItem *parent)
 {
     // handles
     m_points.clear();
-    m_pen = QPen(Qt::black);
+    //m_pen = QPen(Qt::black);
 }
 
 QRectF GraphicsPolygonItem::boundingRect() const
@@ -29,10 +29,11 @@ void GraphicsPolygonItem::addPoint(const QPointF &point)
 
     // 新增的点在第几个位置
     int dir = m_points.count();
-    SizeHandleRect *shr = new SizeHandleRect(this, dir+Left, true);
+    SizeHandleRect *shr = new SizeHandleRect(this, dir+Handle_Shape, true);
     shr->setState(SelectionHandleActive);
     shr->setHandleType(SelectionHandleType::ShapeHandle);
     shr->setBrushColor(m_brush.color());
+    shr->setPenColor(m_pen.color());
     m_handles.push_back(shr);
 }
 
@@ -41,6 +42,7 @@ void GraphicsPolygonItem::control(int dir, const QPointF &delta)
     QPointF pt = mapFromScene(delta);
     if ( dir <= Left ) return ;
     m_points[dir - Left -1] = pt;
+
     prepareGeometryChange();
     m_localRect = m_points.boundingRect();
     m_width = m_localRect.width();
@@ -196,7 +198,7 @@ void GraphicsPolygonItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 void GraphicsPolygonItem::updatehandles()
 {
     // TODO 不需要显示角点
-    //GraphicsItem::updatehandles();
+    GraphicsItem::updatehandles();
 
     for ( int i = 0 ; i < m_points.size() ; ++i ){
         // 每个角点的绘制
