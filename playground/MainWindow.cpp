@@ -126,13 +126,12 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 bool MainWindow::eventFilter(QObject *obj, QEvent *evt)
 {
     // TODO
-    if(obj == mView  &&  evt->type() == QEvent::ContextMenu)
-    {
-        //qDebug() << "item count: " << mScene->items().count();
-        if(!mScene->items().empty()) {
-              mContextMenu->exec(cursor().pos()); //在当前鼠标位置上运行菜单menu对象
-              //mContextMenu->setActiveAction(mUiSelectAct);
-              //mContextMenu->setFocus();
+    if(evt->type() == QEvent::ContextMenu) {
+        if (obj == mView->viewport()) {
+            //qDebug() << "item count: " << mScene->items().count();
+            if(!mScene->items().empty()) {
+                  mContextMenu->exec(cursor().pos()); //在当前鼠标位置上运行菜单menu对象
+            }
         }
     }
 
@@ -215,10 +214,11 @@ void MainWindow::OnAddShape()
 
     if ( sender() != mUiSelectAct && sender() != mUiRotateAct ){
         mScene->clearSelection();
+        mView->viewport()->setCursor(Qt::CrossCursor);
     }
 
     if (sender() == mUiSelectAct || sender() == mUiRotateAct) {
-        mView->setCursor(Qt::ArrowCursor);
+        mView->viewport()->setCursor(Qt::ArrowCursor);
     }
 }
 
@@ -376,13 +376,13 @@ void MainWindow::OnZoomOne()
 void MainWindow::OnZoomToRect()
 {
     gvf::DrawTool::c_drawShape = gvf::rubberbandzoom;
-    mView->setCursor(QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
+    mView->viewport()->setCursor(QCursor(QPixmap(":/image/icons/zoomrectcur.png")));
 }
 
 void MainWindow::OnPan()
 {
     gvf::DrawTool::c_drawShape = gvf::pan;
-    mView->setCursor(Qt::OpenHandCursor);
+    mView->viewport()->setCursor(Qt::OpenHandCursor);
 }
 
 void MainWindow::OnDeleteItem()
@@ -805,7 +805,8 @@ void MainWindow::CreateMenus()
 
     // 右键菜单
     mContextMenu = new QMenu;
-    mView->installEventFilter(this);
+    //mView->installEventFilter(this);
+    mView->viewport()->installEventFilter(this);
     //QAction *a1 = new QAction("aaaa");
     //mContextMenu->addAction(a1);
 //    mView->setContextMenuPolicy(Qt::CustomContextMenu);

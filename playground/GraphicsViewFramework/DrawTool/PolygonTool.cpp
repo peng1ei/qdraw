@@ -85,7 +85,10 @@ void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
-    if ( c_drawShape == line ){
+
+    qDebug() << m_nPoints;
+    // TODO
+    if ( c_drawShape == line && m_nPoints > 2){
         if (!item) return;
 
         item->endPoint(event->scenePos());
@@ -98,8 +101,11 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
         //c_drawShape = selection;
 
         m_nPoints = 0;
+        //item = nullptr;
+        //selectMode = none;
 
         scene->clearSelection();
+        return;
     }
 
     scene->clearSelection();
@@ -107,6 +113,9 @@ void PolygonTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSce
 
 void PolygonTool::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    if (c_drawShape == line)
+        return;
+
     DrawTool::mouseDoubleClickEvent(event,scene);
     item->endPoint(event->scenePos());
     item->updateCoordinate();

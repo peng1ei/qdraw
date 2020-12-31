@@ -6,6 +6,7 @@ namespace gvf {
 
 SelectTool selectTool;
 
+// for debug
 static QMap<int, QString> selectModeStr = {
     {SelectMode::none, "none"},
     {SelectMode::move, "move"},
@@ -20,7 +21,6 @@ SelectTool::SelectTool()
 {
     dashRect = 0;
     selLayer = 0;
-    //opposite_ = QPointF();
 }
 
 void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -83,8 +83,9 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 #endif
     }
 
-    if ( selectMode == move && items.count() == 1 ){
 
+    if ( selectMode == move && items.count() == 1 ){
+#if 0
         if (dashRect ){
             scene->removeItem(dashRect);
             delete dashRect;
@@ -93,8 +94,8 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
         dashRect = new QGraphicsPathItem(item->shape());
         QPen tpen = dashRect->pen();
-        tpen.setWidthF(2);
-        tpen.setStyle(Qt::DashLine);
+        tpen.setWidthF(1);
+        tpen.setStyle(Qt::SolidLine);
         tpen.setColor(Qt::white);
         tpen.setCosmetic(true);
 
@@ -108,6 +109,8 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
         scene->addItem(dashRect);
 
+        initialPositions = item->pos();
+#endif
         initialPositions = item->pos();
     }
 
@@ -175,9 +178,11 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
 
     if ( selectMode == move ){
         //setCursor(scene,Qt::ClosedHandCursor);
+#if 0
         if ( dashRect ){
             dashRect->setPos(initialPositions + c_last - c_down);
         }
+#endif
     }
 
     if ( selectMode != size  && items.count() > 1)
@@ -225,15 +230,18 @@ void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
         }
 #endif
     }
+
+#if 0
     if (dashRect ){
         scene->removeItem(dashRect);
         delete dashRect;
         dashRect = 0;
     }
+#endif
+
     selectMode = none;
     nDragHandle = Handle_None;
     m_hoverSizer = false;
-    //opposite_ = QPointF();
     scene->mouseEvent(event);
 
     qDebug() << "selectMode: " << selectModeStr[selectMode];
