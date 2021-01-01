@@ -183,7 +183,7 @@ QGraphicsItem *GraphicsPolygonItem::duplicate() const
 
 void GraphicsPolygonItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
-    m_alpha = 100;
+    m_alpha = 200;
     update();
     //QGraphicsItem::hoverEnterEvent(e);
 }

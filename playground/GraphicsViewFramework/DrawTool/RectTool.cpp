@@ -54,8 +54,10 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
 
     // 项目的位置在父坐标中描述其原点（本地坐标（0，0））
     // 即item在父坐标中的位置就是item坐标系的原点
+    qDebug() << "curLayer: " <<scene->curLayer()->mapFromScene(event->scenePos());
     item->setPos( event->scenePos() );
-    scene->addItem(item);
+    //scene->addItem(item);
+    scene->addToCurLayer(item);
 
     qDebug() << "event->scenePos(): " << event->scenePos();
     qDebug() << "item event->scenePos(): " << item->mapFromScene(event->scenePos());
@@ -80,7 +82,7 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
     if ( event->scenePos() == (c_down/*-QPoint(2,2)*/)){
 
-       if ( item != 0){
+       if ( item != 0 ){
          item->setSelected(false);
          scene->removeItem(item);
          delete item ;

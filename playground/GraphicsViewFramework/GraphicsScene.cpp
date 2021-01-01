@@ -308,6 +308,24 @@ void GraphicsScene::destroyGroup(QGraphicsItemGroup *group)
     delete group;
 }
 
+void GraphicsScene::SetCurrentLayer(GraphicsScene::Layer *layer)
+{
+    if (m_curLayer) {
+        removeItem(m_curLayer);
+        m_curLayer = nullptr;
+    }
+
+    m_curLayer = layer;
+    m_curLayer->setFlags(QGraphicsItem::ItemClipsChildrenToShape);
+    m_curLayer->setHandlesChildEvents(false);
+    addItem(m_curLayer);
+}
+
+void GraphicsScene::addToCurLayer(QGraphicsItem *item)
+{
+    item->setParentItem(m_curLayer);
+}
+
 void GraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsScene::drawBackground(painter,rect);

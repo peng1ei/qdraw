@@ -1070,7 +1070,11 @@ void MainWindow::UpdateScene(const QString &imgFile)
     QImage img = imgReader.read();
 
     mScene->clear();
-    mScene->addPixmap(QPixmap::fromImage(img));
+
+    QGraphicsPixmapItem *pixitem = new QGraphicsPixmapItem(QPixmap::fromImage(img));
+    mScene->SetCurrentLayer(pixitem);
+
+    //mScene->addPixmap(QPixmap::fromImage(img));
     mView->FitInView(0, 0, img.width(), img.height());
     //mView->Zoom1To1(0, 0, img.width(), img.height());
 }

@@ -51,7 +51,7 @@ class GraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    using Layer = QGraphicsItemGroup;
+    using Layer = QGraphicsItem;//QGraphicsItemGroup
 
     explicit GraphicsScene(QObject *parent = 0);
     ~GraphicsScene();
@@ -62,8 +62,9 @@ public:
     GraphicsItemGroup * createGroup(const QList<QGraphicsItem *> &items ,bool isAdd = true);
     void destroyGroup(QGraphicsItemGroup *group);
 
-    void SetCurrentLayer(Layer *layer) { m_curLayer = layer; }
+    void SetCurrentLayer(Layer *layer);
     Layer* curLayer() { return m_curLayer; }
+    void addToCurLayer(QGraphicsItem *item);
 
 signals:
     void itemMoved( QGraphicsItem * item , const QPointF & oldPosition );
@@ -87,7 +88,7 @@ protected:
     bool  m_moved;
     GridTool *m_grid;
 
-    Layer *m_curLayer;
+    Layer *m_curLayer = nullptr;
 
     friend class GraphicsView;
 };

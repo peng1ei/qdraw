@@ -125,9 +125,10 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     DrawTool::mouseMoveEvent(event,scene);
 
     QList<QGraphicsItem *> items = scene->selectedItems();
+    //QList<QGraphicsItem *> items = scene->curLayer()->;
     AbstractShape * item = 0;
 
-    //qDebug() << "selection count: " << items.count();
+    qDebug() << "selection count: " << items.count();
 
     if ( items.count() == 1 ){
         item = qgraphicsitem_cast<AbstractShape*>(items.first());

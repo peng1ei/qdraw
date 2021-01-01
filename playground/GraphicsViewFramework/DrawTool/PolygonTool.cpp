@@ -39,7 +39,8 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
         item->setPos(event->scenePos());
 
         // TODO 加入当前图层
-        scene->addItem(item);
+        //scene->addItem(item);
+        scene->addToCurLayer(item);
 
         initialPositions = c_down;
         item->addPoint(c_down);

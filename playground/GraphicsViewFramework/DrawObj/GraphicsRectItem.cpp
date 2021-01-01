@@ -449,7 +449,7 @@ bool GraphicsRectItem::saveToXml(QXmlStreamWriter * xml)
 void GraphicsRectItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
 
-    m_alpha = 100;
+    m_alpha = 200;
     update();
     //QGraphicsItem::hoverEnterEvent(e);
     //setCursor(Qt::OpenHandCursor);

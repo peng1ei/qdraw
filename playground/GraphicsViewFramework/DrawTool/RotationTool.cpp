@@ -55,7 +55,8 @@ void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
                 dashRect->setRotation(item->rotation());
                 dashRect->setScale(item->scale());
                 dashRect->setZValue(item->zValue());
-                scene->addItem(dashRect);
+                //scene->addItem(dashRect);
+                scene->addToCurLayer(dashRect);
                 setCursor(scene,QCursor((QPixmap(":/icons/rotate.png"))));
 
                 return;
