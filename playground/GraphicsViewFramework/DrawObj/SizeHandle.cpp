@@ -37,17 +37,22 @@ void SizeHandleRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 
     if ( m_controlPoint  )
     {
+        int size = 4;
+        if (m_dir <= Left)
+            size = 8;
+
         if (m_mouseEnter && DrawTool::c_drawShape == selection) {
             painter->setPen(QPen(m_penColor, 1, Qt::SolidLine)); // 绘制圆形外边框
             painter->setBrush(Qt::white);
             //painter->drawPoint(rect().center());
-            painter->drawRect(rect().center().x()-8,
-                              rect().center().y()-8,
-                              16,16);
+            painter->drawRect(rect().center().x()-size,
+                              rect().center().y()-size,
+                              2*size,2*size);
         } else {
             painter->setPen(Qt::NoPen); // 设置圆点无外边框
             painter->setBrush(m_brushColor);
-            painter->drawEllipse(rect().center(),5,5); // 画圆形点
+
+            painter->drawEllipse(rect().center(),size,size); // 画圆形点
             //painter->drawPoint(rect().center()); // 画方形点
         }
     }else {

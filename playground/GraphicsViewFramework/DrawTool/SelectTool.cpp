@@ -49,7 +49,7 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
         // 当前鼠标点在预定义的控制点内（LeftTop ... Left）
         if ( nDragHandle != Handle_None && nDragHandle <= Left )
-             selectMode = editor; // size,editor, 原先是size，但是目前size好像都没用到了
+                selectMode = editor; // size,editor, 原先是size，但是目前size好像都没用到了
         else if ( nDragHandle > Left ) // 自定义的控制点
             selectMode = editor;
         else // nDragHandle == Handle_None
