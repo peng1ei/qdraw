@@ -310,10 +310,15 @@ void GraphicsScene::destroyGroup(QGraphicsItemGroup *group)
 
 void GraphicsScene::SetCurrentLayer(GraphicsScene::Layer *layer)
 {
+    if (layer == m_curLayer || !layer)
+        return;
+
     if (m_curLayer) {
         removeItem(m_curLayer);
         m_curLayer = nullptr;
     }
+
+    clear();
 
     m_curLayer = layer;
     m_curLayer->setFlags(QGraphicsItem::ItemClipsChildrenToShape);
