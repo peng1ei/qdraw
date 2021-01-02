@@ -114,7 +114,7 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
         initialPositions = item->pos();
     }
 
-    qDebug() << "selectMode: " << selectModeStr[selectMode];
+    //qDebug() << "selectMode: " << selectModeStr[selectMode];
 
     if (DrawTool::c_drawShape == selection)
         setCursor(scene, Qt::ArrowCursor);
@@ -128,7 +128,7 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     //QList<QGraphicsItem *> items = scene->curLayer()->;
     AbstractShape * item = 0;
 
-    qDebug() << "selection count: " << items.count();
+    //qDebug() << "selection count: " << items.count();
 
     if ( items.count() == 1 ){
         item = qgraphicsitem_cast<AbstractShape*>(items.first());
@@ -154,12 +154,12 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
               //         << initial_delta << item->mapFromScene(c_down) << item->boundingRect();
 
             } else if ( nDragHandle > Left  && selectMode == editor ){
-                qDebug() << "control1" ;
+                //qDebug() << "control1" ;
                 item->control(nDragHandle,c_last);
                 emit scene->itemControl(item,nDragHandle,c_last,c_down);
             }
             else if ( nDragHandle <= Left && nDragHandle > Handle_None  && selectMode == editor ){
-                qDebug() << "control2" ;
+                //qDebug() << "control2" ;
                 item->control(nDragHandle,c_last);
                 emit scene->itemControl(item,nDragHandle,c_last,c_down);
             }
@@ -195,7 +195,7 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
         setCursor(scene, Qt::ArrowCursor);
     }
 
-    qDebug() << "selectMode: " << selectModeStr[selectMode];
+    //qDebug() << "selectMode: " << selectModeStr[selectMode];
 }
 
 void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -245,7 +245,7 @@ void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     m_hoverSizer = false;
     scene->mouseEvent(event);
 
-    qDebug() << "selectMode: " << selectModeStr[selectMode];
+    //qDebug() << "selectMode: " << selectModeStr[selectMode];
 
     if (DrawTool::c_drawShape == selection)
         setCursor(scene, Qt::ArrowCursor);

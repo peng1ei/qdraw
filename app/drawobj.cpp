@@ -226,7 +226,7 @@ QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, cons
             return QVariant::fromValue<bool>(false);
         }
     }
-    /*
+
     else if (change == ItemPositionChange && scene()) {
         // value is the new position.
         QPointF newPos = value.toPointF();
@@ -238,7 +238,7 @@ QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, cons
             return newPos;
         }
     }
-    */
+
     return QGraphicsItem::itemChange(change, value);
 }
 

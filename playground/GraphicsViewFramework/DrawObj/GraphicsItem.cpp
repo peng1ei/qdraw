@@ -118,27 +118,41 @@ QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, cons
          && DrawTool::c_drawShape == selection) {
         QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(parentItem());
         if (!g)
-            // [2020-12-26 23:25 by pl] 无论Item是否被选中，都显示角点标注
-            //setState(value.toBool() ? SelectionHandleActive : SelectionHandleActive);
             setState(value.toBool() ? SelectionHandleActive : SelectionHandleOff);
         else{
             setSelected(false);
             return QVariant::fromValue<bool>(false);
         }
     }
-    /*
     else if (change == ItemPositionChange && scene()) {
         // value is the new position.
         QPointF newPos = value.toPointF();
-        QRectF rect = scene()->sceneRect();
-        if (!rect.contains(newPos)) {
+        QRectF rect =  parentItem()->boundingRect();//scene()->sceneRect();
+
+        // 减0.1是为了使多边形中外接矩形边框和父Item四边贴合
+        auto leftTop = mapToParent(boundingRect().left() - 0.1, boundingRect().top()-0.1);
+        auto deltaX = pos().x()-leftTop.x() - 0.1;
+        auto deltaY = pos().y()-leftTop.y() - 0.1;
+
+        newPos = QPointF(newPos.x() - deltaX, newPos.y()-deltaY);
+        if (!rect.contains(newPos) /*left and top*/
+                || !rect.contains(QPointF(newPos.x(), newPos.y()+boundingRect().height())) /*bottom*/
+                || !rect.contains(QPointF(newPos.x()+boundingRect().width(), newPos.y()))/*right*/) {
+            //newPos.setX(qMin(rect.right()-boundingRect().width()/2, qMax(newPos.x(), rect.left()+boundingRect().width()/2)));
+            //newPos.setY(qMin(rect.bottom()-boundingRect().height()/2, qMax(newPos.y(), rect.top()+boundingRect().height()/2)));
+
             // Keep the item inside the scene rect.
-            newPos.setX(qMin(rect.right()-boundingRect().width()/2, qMax(newPos.x(), rect.left()+boundingRect().width()/2)));
-            newPos.setY(qMin(rect.bottom()-boundingRect().height()/2, qMax(newPos.y(), rect.top()+boundingRect().height()/2)));
+            newPos.setX(qMin(rect.right()-boundingRect().width()+deltaX, qMax(qMax(newPos.x()+deltaX, rect.left()),deltaX)));
+            newPos.setY(qMin(rect.bottom()-boundingRect().height()+deltaY, qMax(qMax(newPos.y()+deltaY, rect.top()), deltaY)));
+
+            // 只针对矩形有效，对多边形无效
+            //newPos.setX(qMin(rect.right()-boundingRect().width(), qMax(newPos.x(), rect.left())));
+            //newPos.setY(qMin(rect.bottom()-boundingRect().height(), qMax(newPos.y(), rect.top())));
+
             return newPos;
         }
     }
-    */
+
     return QGraphicsItem::itemChange(change, value);
 }
 
