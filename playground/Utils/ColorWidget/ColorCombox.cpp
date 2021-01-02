@@ -9,10 +9,10 @@
 
 const QColor colors[6][8] =
 {
-    {QColor(0, 0, 0, 255), QColor(170, 0, 0, 255), QColor(0, 85, 0, 255), QColor(170, 85, 0, 255),
+    {QColor(0, 0, 0, 0), QColor(0, 0, 0, 255), QColor(128, 128, 128, 255), QColor(255, 255, 255, 255),
     QColor(0, 170, 0, 255), QColor(170, 170, 0, 255), QColor(0, 255, 0, 255), QColor(170, 250, 0, 255)},
 
-    {QColor(128, 128, 128, 255), QColor(170, 0, 127, 255), QColor(0, 85, 127, 255), QColor(170, 85, 127, 255),
+    {QColor(170, 0, 0, 255), QColor(170, 0, 127, 255), QColor(0, 85, 127, 255), QColor(170, 85, 127, 255),
     QColor(0, 170, 127, 255), QColor(170, 170, 127, 255), QColor(0, 255, 127, 255), QColor(170, 255, 127, 255)},
 
     {QColor(0, 0, 255, 255), QColor(170, 0, 255, 255), QColor(0, 85, 255, 255), QColor(170, 85, 255, 255),
@@ -25,7 +25,7 @@ const QColor colors[6][8] =
     QColor(85, 170, 127, 255), QColor(255, 170, 127, 255), QColor(85, 255, 127, 255), QColor(255, 255, 127, 255)},
 
     {QColor(85, 0, 255, 255), QColor(255, 0, 255, 255), QColor(85, 85, 255, 255), QColor(255, 85, 255, 255),
-    QColor(85, 170, 255, 255), QColor(255, 170, 255, 255), QColor(85, 255, 255, 255), QColor(255, 255, 255, 255)}
+    QColor(85, 170, 255, 255), QColor(255, 170, 255, 255), QColor(85, 255, 255, 255), QColor(0, 85, 0, 255)}
 };
 
 ColorCombox::ColorCombox(const QString &name,const QColor&color, QWidget *parent) :
@@ -70,6 +70,7 @@ QMenu *ColorCombox::createColorMenu(const char *slot, const char *slotColorBoard
     pGridLayout->setContentsMargins(0, 0, 0, 0);
     pGridLayout->setSpacing(2);
 
+    QAction *lastAction = nullptr;
     for (int iRow = 0; iRow < 6; iRow++)
     {
         for (int iCol = 0; iCol < 8; iCol++)
@@ -79,6 +80,9 @@ QMenu *ColorCombox::createColorMenu(const char *slot, const char *slotColorBoard
             action->setIcon(createColorIcon(colors[iRow][iCol]));
             connect(action, SIGNAL(triggered()), this, slot);
 
+            if (iRow == 0 && iCol == 0)
+                lastAction = action;
+
             QToolButton *pBtnColor = new QToolButton;
             pBtnColor->setFixedSize(QSize(16, 16));
             pBtnColor->setAutoRaise(true);
@@ -87,6 +91,14 @@ QMenu *ColorCombox::createColorMenu(const char *slot, const char *slotColorBoard
             pGridLayout->addWidget(pBtnColor, iRow, iCol);
         }
     }
+
+    QImage img(":/image/icons/background.png");
+    img = img.scaled(16,16);
+
+    if (lastAction) {
+        lastAction->setIcon(QPixmap::fromImage(img));
+    }
+
 
     QWidget *widget = new QWidget;
     widget->setLayout(pGridLayout);
@@ -161,7 +173,12 @@ void ColorCombox::OnShowColorBoard()
 
 void ColorCombox::changeColor(QColor color)
 {
-    setButtonIcon(QString(), color);
+    if (color.alpha() == 0) {
+        setIcon(QPixmap(":/image/icons/background.png"));
+    } else {
+        setButtonIcon(QString(), color);
+    }
+
     setText(m_name);
     //QString strstyle = QString("background-color:rgb(%1,%2,%3);").arg(QString::number(color.red()), QString::number(color.green()), QString::number(color.blue()));
     //this->setStyleSheet(strstyle);

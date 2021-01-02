@@ -44,5 +44,6 @@
         <file>image/icons/select_clear.png</file>
         <file>image/icons/delete.png</file>
         <file>image/icons/delete_select.png</file>
+        <file>image/icons/background.png</file>
     </qresource>
 </RCC>

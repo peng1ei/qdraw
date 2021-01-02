@@ -466,7 +466,12 @@ void MainWindow::OnBrushColorChanged(QColor color)
 
 void MainWindow::OnBackgroundColorChanged(QColor color)
 {
-    mView->setBackgroundBrush(QBrush(color));
+    if (color.alpha() == 0) {
+        mView->setBackgroundBrush(QPixmap(":/image/icons/background.png"));
+    } else {
+        mView->setBackgroundBrush(QBrush(color));
+    }
+
 }
 
 void MainWindow::OnSelectClear()
