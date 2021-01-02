@@ -480,6 +480,8 @@ void GraphicsRectItem::updatehandles()
         m_handles[Handle_Shape+1]->move( x, geom.top());
         //m_handles[Handle_Shape+2]->move(m_originPoint.x(),m_originPoint.y());
 
+        m_handles[Handle_Shape+0]->setPenColor(m_pen.color());
+        m_handles[Handle_Shape+1]->setPenColor(m_pen.color());
         m_handles[Handle_Shape+0]->setBrushColor(m_brush.color());
         m_handles[Handle_Shape+1]->setBrushColor(m_brush.color());
     } else {
@@ -489,6 +491,10 @@ void GraphicsRectItem::updatehandles()
         m_handles[Handle_Shape+2]->move(geom.right(), geom.bottom());
         m_handles[Handle_Shape+3]->move(geom.left(), geom.bottom());
 
+        m_handles[Handle_Shape+0]->setPenColor(m_pen.color());
+        m_handles[Handle_Shape+1]->setPenColor(m_pen.color());
+        m_handles[Handle_Shape+2]->setPenColor(m_pen.color());
+        m_handles[Handle_Shape+3]->setPenColor(m_pen.color());
         m_handles[Handle_Shape+0]->setBrushColor(m_brush.color());
         m_handles[Handle_Shape+1]->setBrushColor(m_brush.color());
         m_handles[Handle_Shape+2]->setBrushColor(m_brush.color());

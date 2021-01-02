@@ -18,8 +18,8 @@ SizeHandleRect::SizeHandleRect(QGraphicsItem* parent , int d, bool control)
     ,m_dir(d)
     ,m_controlPoint(control)
     ,m_state(SelectionHandleOff)
-    ,m_penColor("white")
-    ,m_brushColor("white")
+    ,m_penColor(78,182,243)
+    ,m_brushColor(78,182,243)
     ,m_type(EightPointHandle)
 {
     this->setAcceptHoverEvents(true);
@@ -49,8 +49,8 @@ void SizeHandleRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
                               rect().center().y()-size,
                               2*size,2*size);
         } else {
-            painter->setPen(Qt::NoPen); // 设置圆点无外边框
-            painter->setBrush(m_brushColor);
+            painter->setPen(Qt::NoPen); // Qt::NoPen -- 设置圆点无外边框
+            painter->setBrush(m_penColor);
 
             painter->drawEllipse(rect().center(),size,size); // 画圆形点
             //painter->drawPoint(rect().center()); // 画方形点

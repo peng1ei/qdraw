@@ -157,6 +157,9 @@ void GraphicsLineItem::updatehandles()
 {
     for ( int i = 0 ; i < m_points.size() ; ++i ){
         m_handles[i]->move(m_points[i].x() ,m_points[i].y() );
+
+        m_handles[i]->setPenColor(m_pen.color());
+        m_handles[i]->setBrushColor(m_brush.color());
     }
 }
 

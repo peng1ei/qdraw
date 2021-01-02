@@ -250,6 +250,9 @@ void GraphicsEllipseItem::updatehandles()
 
     m_handles.at(Handle_Shape + 2)->move(m_localRect.center().x(), m_localRect.center().y());
 
+    m_handles.at(Handle_Shape + 0)->setPenColor(m_pen.color());
+    m_handles.at(Handle_Shape + 1)->setPenColor(m_pen.color());
+    m_handles.at(Handle_Shape + 2)->setPenColor(m_pen.color());
     m_handles.at(Handle_Shape + 0)->setBrushColor(m_brush.color());
     m_handles.at(Handle_Shape + 1)->setBrushColor(m_brush.color());
     m_handles.at(Handle_Shape + 2)->setBrushColor(m_brush.color());

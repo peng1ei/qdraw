@@ -249,7 +249,8 @@ void qt_graphicsItem_highlightSelected(
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(item->boundingRect().adjusted(-pad, -pad, pad, pad));
 #else
-    painter->setPen(QPen(QColor("lightskyblue"), 0, Qt::SolidLine));
+    // 78,182,243/lightskyblue
+    painter->setPen(QPen(QColor(78,182,243), 0, Qt::SolidLine));
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(item->boundingRect().adjusted(-0, -0, 0, 0));
 #endif
