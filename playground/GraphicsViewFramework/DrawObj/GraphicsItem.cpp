@@ -30,13 +30,13 @@ GraphicsItem::GraphicsItem(QGraphicsItem *parent)
 }
 
 QPixmap GraphicsItem::image() {
-    QPixmap pixmap(64, 64);
+    QPixmap pixmap(m_localRect.width()+6, m_localRect.height()+6);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
-    setPen(QPen(Qt::black));
-    setBrush(Qt::white);
+    setPen(m_pen);
+    setBrush(m_brush);
     QStyleOptionGraphicsItem *styleOption = new QStyleOptionGraphicsItem;
-//    painter.translate(m_localRect.center().x(),m_localRect.center().y());
+    painter.translate(-m_localRect.left()+3,-m_localRect.top()+3);
     paint(&painter,styleOption);
     delete styleOption;
     return pixmap;

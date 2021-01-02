@@ -86,7 +86,7 @@ void GraphicsBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
 //    painter->setPen(pen());
 //    painter->setBrush(brush());
     QPen tpen = painter->pen();
-    tpen.setWidthF(1);
+    tpen.setWidthF(2);
     tpen.setColor(m_pen.color());
     tpen.setCosmetic(true); // 设置外边框粗细不变
     painter->setRenderHint(QPainter::Antialiasing);

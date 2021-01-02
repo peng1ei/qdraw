@@ -169,7 +169,7 @@ void GraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     Q_UNUSED(widget);
     //painter->setPen(pen());
     QPen tpen = painter->pen();
-    tpen.setWidthF(1);
+    tpen.setWidthF(2);
     tpen.setColor(m_pen.color());
     tpen.setCosmetic(true);
     painter->setRenderHint(QPainter::Antialiasing);

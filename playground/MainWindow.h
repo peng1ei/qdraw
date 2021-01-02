@@ -147,6 +147,7 @@ private:
     void CreatePropertyEditor();
     void CreateStatusBar();
     void CreateImageListView();
+    void CreateLabelsListWidget();
     
     void InitGraphicsView();
 
@@ -268,5 +269,8 @@ private:
 
     QMenu *mContextMenu = nullptr;
     ProgressBarDialog *mTestDlg;
+
+    QDockWidget *mUiDockLabels;
+    QListWidget *mUiListWidgetLabels;
 };
 #endif // MAINWINDOW_H

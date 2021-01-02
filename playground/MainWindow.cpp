@@ -32,6 +32,8 @@
 #include <QGLWidget>
 #include <QDebug>
 #include <QColorDialog>
+#include <QListWidget>
+#include <QListWidgetItem>
 
 int s_x = 50;
 int s_y = 50;
@@ -525,7 +527,16 @@ void MainWindow::OnItemRotate(QGraphicsItem *item, const qreal oldAngle)
 
 void MainWindow::OnItemAdded(QGraphicsItem *item)
 {
-    
+    gvf::GraphicsItem * titem = qgraphicsitem_cast<gvf::GraphicsItem*>(item);
+    if (!titem)
+        return;
+
+    QListWidgetItem *lwitem = new QListWidgetItem(titem->displayName());
+    lwitem->setSizeHint(QSize(60, 36));  //每次改变Item的高度
+    auto pix = titem->image();
+    pix = pix.scaled(32,32, Qt::KeepAspectRatio);
+    lwitem->setIcon(pix);
+    mUiListWidgetLabels->addItem(lwitem);
 }
 
 void MainWindow::OnItemResize(QGraphicsItem *item, int handle, const QPointF &scale)
@@ -556,7 +567,7 @@ void MainWindow::InitUI()
     mUiUndoView->setWindowTitle(tr("Command List"));
     mUiUndoView->setAttribute(Qt::WA_QuitOnClose, false);
     QDockWidget *dock = new QDockWidget(this);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(mUiUndoView);
     
     InitGraphicsView();
@@ -569,6 +580,7 @@ void MainWindow::InitUI()
 
     CreateStatusBar();
 
+    CreateLabelsListWidget();
     CreateImageListView();
 }
 
@@ -1027,6 +1039,16 @@ void MainWindow::CreateImageListView()
 
     connect(mUiImageListView, &QListView::doubleClicked,
             this, &MainWindow::OnImageListViewDoubleClicked);
+}
+
+void MainWindow::CreateLabelsListWidget()
+{
+    mUiDockLabels = new QDockWidget(tr("Labels"), this);
+    addDockWidget(Qt::RightDockWidgetArea, mUiDockLabels);
+
+    mUiListWidgetLabels = new QListWidget(this);
+    mUiListWidgetLabels->setIconSize(QSize(32,32));
+    mUiDockLabels->setWidget(mUiListWidgetLabels);
 }
 
 void MainWindow::InitGraphicsView()

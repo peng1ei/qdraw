@@ -30,6 +30,9 @@ SizeHandleRect::SizeHandleRect(QGraphicsItem* parent , int d, bool control)
 // 绘制角点标注的样式
 void SizeHandleRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+
     painter->save();
 
     painter->setRenderHint(QPainter::Antialiasing);
@@ -42,7 +45,7 @@ void SizeHandleRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
             size = 8;
 
         if (m_mouseEnter && DrawTool::c_drawShape == selection) {
-            painter->setPen(QPen(m_penColor, 1, Qt::SolidLine)); // 绘制圆形外边框
+            painter->setPen(QPen(m_penColor, 2, Qt::SolidLine)); // 绘制圆形外边框
             painter->setBrush(Qt::white);
             //painter->drawPoint(rect().center());
             painter->drawRect(rect().center().x()-size,

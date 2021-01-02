@@ -224,14 +224,15 @@ void GraphicsPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->setBrush(result);
 #else
     // TODO 根据图形指定的颜色进行填充
-    widget->setAttribute(Qt::WA_TranslucentBackground, true);
+    if (widget)
+        widget->setAttribute(Qt::WA_TranslucentBackground, true);
     painter->setBrush(QColor(m_brush.color().red(),
                              m_brush.color().green(),
                              m_brush.color().blue(),m_alpha));//最后一位是设置透明属性（在0-255取值）
 #endif
 
     QPen tpen = painter->pen();
-    tpen.setWidthF(1);
+    tpen.setWidthF(2);
     tpen.setColor(m_pen.color());
     tpen.setCosmetic(true);
     painter->setRenderHint(QPainter::Antialiasing);
