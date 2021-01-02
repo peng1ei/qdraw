@@ -133,6 +133,7 @@ public slots:
     void OnBrushColorChanged(QColor color);
 
     void OnSelectClear();
+    void OnDeleteAllItem();
 
 private:
     void SetLayerVisiable(Layer *layer, bool visiable);
@@ -203,6 +204,7 @@ private:
     QAction  * mUiPasteAct;
     QAction  * mUiCutAct;
     QAction  * mUiSelecteClearAct;
+    QAction  * mUiDeleteAllAct;
 
     // image browse control
     QToolBar * mUiImgBrowseControlToolBar;

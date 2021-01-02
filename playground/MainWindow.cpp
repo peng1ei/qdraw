@@ -391,6 +391,9 @@ void MainWindow::OnDeleteItem()
     if (mScene->selectedItems().isEmpty())
         return;
 
+    //auto childs = mScene->curLayer()->childItems();
+    //qDebug() << "size: " << childs.size();
+
     auto items = mScene->selectedItems();
     foreach (QGraphicsItem *item, items) {
         QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(item->parentItem());
@@ -464,6 +467,21 @@ void MainWindow::OnBrushColorChanged(QColor color)
 void MainWindow::OnSelectClear()
 {
     mScene->clearSelection();
+}
+
+void MainWindow::OnDeleteAllItem()
+{
+    if (!mScene->curLayer())
+        return;
+
+    auto childs = mScene->curLayer()->childItems();
+    //qDebug() << "size: " << childs.size();
+
+    foreach (QGraphicsItem *item, childs) {
+        QGraphicsItemGroup *g = dynamic_cast<QGraphicsItemGroup*>(item->parentItem());
+        if ( !g )
+            mScene->removeItem(item);
+    }
 }
 
 void MainWindow::OnItemSelected()
@@ -709,9 +727,13 @@ void MainWindow::CreateActions()
     connect(mUiRotateAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiSelectColorAct,SIGNAL(triggered()),this,SLOT(OnSelectColor()));
 
-    mUiDeleteAct = new QAction(tr("&Delete"), this);
-    mUiDeleteAct->setIcon(QIcon(":/image/icons/delete.png"));
+    mUiDeleteAct = new QAction(tr("&Delete Selected"), this);
+    mUiDeleteAct->setIcon(QIcon(":/image/icons/delete_select.png"));
     mUiDeleteAct->setShortcut(QKeySequence::Delete);
+
+    mUiDeleteAllAct = new QAction(tr("&Delete All"), this);
+    mUiDeleteAllAct->setIcon(QIcon(":/image/icons/delete.png"));
+    //mUiDeleteAct->setShortcut(QKeySequence::Delete);
 
     mUiUndoAct = mUiUndoStack->createUndoAction(this,tr("undo"));
     mUiUndoAct->setIcon(QIcon(":/image/icons/undo.png"));
@@ -738,7 +760,7 @@ void MainWindow::CreateActions()
     mUiCutAct = new QAction(QIcon(":/image/icons/cut.png"),tr("cut"),this);
     mUiCutAct->setShortcut(QKeySequence::Cut);
 
-    mUiSelecteClearAct = new QAction(QIcon(":/image/icons/select_clear.png"),tr("select clear"),this);;
+    mUiSelecteClearAct = new QAction(QIcon(":/image/icons/select_clear.png"),tr("clear select"),this);;
     mUiSelecteClearAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
 
     connect(mUiCopyAct,SIGNAL(triggered()),this,SLOT(OnCopy()));
@@ -753,6 +775,7 @@ void MainWindow::CreateActions()
     connect(mUiZoomToRectAct , SIGNAL(triggered()),this,SLOT(OnZoomToRect()));
     connect(mUiPanAct , SIGNAL(triggered()),this,SLOT(OnPan()));
     connect(mUiDeleteAct, SIGNAL(triggered()), this, SLOT(OnDeleteItem()));
+    connect(mUiDeleteAllAct, SIGNAL(triggered()), this, SLOT(OnDeleteAllItem()));
 
     mUiFuncAct = new QAction(tr("func test"),this);
     connect(mUiFuncAct,SIGNAL(triggered()),this,SLOT(OnFuncTestTriggered()));
@@ -874,6 +897,7 @@ void MainWindow::CreateToolbars()
     mUiEditToolBar->addAction(mUiRedoAct);
     mUiEditToolBar->addAction(mUiSelecteClearAct);
     mUiEditToolBar->addAction(mUiDeleteAct);
+    mUiEditToolBar->addAction(mUiDeleteAllAct);
 
     mUiImgBrowseControlToolBar = addToolBar(tr("browse"));
 
@@ -1074,8 +1098,8 @@ void MainWindow::UpdateScene(const QString &imgFile)
     mScene->SetCurrentLayer(pixitem);
 
     //mScene->addPixmap(QPixmap::fromImage(img));
-    mView->FitInView(0, 0, img.width(), img.height());
-    //mView->Zoom1To1(0, 0, img.width(), img.height());
+    //mView->FitInView(0, 0, img.width(), img.height());
+    mView->Zoom1To1(0, 0, img.width(), img.height());
     qDebug() << "Update sene 1";
 }
 

@@ -21,8 +21,8 @@ RectTool::RectTool(DrawShape drawShape)
 
 void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
-    qDebug() << "x scale: " << scene->view()->transform().m11();
-    qDebug() << "y scale: " << scene->view()->transform().m22();
+    //qDebug() << "x scale: " << scene->view()->transform().m11();
+    //qDebug() << "y scale: " << scene->view()->transform().m22();
 
     if ( event->button() != Qt::LeftButton ) return;
     scene->clearSelection();
@@ -80,7 +80,7 @@ void RectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
     //DrawTool::mouseMoveEvent(event,scene);
     selectTool.mouseReleaseEvent(event,scene);
 
-    if ( event->scenePos() == (c_down/*-QPoint(2,2)*/)){
+    if ( event->scenePos() == (c_down/*-QPoint(2,2)*/) ){
 
        if ( item != 0 ){
          item->setSelected(false);
