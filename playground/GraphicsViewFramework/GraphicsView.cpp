@@ -33,6 +33,8 @@ public:
     QtCornerBox *mBox = nullptr;
 
     QRect mRubberBandRect;
+    bool mKeyCtrlPressed = false;
+    DrawShape mOldDrawShape = DrawShape::selection;
 };
 
 GraphicsView::GraphicsView(QWidget *parent)
@@ -157,12 +159,18 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
 //    if (event->button() == Qt::RightButton)
 //        return;
 
-    if (event->button() == PAN_BUTTON
-        || (DrawTool::c_drawShape == pan && event->button() == Qt::LeftButton)) {
+    if ( event->button() == PAN_BUTTON
+        || (DrawTool::c_drawShape == pan && event->button() == Qt::LeftButton)
+        || (event->button() == Qt::LeftButton && d_ptr->mKeyCtrlPressed) ) {
         d_ptr->mIsPan = true;
         d_ptr->mLastMousePos = event->pos();
         
-        setCursor(Qt::ClosedHandCursor);
+        viewport()->setCursor(Qt::ClosedHandCursor);
+    }
+
+    if (d_ptr->mKeyCtrlPressed && event->button() == Qt::LeftButton) {
+        d_ptr->mOldDrawShape = DrawTool::c_drawShape;
+        DrawTool::c_drawShape = pan;
     }
 
 //    if (event->button() == Qt::RightButton)
@@ -204,7 +212,7 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
     
     if (d_ptr->mIsPan){
-        setCursor(Qt::ClosedHandCursor);
+        viewport()->setCursor(Qt::ClosedHandCursor);
     }
 
     emit posFromSceneChanged(d_ptr->mTargetScenePos.x(), d_ptr->mTargetScenePos.y());
@@ -223,7 +231,11 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         || event->button() == Qt::LeftButton) {
         d_ptr->mIsPan = false;
 
-        DrawTool::c_drawShape == pan ? setCursor(Qt::ClosedHandCursor) : setCursor(Qt::ArrowCursor);
+        DrawTool::c_drawShape == pan ? viewport()->setCursor(Qt::ClosedHandCursor) : viewport()->setCursor(Qt::ArrowCursor);
+    }
+
+    if (d_ptr->mKeyCtrlPressed && event->button() == Qt::LeftButton) {
+        DrawTool::c_drawShape = d_ptr->mOldDrawShape;
     }
 
     if (DrawTool::c_drawShape == rubberbandzoom) {
@@ -243,6 +255,32 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 
     //qDebug() << "Rubber band Rect release: " << rubberBandRect();
+}
+
+void GraphicsView::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+        case Qt::Key_Control:
+        d_ptr->mKeyCtrlPressed = true;
+        break;
+    default:
+        break;
+    }
+
+    QGraphicsView::keyPressEvent(event);
+}
+
+void GraphicsView::keyReleaseEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+        case Qt::Key_Control:
+        d_ptr->mKeyCtrlPressed = false;
+        break;
+    default:
+        break;
+    }
+
+    QGraphicsView::keyPressEvent(event);
 }
 
 void GraphicsView::resizeEvent(QResizeEvent *event)

@@ -48,6 +48,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void scrollContentsBy(int dx, int dy) Q_DECL_OVERRIDE;
 

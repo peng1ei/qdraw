@@ -1,4 +1,5 @@
 #include "GraphicsRectItem.h"
+#include "DrawTool/DrawTool.h"
 #include <QPainter>
 #include <QWidget>
 #include <QStyleOptionGraphicsItem>
@@ -448,10 +449,11 @@ bool GraphicsRectItem::saveToXml(QXmlStreamWriter * xml)
 
 void GraphicsRectItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
-
-    m_alpha = 200;
-    update();
-    //QGraphicsItem::hoverEnterEvent(e);
+    if (DrawTool::c_drawShape == DrawShape::selection) {
+        m_alpha = 200;
+        update();
+    }
+    QGraphicsItem::hoverEnterEvent(e);
     //setCursor(Qt::OpenHandCursor);
 }
 
@@ -459,7 +461,7 @@ void GraphicsRectItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
     m_alpha = 50;
     update();
-    //QGraphicsItem::hoverLeaveEvent(e);
+    QGraphicsItem::hoverLeaveEvent(e);
     //setCursor(Qt::ArrowCursor);
 }
 

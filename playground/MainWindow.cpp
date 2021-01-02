@@ -1115,6 +1115,7 @@ void MainWindow::UpdateScene(const QString &imgFile)
     mView->FitInView(0, 0, img.width(), img.height());
     //mView->Zoom1To1(0, 0, img.width(), img.height());
     qDebug() << "Update sene 1";
+    mView->setFocus();
 }
 
 Layer::Layer(const QColor &color, QGraphicsItem *parent)
