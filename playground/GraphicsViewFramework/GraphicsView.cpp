@@ -294,7 +294,9 @@ void GraphicsView::UpdateRuler()
 {
     if ( scene() == 0) return;
     QRectF viewbox = this->rect();
-    QPointF offset = mapFromScene(scene()->sceneRect().topLeft());
+
+    // 以当前层为基准还是以场景坐标为基准？？？
+    QPointF offset = mapFromScene(0,0/*scene()->sceneRect().topLeft()*/);
     double factor =  1./transform().m11();
     double lower_x = factor * ( viewbox.left()  - offset.x() );
     double upper_x = factor * ( viewbox.right() -RULER_SIZE- offset.x()  );

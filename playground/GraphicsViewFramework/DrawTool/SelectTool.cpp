@@ -130,8 +130,9 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
     if (!scene->curLayer())
         return;
     auto p = scene->curLayer()->mapFromScene(event->scenePos());
-    if (!scene->curLayer()->boundingRect().contains(p))
+    if (!scene->curLayer()->boundingRect().contains(p)) {
         return;
+    }
 
     DrawTool::mouseMoveEvent(event,scene);
 
