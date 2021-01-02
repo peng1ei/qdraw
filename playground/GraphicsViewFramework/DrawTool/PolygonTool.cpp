@@ -21,8 +21,11 @@ PolygonTool::PolygonTool(DrawShape shape)
 void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
-
     if ( event->button() != Qt::LeftButton ) return;
+
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
 
     if ( item == nullptr ){
         if ( c_drawShape == polygon ){
@@ -70,6 +73,10 @@ void PolygonTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
 
 void PolygonTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
+
     DrawTool::mouseMoveEvent(event,scene);
     setCursor(scene,Qt::CrossCursor);
 

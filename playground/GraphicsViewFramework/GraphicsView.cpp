@@ -55,7 +55,7 @@ GraphicsView::GraphicsView(QWidget *parent)
     setCacheMode(QGraphicsView::CacheBackground);
     setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
     setMouseTracking(true);
-    setBackgroundBrush(QBrush(Qt::darkGray));
+    setBackgroundBrush(QBrush(Qt::white));
 
     if (d_ptr->mRuleBarVisiable) {
         d_ptr->mHRuler = new QtRuleBar(Qt::Horizontal,this,this);

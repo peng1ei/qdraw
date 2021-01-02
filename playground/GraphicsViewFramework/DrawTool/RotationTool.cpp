@@ -21,6 +21,10 @@ void RotationTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     DrawTool::mousePressEvent(event,scene);
     if ( event->button() != Qt::LeftButton ) return;
 
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
+
     if (!m_hoverSizer)
       scene->mouseEvent(event);
 

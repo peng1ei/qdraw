@@ -25,9 +25,13 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
     //qDebug() << "y scale: " << scene->view()->transform().m22();
 
     if ( event->button() != Qt::LeftButton ) return;
-    scene->clearSelection();
-
     DrawTool::mousePressEvent(event,scene);
+
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
+
+    scene->clearSelection();
     switch ( c_drawShape ){
     case rectangle:
         item = new GraphicsRectItem(QRectF(0,0,1,1));
@@ -71,6 +75,10 @@ void RectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *s
 
 void RectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
+
     selectTool.mouseMoveEvent(event,scene);
     setCursor(scene, Qt::CrossCursor);
 }

@@ -40,7 +40,9 @@ ColorCombox::ColorCombox(const QString &name,const QColor&color, QWidget *parent
 
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    setColor(qRgb(color.red(),color.green(),color.blue()));
+    setColor(qRgba(color.red(),color.green(),color.blue(), color.alpha()));
+    if (color.red() == 0&&color.green() == 0&&color.blue() == 0&&color.alpha() == 0)
+        setIcon(QPixmap(":/image/icons/background.png"));
 }
 
 

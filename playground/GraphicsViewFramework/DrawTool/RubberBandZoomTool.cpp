@@ -17,6 +17,11 @@ RubberBandZoomTool::RubberBandZoomTool()
 void RubberBandZoomTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
+
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
+
     scene->clearSelection();
 
     if ( event->button() != Qt::LeftButton ) return;

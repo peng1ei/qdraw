@@ -26,8 +26,13 @@ SelectTool::SelectTool()
 void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mousePressEvent(event,scene);
-
     if ( event->button() != Qt::LeftButton ) return;
+
+    if (!scene->curLayer())
+        return;
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
 
     // TODO m_hoverSizer什么意思？？？
     if (!m_hoverSizer)
@@ -122,6 +127,12 @@ void SelectTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScene 
 
 void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
+    if (!scene->curLayer())
+        return;
+    auto p = scene->curLayer()->mapFromScene(event->scenePos());
+    if (!scene->curLayer()->boundingRect().contains(p))
+        return;
+
     DrawTool::mouseMoveEvent(event,scene);
 
     QList<QGraphicsItem *> items = scene->selectedItems();
@@ -201,7 +212,6 @@ void SelectTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *
 void SelectTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     DrawTool::mouseReleaseEvent(event,scene);
-
     if ( event->button() != Qt::LeftButton ) return;
 
     QList<QGraphicsItem *> items = scene->selectedItems();

@@ -456,7 +456,7 @@ void MainWindow::OnImageListViewDoubleClicked(const QModelIndex &index)
 void MainWindow::OnPenColorChanged(QColor color)
 {
     gvf::DrawTool::c_penColor = color;
-
+    gvf::DrawTool::c_brushColor = color;
 }
 
 void MainWindow::OnBrushColorChanged(QColor color)
@@ -936,10 +936,10 @@ void MainWindow::CreateToolbars()
     // Pen and Brush Color
     mUiPenColorCombox = new ColorCombox(tr("Pen"), QColor(32,144,32));
     mUiBrushColorCombox = new ColorCombox(tr("Brush"),QColor(32,144,32));
-    mUiBackgroundColorCombox = new ColorCombox(tr("Background"),mView->backgroundBrush().color());
+    mUiBackgroundColorCombox = new ColorCombox(tr("Background"),QColor(255,255,255));
     mUiDrawToolBar->addSeparator();
     mUiDrawToolBar->addWidget(mUiPenColorCombox);
-    mUiDrawToolBar->addWidget(mUiBrushColorCombox);
+    //mUiDrawToolBar->addWidget(mUiBrushColorCombox);
     mUiDrawToolBar->addWidget(mUiBackgroundColorCombox);
     connect(mUiPenColorCombox, &ColorCombox::sigColorChanged,
             this, &MainWindow::OnPenColorChanged);
@@ -1112,8 +1112,8 @@ void MainWindow::UpdateScene(const QString &imgFile)
     mScene->SetCurrentLayer(pixitem);
 
     //mScene->addPixmap(QPixmap::fromImage(img));
-    //mView->FitInView(0, 0, img.width(), img.height());
-    mView->Zoom1To1(0, 0, img.width(), img.height());
+    mView->FitInView(0, 0, img.width(), img.height());
+    //mView->Zoom1To1(0, 0, img.width(), img.height());
     qDebug() << "Update sene 1";
 }
 
