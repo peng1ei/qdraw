@@ -12,7 +12,7 @@ const QColor colors[6][8] =
     {QColor(0, 0, 0, 255), QColor(170, 0, 0, 255), QColor(0, 85, 0, 255), QColor(170, 85, 0, 255),
     QColor(0, 170, 0, 255), QColor(170, 170, 0, 255), QColor(0, 255, 0, 255), QColor(170, 250, 0, 255)},
 
-    {QColor(0, 0, 127, 255), QColor(170, 0, 127, 255), QColor(0, 85, 127, 255), QColor(170, 85, 127, 255),
+    {QColor(128, 128, 128, 255), QColor(170, 0, 127, 255), QColor(0, 85, 127, 255), QColor(170, 85, 127, 255),
     QColor(0, 170, 127, 255), QColor(170, 170, 127, 255), QColor(0, 255, 127, 255), QColor(170, 255, 127, 255)},
 
     {QColor(0, 0, 255, 255), QColor(170, 0, 255, 255), QColor(0, 85, 255, 255), QColor(170, 85, 255, 255),
@@ -28,7 +28,7 @@ const QColor colors[6][8] =
     QColor(85, 170, 255, 255), QColor(255, 170, 255, 255), QColor(85, 255, 255, 255), QColor(255, 255, 255, 255)}
 };
 
-ColorCombox::ColorCombox(const QString &name, QWidget *parent) :
+ColorCombox::ColorCombox(const QString &name,const QColor&color, QWidget *parent) :
     QToolButton(parent), m_name(name)
 {
     setPopupMode(QToolButton::MenuButtonPopup );
@@ -40,7 +40,7 @@ ColorCombox::ColorCombox(const QString &name, QWidget *parent) :
 
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    setColor(qRgb(32,144,32));
+    setColor(qRgb(color.red(),color.green(),color.blue()));
 }
 
 

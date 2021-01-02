@@ -464,6 +464,11 @@ void MainWindow::OnBrushColorChanged(QColor color)
     gvf::DrawTool::c_brushColor = color;
 }
 
+void MainWindow::OnBackgroundColorChanged(QColor color)
+{
+    mView->setBackgroundBrush(QBrush(color));
+}
+
 void MainWindow::OnSelectClear()
 {
     mScene->clearSelection();
@@ -924,15 +929,19 @@ void MainWindow::CreateToolbars()
     //mUiDrawToolBar->addAction(mUiSelectColorAct);
 
     // Pen and Brush Color
-    mUiPenColorCombox = new ColorCombox(tr("Pen"));
-    mUiBrushColorCombox = new ColorCombox(tr("Brush"));
+    mUiPenColorCombox = new ColorCombox(tr("Pen"), QColor(32,144,32));
+    mUiBrushColorCombox = new ColorCombox(tr("Brush"),QColor(32,144,32));
+    mUiBackgroundColorCombox = new ColorCombox(tr("Background"),mView->backgroundBrush().color());
     mUiDrawToolBar->addSeparator();
     mUiDrawToolBar->addWidget(mUiPenColorCombox);
     mUiDrawToolBar->addWidget(mUiBrushColorCombox);
+    mUiDrawToolBar->addWidget(mUiBackgroundColorCombox);
     connect(mUiPenColorCombox, &ColorCombox::sigColorChanged,
             this, &MainWindow::OnPenColorChanged);
     connect(mUiBrushColorCombox, &ColorCombox::sigColorChanged,
             this, &MainWindow::OnBrushColorChanged);
+    connect(mUiBackgroundColorCombox, &ColorCombox::sigColorChanged,
+            this, &MainWindow::OnBackgroundColorChanged);
 
     // create align toolbar
 #if 0

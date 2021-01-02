@@ -131,6 +131,7 @@ public slots:
 
     void OnPenColorChanged(QColor color);
     void OnBrushColorChanged(QColor color);
+    void OnBackgroundColorChanged(QColor color);
 
     void OnSelectClear();
     void OnDeleteAllItem();
@@ -231,6 +232,7 @@ private:
 
     ColorCombox * mUiPenColorCombox;
     ColorCombox * mUiBrushColorCombox;
+    ColorCombox * mUiBackgroundColorCombox;
 
     QAction *mUiCloseAct;
     QAction *mUiCloseAllAct;

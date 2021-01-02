@@ -9,7 +9,7 @@ class ColorCombox : public QToolButton
     Q_OBJECT
 
 public:
-    ColorCombox(const QString &name = QString(), QWidget *parent = 0);
+    ColorCombox(const QString &name = QString(), const QColor&color = Qt::white, QWidget *parent = 0);
     ~ColorCombox();
 
     void setButtonIcon(const QString &imageFile, QColor color);
