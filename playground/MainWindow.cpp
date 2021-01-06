@@ -215,6 +215,8 @@ void MainWindow::OnAddShape()
         gvf::DrawTool::c_drawShape = gvf::rotation;
     else if (sender() == mUiPolylineAct )
         gvf::DrawTool::c_drawShape = gvf::polyline;
+    else if (sender() == mUiScribbleAct)
+        gvf::DrawTool::c_drawShape = gvf::scribble;
 
     if ( sender() != mUiSelectAct && sender() != mUiRotateAct ){
         mScene->clearSelection();
@@ -776,6 +778,8 @@ void MainWindow::CreateActions()
     mUiPolylineAct->setCheckable(true);
     mUiBezierAct= new QAction(QIcon(":/image/icons/bezier.png"),tr("bezier tool"),this);
     mUiBezierAct->setCheckable(true);
+    mUiScribbleAct= new QAction(QIcon(":/image/icons/pen.png"),tr("scribble tool"),this);
+    mUiScribbleAct->setCheckable(true);
 
     mUiRotateAct = new QAction(QIcon(":/image/icons/rotate.png"),tr("rotate tool"),this);
     mUiRotateAct->setCheckable(true);
@@ -793,6 +797,7 @@ void MainWindow::CreateActions()
     mUiDrawActionGroup->addAction(mUiPolygonAct);
 
     //mUiDrawActionGroup->addAction(mUiBezierAct);
+    mUiDrawActionGroup->addAction(mUiScribbleAct);
     mUiDrawActionGroup->addAction(mUiRotateAct);
 
     mUiZoomToRectAct = new QAction(QIcon(":/image/icons/zoomrect.png"),tr("zoomToRect"),this);
@@ -813,6 +818,7 @@ void MainWindow::CreateActions()
     connect(mUiPolygonAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiPolylineAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiBezierAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
+    connect(mUiScribbleAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiRotateAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiSelectColorAct,SIGNAL(triggered()),this,SLOT(OnSelectColor()));
 
@@ -1009,6 +1015,7 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiPolylineAct);
     mUiDrawToolBar->addAction(mUiPolygonAct);
     //mUiDrawToolBar->addAction(mUiBezierAct);
+    mUiDrawToolBar->addAction(mUiScribbleAct);
     mUiDrawToolBar->addAction(mUiRotateAct);
     //mUiDrawToolBar->addAction(mUiSelectColorAct);
 

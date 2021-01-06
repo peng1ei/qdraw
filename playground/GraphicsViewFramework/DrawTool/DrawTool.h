@@ -20,6 +20,7 @@ class GraphicsScene;
 class GraphicsItem;
 class GraphicsPolygonItem;
 class GraphicsItemGroup;
+class GraphicsScribbleItem;
 
 enum DrawShape
 {
@@ -33,7 +34,8 @@ enum DrawShape
     polygon,
     polyline,
     rubberbandzoom,
-    pan
+    pan,
+    scribble
 };
 
 enum SelectMode

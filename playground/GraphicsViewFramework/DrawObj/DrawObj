@@ -7,3 +7,4 @@
 #include "GraphicsPolygonItem.h"
 #include "GraphicsLineItem.h"
 #include "GraphicsBezier.h"
+#include "GraphicsScribbleItem.h"

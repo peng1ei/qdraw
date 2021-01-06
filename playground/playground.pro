@@ -54,6 +54,7 @@ SOURCES += \
     GraphicsViewFramework/DrawObj/GraphicsLineItem.cpp \
     GraphicsViewFramework/DrawObj/GraphicsPolygonItem.cpp \
     GraphicsViewFramework/DrawObj/GraphicsRectItem.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsScribbleItem.cpp \
     GraphicsViewFramework/DrawObj/ShapeMimeData.cpp \
     GraphicsViewFramework/DrawObj/SizeHandle.cpp \
     GraphicsViewFramework/DrawTool/DrawTool.cpp \
@@ -62,6 +63,7 @@ SOURCES += \
     GraphicsViewFramework/DrawTool/RectTool.cpp \
     GraphicsViewFramework/DrawTool/RotationTool.cpp \
     GraphicsViewFramework/DrawTool/RubberBandZoomTool.cpp \
+    GraphicsViewFramework/DrawTool/ScribbleTool.cpp \
     GraphicsViewFramework/DrawTool/SelectTool.cpp \
     GraphicsViewFramework/GraphicsScene.cpp \
     GraphicsViewFramework/GraphicsView.cpp \
@@ -94,6 +96,7 @@ HEADERS += \
     GraphicsViewFramework/DrawObj/GraphicsLineItem.h \
     GraphicsViewFramework/DrawObj/GraphicsPolygonItem.h \
     GraphicsViewFramework/DrawObj/GraphicsRectItem.h \
+    GraphicsViewFramework/DrawObj/GraphicsScribbleItem.h \
     GraphicsViewFramework/DrawObj/ShapeMimeData.h \
     GraphicsViewFramework/DrawObj/SizeHandle.h \
     GraphicsViewFramework/DrawTool/DrawTool.h \
@@ -102,6 +105,7 @@ HEADERS += \
     GraphicsViewFramework/DrawTool/RectTool.h \
     GraphicsViewFramework/DrawTool/RotationTool.h \
     GraphicsViewFramework/DrawTool/RubberBandZoomTool.h \
+    GraphicsViewFramework/DrawTool/ScribbleTool.h \
     GraphicsViewFramework/DrawTool/SelectTool.h \
     GraphicsViewFramework/GraphicsScene.h \
     GraphicsViewFramework/GraphicsView.h \

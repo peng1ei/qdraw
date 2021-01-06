@@ -151,6 +151,8 @@ QVariant GraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, cons
 
             return newPos;
         }
+    } else if (change == ItemScaleChange && scene()) {
+        QPointF newPos = value.toPointF();
     }
 
     return QGraphicsItem::itemChange(change, value);

@@ -230,6 +230,7 @@ private:
     QAction  * mUiBezierAct;
     QAction  * mUiRotateAct;
     QAction  * mUiSelectColorAct;
+    QAction  * mUiScribbleAct;
 
     ColorCombox * mUiPenColorCombox;
     ColorCombox * mUiBrushColorCombox;
