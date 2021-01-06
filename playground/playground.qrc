@@ -45,5 +45,8 @@
         <file>image/icons/delete.png</file>
         <file>image/icons/delete_select.png</file>
         <file>image/icons/background.png</file>
+        <file>image/bb/blackboard-texture.jpg</file>
+        <file>image/bb/empty-blackboard.jpg</file>
+        <file>image/bb/green-slate.jpg</file>
     </qresource>
 </RCC>

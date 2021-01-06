@@ -9,6 +9,7 @@
 #include "Utils/ColorWidget/qwwcolorcombobox.h"
 #include "Utils/ColorWidget/qwwcolorbutton.h"
 #include "Utils/ColorWidget/ColorCombox.h"
+#include "DrawingBoardTemplateDlg.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
@@ -33,6 +34,7 @@
 #include <QDebug>
 #include <QColorDialog>
 #include <QListWidget>
+#include <QIcon>
 #include <QListWidgetItem>
 
 int s_x = 50;
@@ -236,26 +238,90 @@ void MainWindow::OnSelectColor()
 
 void MainWindow::OnNewFile()
 {
-    auto viewRect = mView->viewport()->rect();
-    auto viewCenterPoint = viewRect.center();
+    //auto viewRect = mView->viewport()->rect();
+    //auto viewCenterPoint = viewRect.center();
     //auto sceneCenterPoint = mView->mapToScene(viewCenterPoint);
-    qDebug() << "0,0 map to scene: " << mView->mapToScene(viewCenterPoint);
-    qDebug() << "resize view Rect: " << viewRect;
-    qDebug() << "resize view center: " << viewCenterPoint;
-    
-    int w = 960, h = 720;
+    //qDebug() << "0,0 map to scene: " << mView->mapToScene(viewCenterPoint);
+    //qDebug() << "resize view Rect: " << viewRect;
+    //qDebug() << "resize view center: " << viewCenterPoint;
+    //int w = 960, h = 720;
     //Layer *layer = new Layer(sceneCenterPoint.x()-w/2,sceneCenterPoint.y()-h/2, w, h);
-    Layer *layer = new Layer(0,0, w, h);
-    mScene->addItem(layer);
+    //Layer *layer = new Layer(0,0, w, h);
+    //mScene->addItem(layer);
     //layer->setX(0);
     //layer->setY(0);
-    qDebug() << "x scale: " << mView->transform().m11();
-    qDebug() << "y scale: " << mView->transform().m12();
-    mView->Zoom1To1();
-    qDebug() << "x scale: " << mView->transform().m11();
-    qDebug() << "y scale: " << mView->transform().m12();
+    //qDebug() << "x scale: " << mView->transform().m11();
+    //qDebug() << "y scale: " << mView->transform().m12();
+    //mView->Zoom1To1();
+    //qDebug() << "x scale: " << mView->transform().m11();
+    //qDebug() << "y scale: " << mView->transform().m12();
+    //qDebug() << "Layer Rect: " << layer->GetRectFromScene();
 
-    qDebug() << "Layer Rect: " << layer->GetRectFromScene();
+//    //定义QListWidget对象
+//    QListWidget *imageList = new QListWidget;
+//    imageList->resize(720,400);
+//    //设置QListWidget的显示模式
+//    imageList->setViewMode(QListView::IconMode);
+//    //设置QListWidget中单元项的图片大小
+//    imageList->setIconSize(QSize(200,200));
+//    //设置QListWidget中单元项的间距
+//    imageList->setSpacing(10);
+//    //设置自动适应布局调整（Adjust适应，Fixed不适应），默认不适应
+//    imageList->setResizeMode(QListWidget::Adjust);
+//    //设置不能移动
+//    imageList->setMovement(QListWidget::Static);
+
+//    QVector<QString> fileNames = { "../assets/black.jpg",
+//                                   "../assets/gray.jpg",
+//                                   "../assets/green.jpg",
+//                                 "../assets/pure_black.png",
+//                                 "../assets/pure_gray.png",
+//                                 "../assets/pure_white.png"};
+//    QStringList ls{"blackboard-black",
+//                  "blackboard-gray",
+//                  "blackboard-green",
+//                  "pure-black",
+//                  "pure-gray",
+//                  "pure-white"};
+//    int i = 0;
+//    for(auto tmp : fileNames)
+//    {
+//        //定义QListWidgetItem对象
+//        QListWidgetItem *imageItem = new QListWidgetItem;
+//        //为单元项设置属性
+//        imageItem->setIcon(QIcon(tmp));
+//        imageItem->setText(ls[i++]);
+//        //重新设置单元项图片的宽度和高度
+//        imageItem->setSizeHint(QSize(200,160));
+//        imageItem->setTextAlignment(Qt::AlignCenter);
+//        //将单元项添加到QListWidget中
+//        imageList->addItem(imageItem);
+//    }
+//    //显示QListWidget
+//    imageList->show();
+
+    DrawingBoardTemplateDlg dbtDlg(this);
+    if (dbtDlg.exec() == QDialog::Accepted) {
+        QString fileName = dbtDlg.getTemplateFilePath();
+        if (fileName.isEmpty())
+            return;
+
+        QFileInfo file(fileName);
+        QImageReader imgReader(file.filePath(), file.suffix().toLocal8Bit());
+        QImage img = imgReader.read();
+
+        qDebug() << "Update sene 0";
+        QGraphicsPixmapItem *pixitem = new QGraphicsPixmapItem(QPixmap::fromImage(img));
+        mScene->SetCurrentLayer(pixitem);
+
+        qDebug() << img.size();
+
+        //mScene->addPixmap(QPixmap::fromImage(img));
+        mView->Zoom1To1(0, 0, img.width(), img.height());
+        //mView->Zoom1To1(0, 0, img.width(), img.height());
+        qDebug() << "Update sene 1";
+        mView->setFocus();
+    }
 }
 
 void MainWindow::OnOpen()
@@ -533,8 +599,9 @@ void MainWindow::OnItemAdded(QGraphicsItem *item)
 
     QListWidgetItem *lwitem = new QListWidgetItem(titem->displayName());
     lwitem->setSizeHint(QSize(60, 36));  //每次改变Item的高度
+
     auto pix = titem->image();
-    pix = pix.scaled(32,32, Qt::KeepAspectRatio);
+    //pix = pix.scaled(32,32, Qt::KeepAspectRatio);
     lwitem->setIcon(pix);
     mUiListWidgetLabels->addItem(lwitem);
 }
@@ -806,7 +873,7 @@ void MainWindow::CreateActions()
 void MainWindow::CreateMenus()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    //fileMenu->addAction(mUiNewAct);
+    fileMenu->addAction(mUiNewAct);
     fileMenu->addAction(mUiOpenAct);
     fileMenu->addAction(mUiOpenDirAct);
     fileMenu->addAction(mUiSaveAct);

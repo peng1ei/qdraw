@@ -44,6 +44,7 @@ INCLUDEPATH += Utils/ColorWidget/
 INCLUDEPATH += GraphicsViewFramework/
 
 SOURCES += \
+    DrawingBoardTemplateDlg.cpp \
     GraphicsViewFramework/Commands.cpp \
     GraphicsViewFramework/CustomProperty.cpp \
     GraphicsViewFramework/DrawObj/GraphicsBezier.cpp \
@@ -81,6 +82,7 @@ SOURCES += \
     MainWindow.cpp
 
 HEADERS += \
+    DrawingBoardTemplateDlg.h \
     GraphicsViewFramework/Commands.h \
     GraphicsViewFramework/CustomProperty.h \
     GraphicsViewFramework/DrawObj/AbstractShapeType.hpp \
@@ -120,6 +122,7 @@ HEADERS += \
     Utils/ProgressBarDialog.h
 
 FORMS += \
+    DrawingBoardTemplateDlg.ui \
     MainWindow.ui
 
 # Default rules for deployment.
