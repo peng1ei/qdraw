@@ -18,6 +18,7 @@ namespace gvf {
         virtual bool saveToXml( QXmlStreamWriter * xml ) { return true; }
         QString displayName() const { return tr("scribble"); }
     protected:
+        void updatehandles();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     private:

@@ -1,4 +1,5 @@
 #include "GraphicsPathItem.h"
+#include "DrawTool/DrawTool.h"
 #include <QPainterPath>
 
 namespace gvf {
@@ -6,20 +7,26 @@ namespace gvf {
 GraphicsPathItem::GraphicsPathItem(GraphicsItem *parent)
     : GraphicsItem(parent) {
     m_painterPath = new QPainterPath;
+    m_penWidth = 3;
 }
 
 void GraphicsPathItem::setBeginPoint(const QPointF &point)
 {
+    prepareGeometryChange();
     m_beginPoint = mapFromScene(point);
     m_painterPath->moveTo(m_beginPoint);
     m_boundingRect = m_painterPath->controlPointRect();
+    updatehandles();
+    update();
 }
 
 void GraphicsPathItem::setEndPoint(const QPointF &point)
 {
+    prepareGeometryChange();
     m_endPoint = mapFromScene(point);
     m_painterPath->lineTo(m_endPoint);
     m_boundingRect = m_painterPath->controlPointRect();
+    updatehandles();
     update();
 }
 
@@ -51,19 +58,26 @@ void GraphicsPathItem::updateCoordinate()
 
 }
 
+void GraphicsPathItem::updatehandles()
+{
+    GraphicsItem::updatehandles();
+}
+
 void GraphicsPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPen pen = painter->pen();
     pen.setCosmetic(true);
-    pen.setWidth(3);
+    pen.setWidth(m_penWidth);
     pen.setBrush(m_pen.color());
     pen.setCapStyle(Qt::RoundCap);
     pen.setJoinStyle(Qt::RoundJoin);
     painter->setPen(pen);
-    //m_painterPath->lineTo(m_endPoint);
 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->drawPath(*m_painterPath);
+
+    if (option->state & QStyle::State_Selected)
+        qt_graphicsItem_highlightSelected(this, painter, option);
 }
 
 } // namespace gvf

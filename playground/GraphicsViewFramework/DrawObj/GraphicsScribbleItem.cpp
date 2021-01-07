@@ -43,6 +43,11 @@ void GraphicsScribbleItem::updateCoordinate()
 
 }
 
+void GraphicsScribbleItem::updatehandles()
+{
+    GraphicsItem::updatehandles();
+}
+
 void gvf::GraphicsScribbleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPainter p(&out);

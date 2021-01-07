@@ -12,6 +12,7 @@ public:
 
     void setBeginPoint(const QPointF &point);
     void setEndPoint(const QPointF &point);
+    void setPenWidth(int w) { m_penWidth = w; }
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -24,6 +25,7 @@ public:
     QString displayName() const { return tr("GraphicsPathItem"); }
 
 protected:
+    void updatehandles();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 protected:
@@ -32,6 +34,7 @@ protected:
     QPointF m_beginPoint;
     QPointF m_endPoint;
     QRectF m_boundingRect;
+    int m_penWidth;
     QPainterPath *m_painterPath;
 };
 

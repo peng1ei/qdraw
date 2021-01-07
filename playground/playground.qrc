@@ -49,5 +49,6 @@
         <file>image/bb/empty-blackboard.jpg</file>
         <file>image/bb/green-slate.jpg</file>
         <file>image/icons/pen.png</file>
+        <file>image/icons/eraser.png</file>
     </qresource>
 </RCC>

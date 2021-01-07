@@ -35,6 +35,7 @@
 #include <QColorDialog>
 #include <QListWidget>
 #include <QIcon>
+#include <QSpinBox>
 #include <QListWidgetItem>
 
 int s_x = 50;
@@ -217,6 +218,8 @@ void MainWindow::OnAddShape()
         gvf::DrawTool::c_drawShape = gvf::polyline;
     else if (sender() == mUiScribbleAct)
         gvf::DrawTool::c_drawShape = gvf::scribble;
+    else if (sender() == mUiEraserAct)
+        gvf::DrawTool::c_drawShape = gvf::eraser;
 
     if ( sender() != mUiSelectAct && sender() != mUiRotateAct ){
         mScene->clearSelection();
@@ -544,6 +547,11 @@ void MainWindow::OnBackgroundColorChanged(QColor color)
 
 }
 
+void MainWindow::OnPenWidthChanged(int width)
+{
+    gvf::DrawTool::c_penWidth = width;
+}
+
 void MainWindow::OnSelectClear()
 {
     mScene->clearSelection();
@@ -780,6 +788,8 @@ void MainWindow::CreateActions()
     mUiBezierAct->setCheckable(true);
     mUiScribbleAct= new QAction(QIcon(":/image/icons/pen.png"),tr("scribble tool"),this);
     mUiScribbleAct->setCheckable(true);
+    mUiEraserAct= new QAction(QIcon(":/image/icons/eraser.png"),tr("eraser tool"),this);
+    mUiEraserAct->setCheckable(true);
 
     mUiRotateAct = new QAction(QIcon(":/image/icons/rotate.png"),tr("rotate tool"),this);
     mUiRotateAct->setCheckable(true);
@@ -798,6 +808,7 @@ void MainWindow::CreateActions()
 
     //mUiDrawActionGroup->addAction(mUiBezierAct);
     mUiDrawActionGroup->addAction(mUiScribbleAct);
+    mUiDrawActionGroup->addAction(mUiEraserAct);
     mUiDrawActionGroup->addAction(mUiRotateAct);
 
     mUiZoomToRectAct = new QAction(QIcon(":/image/icons/zoomrect.png"),tr("zoomToRect"),this);
@@ -819,6 +830,7 @@ void MainWindow::CreateActions()
     connect(mUiPolylineAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiBezierAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiScribbleAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
+    connect(mUiEraserAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiRotateAct,SIGNAL(triggered()),this,SLOT(OnAddShape()));
     connect(mUiSelectColorAct,SIGNAL(triggered()),this,SLOT(OnSelectColor()));
 
@@ -1016,6 +1028,7 @@ void MainWindow::CreateToolbars()
     mUiDrawToolBar->addAction(mUiPolygonAct);
     //mUiDrawToolBar->addAction(mUiBezierAct);
     mUiDrawToolBar->addAction(mUiScribbleAct);
+    mUiDrawToolBar->addAction(mUiEraserAct);
     mUiDrawToolBar->addAction(mUiRotateAct);
     //mUiDrawToolBar->addAction(mUiSelectColorAct);
 
@@ -1023,16 +1036,24 @@ void MainWindow::CreateToolbars()
     mUiPenColorCombox = new ColorCombox(tr("Pen"), QColor(32,144,32));
     mUiBrushColorCombox = new ColorCombox(tr("Brush"),QColor(32,144,32));
     mUiBackgroundColorCombox = new ColorCombox(tr("Background"),QColor(255,255,255));
+    mUiPenWidthSpinBox = new QSpinBox;
+    mUiPenWidthSpinBox->setMaximumSize(48,32);
+    mUiPenWidthSpinBox->setMinimum(1);
+    mUiPenWidthSpinBox->setMaximum(60);
+    mUiPenWidthSpinBox->setValue(3);
     mUiDrawToolBar->addSeparator();
     mUiDrawToolBar->addWidget(mUiPenColorCombox);
     //mUiDrawToolBar->addWidget(mUiBrushColorCombox);
     mUiDrawToolBar->addWidget(mUiBackgroundColorCombox);
+    mUiDrawToolBar->addWidget(mUiPenWidthSpinBox);
     connect(mUiPenColorCombox, &ColorCombox::sigColorChanged,
             this, &MainWindow::OnPenColorChanged);
     connect(mUiBrushColorCombox, &ColorCombox::sigColorChanged,
             this, &MainWindow::OnBrushColorChanged);
     connect(mUiBackgroundColorCombox, &ColorCombox::sigColorChanged,
             this, &MainWindow::OnBackgroundColorChanged);
+    connect(mUiPenWidthSpinBox, SIGNAL(valueChanged(int)),
+            this, SLOT(OnPenWidthChanged(int)));
 
     // create align toolbar
 #if 0

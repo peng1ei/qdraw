@@ -15,6 +15,8 @@ DrawShape DrawTool::c_drawShape = selection;
 
 QColor DrawTool::c_penColor = Qt::green;
 QColor DrawTool::c_brushColor = Qt::green;
+int DrawTool::c_penWidth = 3;
+int DrawTool::c_eraserWidth = 3;
 
 //static PanTool panTool;
 //static RubberBandZoomTool rubberBandZoomTool;

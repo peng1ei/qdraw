@@ -36,7 +36,8 @@ enum DrawShape
     polyline,
     rubberbandzoom,
     pan,
-    scribble
+    scribble,
+    eraser
 };
 
 enum SelectMode
@@ -74,6 +75,8 @@ public:
 
     static QColor c_penColor; // 当前绘制的笔的颜色
     static QColor c_brushColor; // 当前绘制的画刷的颜色
+    static int c_penWidth;  // 当前绘制的笔的宽度
+    static int c_eraserWidth; // 橡皮擦的宽度
 };
 
 } // namespace gvf

@@ -41,6 +41,7 @@ class QResizeEvent;
 class QListView;
 class QStringListModel;
 class QEvent;
+class QSpinBox;
 QT_END_NAMESPACE
 
 class ProgressBarDialog;
@@ -132,6 +133,7 @@ public slots:
     void OnPenColorChanged(QColor color);
     void OnBrushColorChanged(QColor color);
     void OnBackgroundColorChanged(QColor color);
+    void OnPenWidthChanged(int width);
 
     void OnSelectClear();
     void OnDeleteAllItem();
@@ -231,10 +233,12 @@ private:
     QAction  * mUiRotateAct;
     QAction  * mUiSelectColorAct;
     QAction  * mUiScribbleAct;
+    QAction  * mUiEraserAct;
 
     ColorCombox * mUiPenColorCombox;
     ColorCombox * mUiBrushColorCombox;
     ColorCombox * mUiBackgroundColorCombox;
+    QSpinBox * mUiPenWidthSpinBox;
 
     QAction *mUiCloseAct;
     QAction *mUiCloseAllAct;
