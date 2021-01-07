@@ -27,13 +27,11 @@ void ScribbleTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
         return;
     scene->clearSelection();
 
-    // TODO 寻找该点下的item
-
     switch ( c_drawShape ){
-    case scribble:
-        m_item = new GraphicsPathItem;
-        break;
-    case eraser:
+    case scribble: {
+            m_item = new GraphicsPathItem;
+            m_item->setEraser(false);
+        }
         break;
     default:
         break;
@@ -51,14 +49,13 @@ void ScribbleTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
     m_item->setSelected(true);
     m_item->setBeginPoint(event->scenePos());
 
-    //selectMode = size;
-    //nDragHandle = RightBottom;
+    selectMode = none;
+    nDragHandle = Handle_None;
 }
 
 void ScribbleTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
 {
     if ( event->button() != Qt::LeftButton  && !m_scribbling) return;
-
     selectTool.mouseMoveEvent(event,scene);
 
     if (m_item) {

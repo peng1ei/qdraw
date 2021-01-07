@@ -59,6 +59,7 @@ SOURCES += \
     GraphicsViewFramework/DrawObj/ShapeMimeData.cpp \
     GraphicsViewFramework/DrawObj/SizeHandle.cpp \
     GraphicsViewFramework/DrawTool/DrawTool.cpp \
+    GraphicsViewFramework/DrawTool/EraserTool.cpp \
     GraphicsViewFramework/DrawTool/PanTool.cpp \
     GraphicsViewFramework/DrawTool/PolygonTool.cpp \
     GraphicsViewFramework/DrawTool/RectTool.cpp \
@@ -102,6 +103,7 @@ HEADERS += \
     GraphicsViewFramework/DrawObj/ShapeMimeData.h \
     GraphicsViewFramework/DrawObj/SizeHandle.h \
     GraphicsViewFramework/DrawTool/DrawTool.h \
+    GraphicsViewFramework/DrawTool/EraserTool.h \
     GraphicsViewFramework/DrawTool/PanTool.h \
     GraphicsViewFramework/DrawTool/PolygonTool.h \
     GraphicsViewFramework/DrawTool/RectTool.h \

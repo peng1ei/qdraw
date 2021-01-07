@@ -13,6 +13,8 @@ public:
     void setBeginPoint(const QPointF &point);
     void setEndPoint(const QPointF &point);
     void setPenWidth(int w) { m_penWidth = w; }
+    void setEraserWidth(int w) { m_eraserWidth = w; }
+    void setEraser(bool value) { m_isEraser = value; }
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -35,7 +37,10 @@ protected:
     QPointF m_endPoint;
     QRectF m_boundingRect;
     int m_penWidth;
+    int m_eraserWidth;
+    bool m_isEraser;
     QPainterPath *m_painterPath;
+    QPainterPath *m_eraserPainterPath;
 };
 
 } // namespace gvf
