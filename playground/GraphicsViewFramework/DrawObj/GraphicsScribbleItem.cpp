@@ -13,7 +13,7 @@ gvf::GraphicsScribbleItem::GraphicsScribbleItem(qreal w, qreal h, QGraphicsItem 
     m_minY = 0;
     m_maxX = 0;
     m_maxY = 0;
-    QPixmap pixmap(m_canvasWidth, m_canvasHeight);
+    QImage pixmap(m_canvasWidth, m_canvasHeight,QImage::Format_RGBA8888);
     pixmap.fill(Qt::transparent);
     out = pixmap;
 }
@@ -63,7 +63,7 @@ void gvf::GraphicsScribbleItem::paint(QPainter *painter, const QStyleOptionGraph
 
     painter->setRenderHint(QPainter::Antialiasing);
     //painter->setRenderHint(QPainter::SmoothPixmapTransform);
-    painter->drawPixmap(0,0,out);
+    painter->drawImage(0,0,out);
 }
 
 }

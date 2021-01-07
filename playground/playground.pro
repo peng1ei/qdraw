@@ -52,6 +52,7 @@ SOURCES += \
     GraphicsViewFramework/DrawObj/GraphicsItem.cpp \
     GraphicsViewFramework/DrawObj/GraphicsItemGroup.cpp \
     GraphicsViewFramework/DrawObj/GraphicsLineItem.cpp \
+    GraphicsViewFramework/DrawObj/GraphicsPathItem.cpp \
     GraphicsViewFramework/DrawObj/GraphicsPolygonItem.cpp \
     GraphicsViewFramework/DrawObj/GraphicsRectItem.cpp \
     GraphicsViewFramework/DrawObj/GraphicsScribbleItem.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
     GraphicsViewFramework/DrawObj/GraphicsItem.h \
     GraphicsViewFramework/DrawObj/GraphicsItemGroup.h \
     GraphicsViewFramework/DrawObj/GraphicsLineItem.h \
+    GraphicsViewFramework/DrawObj/GraphicsPathItem.h \
     GraphicsViewFramework/DrawObj/GraphicsPolygonItem.h \
     GraphicsViewFramework/DrawObj/GraphicsRectItem.h \
     GraphicsViewFramework/DrawObj/GraphicsScribbleItem.h \

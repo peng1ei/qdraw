@@ -21,6 +21,7 @@ class GraphicsItem;
 class GraphicsPolygonItem;
 class GraphicsItemGroup;
 class GraphicsScribbleItem;
+class GraphicsPathItem;
 
 enum DrawShape
 {

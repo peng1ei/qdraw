@@ -1,13 +1,14 @@
 #include "ScribbleTool.h"
 #include "../GraphicsScene.h"
 #include "DrawObj/GraphicsScribbleItem.h"
+#include "DrawObj/GraphicsPathItem.h"
 
 namespace gvf {
 
 static ScribbleTool scribbleTool(scribble);
 
 ScribbleTool::ScribbleTool(DrawShape drawShape)
-    : DrawTool(scribble) {
+    : DrawTool(drawShape) {
     m_item = nullptr;
 }
 
@@ -29,8 +30,9 @@ void ScribbleTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
         //item = new QGraphicsPathItem(*_path,nullptr);
         //item->setFlag(QGraphicsItem::ItemIsMovable, true);
         //item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        m_item = new GraphicsScribbleItem(scene->curLayer()->boundingRect().width(),
-                                          scene->curLayer()->boundingRect().height());
+//        m_item = new GraphicsScribbleItem(scene->curLayer()->boundingRect().width(),
+//                                          scene->curLayer()->boundingRect().height());
+        m_item = new GraphicsPathItem;
         break;
     default:
         break;
@@ -41,17 +43,14 @@ void ScribbleTool::mousePressEvent(QGraphicsSceneMouseEvent *event, GraphicsScen
 
     m_item->setPenColor(DrawTool::c_penColor);
     m_item->setBrushColor(DrawTool::c_brushColor);
-    m_item->setPos( 0,0 );
+
     scene->addToCurLayer(m_item);
+    m_item->setPos(event->scenePos());
     m_item->setSelected(true);
-    //m_item->setBeginPoint(event->scenePos());
+    m_item->setBeginPoint(event->scenePos());
+
     //selectMode = size;
     //nDragHandle = RightBottom;
-
-    //QPen pen_bak=item->pen();
-    //pen_bak.setWidth(9);
-    //pen_bak.setColor(_mColor);
-    //item->setPen(pen_bak);
 }
 
 void ScribbleTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene *scene)
@@ -59,9 +58,8 @@ void ScribbleTool::mouseMoveEvent(QGraphicsSceneMouseEvent *event, GraphicsScene
     if ( event->button() != Qt::LeftButton  && !m_scribbling) return;
     if (m_item) {
         auto p = scene->curLayer()->mapFromScene(event->scenePos());
-        m_item->setEndPoint(p);
-        m_item->update();
-        scene->update();
+        m_item->setEndPoint(event->scenePos());
+        //m_item->update();
     }
 }
 
@@ -69,15 +67,11 @@ void ScribbleTool::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, GraphicsSc
 {
     if ( event->button() != Qt::LeftButton && !m_scribbling) return;
     if (m_item) {
-        m_item->setBeginPoint(QPointF());
-        m_item->update();
         scene->clearSelection();
         m_item = nullptr;
     }
 
     m_scribbling = false;
 }
-
-
 
 } // namespace scribble

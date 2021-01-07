@@ -8,3 +8,4 @@
 #include "GraphicsLineItem.h"
 #include "GraphicsBezier.h"
 #include "GraphicsScribbleItem.h"
+#include "GraphicsPathItem.h"

@@ -31,8 +31,8 @@ namespace gvf {
         QPointF m_endPoint;
 
         //原图
-        QPixmap src;
-        QPixmap out;
+        QImage src;
+        QImage out;
         //上一次的鼠标位置
         QPoint mpos;
         QPen pen;
